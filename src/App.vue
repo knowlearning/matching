@@ -6,10 +6,41 @@
   const cardWidth = 200
   const padding = 10
 
+  // construct nodes. we need them "raw" for event handling.
+  // the positioning of nodes is a convention. For every 'from' 
+  // choice we look at the conventioal placemnt of the rect, and put
+  // the node on the middle of the right side.  for the 'to' choices,
+  // middse of the left side
+
+  const fromChoices = 2
+  const toChoices = 1
+  let nodes = []
+  for (let i=0; i<fromChoices; i++) {
+    nodes.push({
+      type: 'from',
+      name: `from-node-${i}`,
+      pos: {
+        x: cardWidth,
+        y: cardHeight/2 + i*(cardHeight + padding)
+      }
+    })
+  }
+  for (let i=0; i<toChoices; i++) {
+    nodes.push({
+      type: 'to',
+      name: `to-node-${i}`,
+      pos: {
+        x: width - cardWidth,
+        y: cardHeight/2 + i*(cardHeight + padding)
+      }
+    })
+  }
+
   const data = reactive({
-    fromChoices: [ 'a', 'b', 'c' ],
+    fromChoices,
+    toChoices,
+    nodes,
     workingLine: null, // { to, from }
-    toChoices: [ 1 , 2 , 3, 4],
     connections: [ [0,0], [2,0] ],
   })
 
@@ -62,31 +93,40 @@
       height: `${height}px`,
     }"
   >
+
+    <!-- RECTS / IMAGES -->
     <g
-      v-for="c,i in data.fromChoices"
-      :key="`from-choice-{i}`"
-      :transform="`translate(0, ${i*(cardHeight+padding)})`"
+      v-for="n in data.fromChoices"
+      :key="`from-choice-{n}`"
+      :transform="`translate(0, ${(n-1)*(cardHeight+padding)})`"
     >
       <rect
         class="from-choice"
         :width="cardWidth"
         :height="cardHeight"
       />
-      <circle :cx="cardWidth" :cy="cardHeight/2" :r="width/140" />
+      
     </g>
 
     <g
-      v-for="c,i in data.toChoices"
-      :key="`to-choice-{i}`"
-      :transform="`translate(${width-cardWidth}, ${i*(cardHeight+padding)})`"
+      v-for="n in data.toChoices"
+      :key="`to-choice-{n}`"
+      :transform="`translate(${width-cardWidth}, ${(n-1)*(cardHeight+padding)})`"
     >
       <rect
         class="to-choice"
         :width="cardWidth"
         :height="cardHeight"
       />
-      <circle cx="0" :cy="cardHeight/2" :r="width/140" />
     </g>
+    <!-- NODES -->
+    <circle
+      v-for="n,i in nodes"
+      :key="`node-${i}`"
+      :cx="n.pos.x"
+      :cy="n.pos.y"
+      :r="width/140"
+    />
 
     <!-- Fixed Connection -->
     <line
