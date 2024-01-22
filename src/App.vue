@@ -9,7 +9,8 @@
     getClosestNodeWithinTolerance,
     d,
     getSvgCoordinatesFromEvent,
-    getClosestSegmentWitinToleranceIndex
+    getClosestSegmentWitinToleranceIndex,
+    sameConnection
   } from './mathHelpers.js'
 
   const width = 700
@@ -48,6 +49,11 @@
       }
     })
   }
+  // TODO: answers from customizer!
+  const answerConnections = [
+    [ nodes[0].id, nodes[3].id ],
+    [ nodes[4].id, nodes[0].id ]
+  ]
 
   const data = reactive({
     fromChoices,
@@ -56,6 +62,7 @@
     workingStartNode: null,
     workingLine: null, // { to, from }
     connections: [ ], // each connection is [ nodeId, nodeId ]
+    answerConnections,
     hoverNode: null,
     selectedConnectionIndex: null
   })
@@ -63,6 +70,16 @@
   const segments = computed(() => {
     return data.connections.map(([fromId, toId]) => ([ getNodeById(fromId).pos, getNodeById(toId).pos ]))
   })
+
+  function isCorrect() {
+    const every = data.connections.every(c1 => data.answerConnections.some(c2 => sameConnection(c1, c2)))
+    const only = data.answerConnections.every(c1 => data.connections.some(c2 => sameConnection(c1, c2)))
+    return every && only
+  }
+
+  function handleSubmit() {
+    window.alert( isCorrect() ? 'woo' : 'boo' )
+  }
 
   function handleMousedown(e) {
     const pos = getSvgCoordinatesFromEvent(e)
@@ -199,6 +216,9 @@
     @click="removeConnectionByIndex(data.selectedConnectionIndex)"
   >
     Remove Connection
+  </button>
+  <button @click="handleSubmit">
+    Submit
   </button>
 
 </template>

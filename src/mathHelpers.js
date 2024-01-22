@@ -43,6 +43,10 @@ export function nodesConnected(a,b, connections) {
 	return connections.some(([x,y]) => (a.id === x && b.id === y) || (a.id === y && b.id === x))
 }
 
+export function sameConnection([A,B], [C,D]) {
+  return (A === C && B === D) || (A === D && B === C)
+}
+
 export function getClosestNode(pos, nodesArray) {
   if (!nodesArray.length) return undefined
   let closestDistance = Infinity
