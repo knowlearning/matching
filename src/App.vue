@@ -12,8 +12,8 @@
   // the node on the middle of the right side.  for the 'to' choices,
   // middse of the left side
 
-  const fromChoices = 2
-  const toChoices = 1
+  const fromChoices = 3
+  const toChoices = 4
   let nodes = []
   for (let i=0; i<fromChoices; i++) {
     nodes.push({
@@ -41,14 +41,15 @@
     toChoices,
     nodes,
     workingLine: null, // { to, from }
-    connections: [ [0,0], [2,0] ],
+    connections: [ [0,4], [2,5] ],
   })
 
 
   function handleMousedown(e) {
     const pos = getSvgCoordinatesFromEvent(e)
+    const closestNode = getClosestNode(pos)
     data.workingLine = {
-      from: pos,
+      from: closestNode.pos,
       to: pos
     }
   }
@@ -60,6 +61,27 @@
       data.workingLine.to = getSvgCoordinatesFromEvent(e)
     }
   }
+
+  function getClosestNode(pos, nodesArray = nodes) {
+    if (!nodesArray.length) return undefined
+    let closestDistance = Infinity
+    return nodesArray.reduce((acc,node) => {
+      const dist = d(pos, node.pos)
+      if (dist < closestDistance) {
+        closestDistance = dist
+        return node
+      } else {
+        return acc
+      }
+    }, nodesArray[0])
+  }
+
+  function d(pos1, pos2) {
+    const dx = pos1.x - pos2.x
+    const dy = pos1.y - pos2.y
+    return Math.sqrt(dx*dx + dy*dy)
+  }
+
 
   function getSvgCoordinatesFromEvent(e) {
     // Get the target SVG element
@@ -81,7 +103,6 @@
 </script>
 
 <template>
-  <h1>Match Y'all</h1>
   <svg
     :viewBox="`0 0 ${width} ${height}`"
     class="main-wrapper"
@@ -132,10 +153,10 @@
     <line
       v-for="[from, to],i in data.connections"
       :key="`connection-${i}`"
-      :x1="cardWidth"
-      :y1="cardHeight/2 + from*(padding+cardHeight)"
-      :x2="width - cardWidth"
-      :y2="cardHeight/2 + to*(padding+cardHeight)"
+      :x1="nodes[from].pos.x"
+      :y1="nodes[from].pos.y"
+      :x2="nodes[to].pos.x"
+      :y2="nodes[to].pos.y"
       stroke="black"
       :stroke-width="width/220"
     />
@@ -157,12 +178,11 @@
 <style>
 .main-wrapper {
   position: relative;
-  background: pink;
 }
 .from-choice, .to-choice {
-  fill: chartreuse;
+  fill: grey;
 }
 svg {
-  background: yellow;
+  background: darkgrey;
 }
 </style>
