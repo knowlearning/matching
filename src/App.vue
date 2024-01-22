@@ -1,9 +1,19 @@
 <script setup>
-  import { reactive } from 'vue'
+  import { reactive, computed } from 'vue'
   import { v4 as uuid } from 'uuid'
+  import {
+    pDistanceToSegment,
+    nodesConnectable,
+    nodesConnected,
+    getClosestNode,
+    getClosestNodeWithinTolerance,
+    d,
+    getSvgCoordinatesFromEvent,
+    getClosestSegmentWitinToleranceIndex
+  } from './mathHelpers.js'
 
   const width = 700
-  const height = 800
+  const height = 700
   const cardHeight = 150
   const cardWidth = 200
   const padding = 10
@@ -45,39 +55,42 @@
     nodes,
     workingStartNode: null,
     workingLine: null, // { to, from }
-    connections: [ ],
-    hoverNode: null
+    connections: [ ], // each connection is [ nodeId, nodeId ]
+    hoverNode: null,
+    selectedConnectionIndex: null
   })
 
-  function nodesConnectable(a,b) {
-    // connectable if different types and not already connected
-    if (a.type === b.type) return false
-    if (nodesConnected(a,b)) return false
-    return true
-  }
-
-  function nodesConnected(a,b) {
-    // x and y are ids, not nodes
-    return data.connections.some(([x,y]) => (a.id === x && b.id === y) || (a.id === y && b.id === x))
-  }
+  const segments = computed(() => {
+    return data.connections.map(([fromId, toId]) => ([ getNodeById(fromId).pos, getNodeById(toId).pos ]))
+  })
 
   function handleMousedown(e) {
     const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance)
-    if (!node) return
-    data.workingStartNode = node
-    data.workingLine = {
-      from: node.pos,
-      to: pos
+    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
+    const closeSegmentIndex = getClosestSegmentWitinToleranceIndex(e, tolerance, segments.value)
+    if (node) {
+      data.workingStartNode = node
+      data.workingLine = {
+        from: node.pos,
+        to: pos
+      }
+    } else if (closeSegmentIndex !== null) {
+      data.selectedConnectionIndex = closeSegmentIndex  
+    } else { // closeSegmentIndex is null
+      data.selectedConnectionIndex = null
     }
+  }
+  function removeConnectionByIndex(i) {
+    data.connections.splice(i,1)
+    data.selectedConnectionIndex = null
   }
   function handleMouseup(e) {
     if (!data.workingLine) return // ensure in "draw" mode
 
     const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance)
+    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
     // if node and node is distinct from start, snap to it
-    if (node && nodesConnectable(node, data.workingStartNode)) {
+    if (node && nodesConnectable(node, data.workingStartNode, data.connections)) {
       data.connections.push([ node.id, data.workingStartNode.id ])
     }
     data.workingLine = null
@@ -85,10 +98,10 @@
   }
   function handleMousemove(e) {
     const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance)
+    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
 
     if (data.workingLine) {
-      if (node && data.workingStartNode && nodesConnectable(node, data.workingStartNode)) { // if there's a target node
+      if (node && data.workingStartNode && nodesConnectable(node, data.workingStartNode, data.connections)) { // if there's a target node
         data.workingLine.to = node.pos
         data.hoverNode = node
       }
@@ -103,53 +116,11 @@
     return data.nodes.find(n => n.id === id)
   }
 
-  function getClosestNode(pos, nodesArray = nodes) {
-    if (!nodesArray.length) return undefined
-    let closestDistance = Infinity
-    return nodesArray.reduce((acc,node) => {
-      const dist = d(pos, node.pos)
-      if (dist < closestDistance) {
-        closestDistance = dist
-        return node
-      } else {
-        return acc
-      }
-    }, nodesArray[0])
-  }
-
-  function getClosestNodeWithinTolerance(pos, tolerance, nodesArray = nodes) {
-    const closestNode = getClosestNode(pos, nodesArray)
-    const withinTolerance = closestNode && d(pos, closestNode.pos) <= tolerance
-    return withinTolerance ? closestNode : undefined
-  }
-
-  function d(pos1, pos2) {
-    const dx = pos1.x - pos2.x
-    const dy = pos1.y - pos2.y
-    return Math.sqrt(dx*dx + dy*dy)
-  }
-
-
-  function getSvgCoordinatesFromEvent(e) {
-    // Get the target SVG element
-    var svgElement = e.target.ownerSVGElement || e.target
-
-    // Create an SVGPoint representing the pointer coordinates
-    var point = svgElement.createSVGPoint();
-    point.x = e.clientX;
-    point.y = e.clientY;
-
-    // Apply the transformation from screen coordinates to SVG coordinates
-    var svgPoint = point.matrixTransform(svgElement.getScreenCTM().inverse());
-
-    // Return the SVG coordinates
-    return { x: svgPoint.x, y: svgPoint.y };
-  }
-
 
 </script>
 
 <template>
+
   <svg
     :viewBox="`0 0 ${width} ${height}`"
     :class="{
@@ -202,13 +173,13 @@
 
     <!-- Fixed Connection -->
     <line
-      v-for="[idFrom, idTo],i in data.connections"
+      v-for="[A, B],i in segments"
       :key="`connection-${i}`"
-      :x1="getNodeById(idFrom).pos.x"
-      :y1="getNodeById(idFrom).pos.y"
-      :x2="getNodeById(idTo).pos.x"
-      :y2="getNodeById(idTo).pos.y"
-      stroke="black"
+      :x1="A.x"
+      :y1="A.y"
+      :x2="B.x"
+      :y2="B.y"
+      :stroke="data.selectedConnectionIndex === i ? 'red' : 'black'"
       :stroke-width="width/220"
     />
 
@@ -223,6 +194,12 @@
     />
 
   </svg>
+  <button
+    :disabled="data.selectedConnectionIndex === null"
+    @click="removeConnectionByIndex(data.selectedConnectionIndex)"
+  >
+    Remove Connection
+  </button>
 
 </template>
 
