@@ -14,7 +14,7 @@
   } from './mathHelpers.js'
 
   const width = 700
-  const height = 700
+  const height = 500
   const cardHeight = 150
   const cardWidth = 200
   const padding = 10
@@ -26,10 +26,21 @@
   // the node on the middle of the right side.  for the 'to' choices,
   // middse of the left side
 
-  const fromChoices = 3
-  const toChoices = 4
+  const fromChoices = [
+    // picure images
+    { component: 'image', id: 'a3855dc0-b99b-11ee-94ca-d301122f8933' },
+    { component: 'image', id: 'afdb2c30-b99b-11ee-94ca-d301122f8933' },
+    { component: 'image', id: 'a63a1d80-b99b-11ee-94ca-d301122f8933' },
+  ]
+  const toChoices = [
+    // text images
+    { component: 'image', id: '53ddd360-b99b-11ee-94ca-d301122f8933' },
+    { component: 'image', id: '690be240-b99b-11ee-94ca-d301122f8933' },
+    { component: 'image', id: '6c4f2660-b99b-11ee-94ca-d301122f8933' },
+  ]  
+
   let nodes = []
-  for (let i=0; i<fromChoices; i++) {
+  for (let i=0; i<fromChoices.length; i++) {
     nodes.push({
       type: 'from',
       id: uuid(),
@@ -39,7 +50,7 @@
       }
     })
   }
-  for (let i=0; i<toChoices; i++) {
+  for (let i=0; i<toChoices.length; i++) {
     nodes.push({
       type: 'to',
       id: uuid(),
@@ -51,11 +62,13 @@
   }
   // TODO: answers from customizer!
   const answerConnections = [
-    [ nodes[0].id, nodes[3].id ],
-    [ nodes[4].id, nodes[0].id ]
+    [ nodes[0].id, nodes[4].id ],
+    [ nodes[1].id, nodes[3].id ],
+    [ nodes[2].id, nodes[5].id ],
   ]
 
   const data = reactive({
+    files: { },
     fromChoices,
     toChoices,
     nodes,
@@ -66,6 +79,16 @@
     hoverNode: null,
     selectedConnectionIndex: null
   })
+
+
+  getFiles([ ...toChoices, ...fromChoices].filter(choice => choice.id).map(choice => choice.id))
+
+  function getFiles(ids) {
+    ids.forEach(async id => {
+        data.files[id] = { downloadUrl: null }
+        data.files[id].downloadUrl = await Agent.download(id).url()
+    })
+  }
 
   const segments = computed(() => {
     return data.connections.map(([fromId, toId]) => ([ getNodeById(fromId).pos, getNodeById(toId).pos ]))
@@ -153,32 +176,30 @@
       height: `${height}px`,
     }"
   >
-
     <!-- RECTS / IMAGES -->
-    <g
-      v-for="n in data.fromChoices"
-      :key="`from-choice-{n}`"
-      :transform="`translate(0, ${(n-1)*(cardHeight+padding)})`"
-    >
-      <rect
-        class="from-choice"
-        :width="cardWidth"
-        :height="cardHeight"
-      />
-      
-    </g>
+ 
+    <component class="from-choice"
+      v-for="c,i in data.fromChoices"
+      :key="`from-choice-{i}`"
+      :is="c.component"
+      :href="data.files[c.id]?.downloadUrl"
+      :transform="`translate(0, ${i*(cardHeight+padding)})`"
+      :width="cardWidth"
+      :height="cardHeight"
+    />
 
-    <g
-      v-for="n in data.toChoices"
-      :key="`to-choice-{n}`"
-      :transform="`translate(${width-cardWidth}, ${(n-1)*(cardHeight+padding)})`"
+    <component class="to-choice"
+      v-for="c,i in data.toChoices"
+      :key="`to-choice-{i}`"
+      :is="c.component"
+      :href="data.files[c.id]?.downloadUrl"
+      :transform="`translate(${width-cardWidth}, ${i*(cardHeight+padding)})`"
+      :width="cardWidth"
+      :height="cardHeight"
     >
-      <rect
-        class="to-choice"
-        :width="cardWidth"
-        :height="cardHeight"
-      />
-    </g>
+      {{ c.textContent ? c.textContent : '' }}
+    </component>
+
     <!-- NODES -->
     <circle
       v-for="n,i in nodes"
@@ -229,10 +250,10 @@
   position: relative;
 }
 .from-choice, .to-choice {
-  fill: grey;
+  fill: transparent;
 }
 svg {
-  background: darkgrey;
+
 }
 svg.pointer:hover {
   cursor: pointer;
