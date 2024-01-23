@@ -114,6 +114,7 @@
     data.workingStartNode = null
   }
   function handleMousemove(e) {
+    data.hoverNode = null
     const pos = getSvgCoordinatesFromEvent(e)
     const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
 
