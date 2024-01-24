@@ -1,6 +1,8 @@
 <script setup>
   import { reactive, computed } from 'vue'
   import { v4 as uuid } from 'uuid'
+  import ImageChoice from './components/ImageChoice.vue'
+  import TextChoice from './components/TextChoice.vue'
   import {
     pDistanceToSegment,
     nodesConnectable,
@@ -28,15 +30,15 @@
 
   const fromChoices = [
     // picure images
-    { component: 'image', id: 'a3855dc0-b99b-11ee-94ca-d301122f8933' },
-    { component: 'image', id: 'afdb2c30-b99b-11ee-94ca-d301122f8933' },
-    { component: 'image', id: 'a63a1d80-b99b-11ee-94ca-d301122f8933' },
+    { type: 'image', id: 'a3855dc0-b99b-11ee-94ca-d301122f8933' },
+    { type: 'image', id: 'afdb2c30-b99b-11ee-94ca-d301122f8933' },
+    { type: 'image', id: 'a63a1d80-b99b-11ee-94ca-d301122f8933' },
   ]
   const toChoices = [
     // text images
-    { component: 'image', id: '53ddd360-b99b-11ee-94ca-d301122f8933' },
-    { component: 'image', id: '690be240-b99b-11ee-94ca-d301122f8933' },
-    { component: 'image', id: '6c4f2660-b99b-11ee-94ca-d301122f8933' },
+    { type: 'text', textContent: 'Shamrock Shake, Choice One but I don\'t know what happens when the text choice gets really long.' },
+    { type: 'text', textContent: 'Big Mac' },
+    { type: 'text', textContent: 'McNuggets' },
   ]  
 
   let nodes = []
@@ -80,20 +82,15 @@
     selectedConnectionIndex: null
   })
 
-
-  getFiles([ ...toChoices, ...fromChoices].filter(choice => choice.id).map(choice => choice.id))
-
-  function getFiles(ids) {
-    ids.forEach(async id => {
-        data.files[id] = { downloadUrl: null }
-        data.files[id].downloadUrl = await Agent.download(id).url()
-    })
-  }
-
   const segments = computed(() => {
     return data.connections.map(([fromId, toId]) => ([ getNodeById(fromId).pos, getNodeById(toId).pos ]))
   })
 
+  function getComponentForChoice(choice) {
+    if (choice.type === 'image') return ImageChoice
+    else if (choice.type === 'text') return TextChoice
+    else return undefined
+  }
   function isCorrect() {
     const every = data.connections.every(c1 => data.answerConnections.some(c2 => sameConnection(c1, c2)))
     const only = data.answerConnections.every(c1 => data.connections.some(c2 => sameConnection(c1, c2)))
@@ -107,7 +104,7 @@
   function handleMousedown(e) {
     const pos = getSvgCoordinatesFromEvent(e)
     const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-    const closeSegmentIndex = getClosestSegmentWitinToleranceIndex(e, tolerance, segments.value)
+    const closeSegmentIndex = getClosestSegmentWitinToleranceIndex(pos, tolerance, segments.value)
     if (node) {
       data.workingStartNode = node
       data.workingLine = {
@@ -180,25 +177,25 @@
  
     <component class="from-choice"
       v-for="c,i in data.fromChoices"
-      :key="`from-choice-{i}`"
-      :is="c.component"
-      :href="data.files[c.id]?.downloadUrl"
-      :transform="`translate(0, ${i*(cardHeight+padding)})`"
+      :key="`from-choice-${i}`"
+      :is="getComponentForChoice(c)"
+      v-bind="c"
+      :x="0"
+      :y="i*(cardHeight+padding)"
       :width="cardWidth"
       :height="cardHeight"
     />
 
     <component class="to-choice"
       v-for="c,i in data.toChoices"
-      :key="`to-choice-{i}`"
-      :is="c.component"
-      :href="data.files[c.id]?.downloadUrl"
-      :transform="`translate(${width-cardWidth}, ${i*(cardHeight+padding)})`"
+      :key="`to-choice-${i}`"
+      :is="getComponentForChoice(c)"
+      v-bind="c"
+      :x="width-cardWidth"
+      :y="i*(cardHeight+padding)"
       :width="cardWidth"
       :height="cardHeight"
-    >
-      {{ c.textContent ? c.textContent : '' }}
-    </component>
+    />
 
     <!-- NODES -->
     <circle

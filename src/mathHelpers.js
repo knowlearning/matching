@@ -89,8 +89,7 @@ export function getSvgCoordinatesFromEvent(e) {
   return { x: svgPoint.x, y: svgPoint.y };
 }
 
-export function getClosestSegmentWitinToleranceIndex(e, tolerance, segments) {
-  const pos = getSvgCoordinatesFromEvent(e)
+export function getClosestSegmentWitinToleranceIndex(pos, tolerance, segments) {
   let closestDistance = Infinity
   return segments.reduce((acc,[A,B], i) => {
     const dist = pDistanceToSegment([pos.x,pos.y], [A.x, A.y], [B.x, B.y])
