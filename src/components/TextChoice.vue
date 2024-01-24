@@ -24,6 +24,10 @@ export default {
 </script>
 
 <style scoped>
+.text-choice {
+  pointer-events: none;
+  user-select: none;
+}
 .text-choice div {
   width: 100%;
   height: 100%;
