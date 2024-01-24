@@ -15,13 +15,6 @@
     sameConnection
   } from './mathHelpers.js'
 
-  const width = 700
-  const height = 500
-  const cardHeight = 150
-  const cardWidth = 200
-  const padding = 10
-  const tolerance = 30
-
   // construct nodes. we need them "raw" for event handling.
   // the positioning of nodes is a convention. For every 'from' 
   // choice we look at the conventioal placemnt of the rect, and put
@@ -41,13 +34,22 @@
     { type: 'text', textContent: 'McNuggets' },
   ]  
 
+
+  const cardHeight = 150
+  const cardWidth = 200
+  const padding = 10
+  const width = 700
+  const l = Math.max(fromChoices.length, toChoices.length)
+  const height = l*cardHeight + (l+1)*padding
+  const tolerance = 30
+
   let nodes = []
   for (let i=0; i<fromChoices.length; i++) {
     nodes.push({
       type: 'from',
       id: uuid(),
       pos: {
-        x: cardWidth,
+        x: padding + cardWidth,
         y: cardHeight/2 + i*(cardHeight + padding)
       }
     })
@@ -57,12 +59,14 @@
       type: 'to',
       id: uuid(),
       pos: {
-        x: width - cardWidth,
+        x: width - cardWidth - padding,
         y: cardHeight/2 + i*(cardHeight + padding)
       }
     })
   }
-  // TODO: answers from customizer!
+
+  const instructions = "Match the MacDonald's Items"
+
   const answerConnections = [
     [ nodes[0].id, nodes[4].id ],
     [ nodes[1].id, nodes[3].id ],
@@ -74,6 +78,7 @@
     fromChoices,
     toChoices,
     nodes,
+    instructions,
     workingStartNode: null,
     workingLine: null, // { to, from }
     connections: [ ], // each connection is [ nodeId, nodeId ]
@@ -158,11 +163,10 @@
 </script>
 
 <template>
-
+  <h3>{{ instructions || '' }}</h3>
   <svg
     :viewBox="`0 0 ${width} ${height}`"
     :class="{
-      'main-wrapper': true,
       pointer: !!data.hoverNode
     }"
     @mousemove="handleMousemove"
@@ -180,8 +184,8 @@
       :key="`from-choice-${i}`"
       :is="getComponentForChoice(c)"
       v-bind="c"
-      :x="0"
-      :y="i*(cardHeight+padding)"
+      :x="padding"
+      :y="i*cardHeight + (i+1)*padding"
       :width="cardWidth"
       :height="cardHeight"
     />
@@ -191,8 +195,8 @@
       :key="`to-choice-${i}`"
       :is="getComponentForChoice(c)"
       v-bind="c"
-      :x="width-cardWidth"
-      :y="i*(cardHeight+padding)"
+      :x="width-cardWidth - padding"
+      :y="i*cardHeight+ (i+1)*padding"
       :width="cardWidth"
       :height="cardHeight"
     />
@@ -243,16 +247,15 @@
 </template>
 
 <style>
-.main-wrapper {
-  position: relative;
-}
-.from-choice, .to-choice {
-  fill: transparent;
-}
 svg {
-
+  background: #eee;
+  position: relative;
+  border-radius: 8px;
 }
 svg.pointer:hover {
   cursor: pointer;
+}
+.from-choice, .to-choice {
+  fill: transparent;
 }
 </style>
