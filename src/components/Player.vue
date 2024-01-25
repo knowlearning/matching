@@ -15,7 +15,7 @@
     sameConnection
   } from '../helpers/mathHelpers.js'
 
-  const props = defineProps(['id']);
+  const props = defineProps(['id'])
   let item = null
   item = await Agent.state(props.id)
 

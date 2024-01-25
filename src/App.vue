@@ -2,6 +2,7 @@
   import { reactive, computed } from 'vue'
   import Player from './components/Player.vue'
   import Customizer from './components/Customizer.vue'
+  import MatchingItemName from './components/MatchingItemName.vue'
   import newItemSchema from './helpers/newItemSchema.js'
   const copy = x => JSON.parse(JSON.stringify(x))
 
@@ -54,7 +55,9 @@
           }"
           @click="data.active = itemId"
         >
-          {{ itemId }}
+          <Suspense>
+            <MatchingItemName :id="itemId" />
+          </Suspense>
         </div>
       </div>
       <div v-else>Loading Content...</div>
