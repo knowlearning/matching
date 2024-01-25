@@ -15,74 +15,95 @@
     sameConnection
   } from './mathHelpers.js'
 
+  // TODO: Item should be Loaded from UUID Scope Reference with check
+  // that it is of correct type, validate schema
+  const item = {
+    name: 'McDonald\'s',
+    instructions: "Match the McDonald's Items",
+    fromChoices: [
+      {
+        type: 'image',
+        imageId: 'a3855dc0-b99b-11ee-94ca-d301122f8933',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8000'
+      },
+      {
+        type: 'image',
+        imageId: 'afdb2c30-b99b-11ee-94ca-d301122f8933',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8001'
+      },
+      {
+        type: 'image',
+        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8002'
+      },
+    ],
+    toChoices: [
+      {
+        type: 'text',
+        textContent: 'Shamrock Shake, Choice One but I don\'t know what happens when the text choice gets really long.',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8003'
+      },
+      {
+        type: 'text',
+        textContent: 'Big Mac',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8004'
+      },
+      {
+        type: 'text',
+        textContent: 'McNuggets',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8005'
+      },
+    ],
+    answerConnections: [
+      [ 'd00b2c30-b99b-11ee-94ca-d301122f8000', 'd00b2c30-b99b-11ee-94ca-d301122f8003' ], // 0 => 0
+      [ 'd00b2c30-b99b-11ee-94ca-d301122f8005', 'd00b2c30-b99b-11ee-94ca-d301122f8001' ],
+      ['d00b2c30-b99b-11ee-94ca-d301122f8002', 'd00b2c30-b99b-11ee-94ca-d301122f8004' ]
+    ]
+  }
+
+
   // construct nodes. we need them "raw" for event handling.
   // the positioning of nodes is a convention. For every 'from' 
   // choice we look at the conventioal placemnt of the rect, and put
   // the node on the middle of the right side.  for the 'to' choices,
   // middse of the left side
 
-  const fromChoices = [
-    // picure images
-    { type: 'image', id: 'a3855dc0-b99b-11ee-94ca-d301122f8933' },
-    { type: 'image', id: 'afdb2c30-b99b-11ee-94ca-d301122f8933' },
-    { type: 'image', id: 'a63a1d80-b99b-11ee-94ca-d301122f8933' },
-  ]
-  const toChoices = [
-    // text images
-    { type: 'text', textContent: 'Shamrock Shake, Choice One but I don\'t know what happens when the text choice gets really long.' },
-    { type: 'text', textContent: 'Big Mac' },
-    { type: 'text', textContent: 'McNuggets' },
-  ]  
-
 
   const cardHeight = 150
   const cardWidth = 200
   const padding = 10
   const width = 700
-  const l = Math.max(fromChoices.length, toChoices.length)
+  const l = Math.max(item.fromChoices.length, item.toChoices.length)
   const height = l*cardHeight + (l+1)*padding
   const tolerance = 30
 
   let nodes = []
-  for (let i=0; i<fromChoices.length; i++) {
-    nodes.push({
+  item.fromChoices.forEach((c,i) => {
+      nodes.push({
       type: 'from',
-      id: uuid(),
+      id: c.nodeId,
       pos: {
         x: padding + cardWidth,
         y: cardHeight/2 + i*(cardHeight + padding)
       }
     })
-  }
-  for (let i=0; i<toChoices.length; i++) {
-    nodes.push({
+  })
+  item.toChoices.forEach((c,i) => {
+      nodes.push({
       type: 'to',
-      id: uuid(),
+      id: c.nodeId,
       pos: {
         x: width - cardWidth - padding,
         y: cardHeight/2 + i*(cardHeight + padding)
       }
     })
-  }
-
-  const instructions = "Match the MacDonald's Items"
-
-  const answerConnections = [
-    [ nodes[0].id, nodes[4].id ],
-    [ nodes[1].id, nodes[3].id ],
-    [ nodes[2].id, nodes[5].id ],
-  ]
+  })
 
   const data = reactive({
-    files: { },
-    fromChoices,
-    toChoices,
     nodes,
-    instructions,
     workingStartNode: null,
     workingLine: null, // { to, from }
     connections: [ ], // each connection is [ nodeId, nodeId ]
-    answerConnections,
     hoverNode: null,
     selectedConnectionIndex: null
   })
@@ -97,8 +118,8 @@
     else return undefined
   }
   function isCorrect() {
-    const every = data.connections.every(c1 => data.answerConnections.some(c2 => sameConnection(c1, c2)))
-    const only = data.answerConnections.every(c1 => data.connections.some(c2 => sameConnection(c1, c2)))
+    const every = data.connections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
+    const only = item.answerConnections.every(c1 => data.connections.some(c2 => sameConnection(c1, c2)))
     return every && only
   }
 
@@ -163,7 +184,7 @@
 </script>
 
 <template>
-  <h3>{{ instructions || '' }}</h3>
+  <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
   <svg
     :viewBox="`0 0 ${width} ${height}`"
     :class="{
@@ -180,7 +201,7 @@
     <!-- RECTS / IMAGES -->
  
     <component class="from-choice"
-      v-for="c,i in data.fromChoices"
+      v-for="c,i in item.fromChoices"
       :key="`from-choice-${i}`"
       :is="getComponentForChoice(c)"
       v-bind="c"
@@ -191,7 +212,7 @@
     />
 
     <component class="to-choice"
-      v-for="c,i in data.toChoices"
+      v-for="c,i in item.toChoices"
       :key="`to-choice-${i}`"
       :is="getComponentForChoice(c)"
       v-bind="c"
@@ -204,7 +225,7 @@
     <!-- NODES -->
     <circle
       v-for="n,i in nodes"
-      :key="`node-${i}`"
+      :key="`node-${n.id}`"
       :cx="n.pos.x"
       :cy="n.pos.y"
       :r="width/140"
