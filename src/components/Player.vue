@@ -13,7 +13,7 @@
     getSvgCoordinatesFromEvent,
     getClosestSegmentWitinToleranceIndex,
     sameConnection
-  } from '../mathHelpers.js'
+  } from '../helpers/mathHelpers.js'
 
   // TODO: Item should be Loaded from UUID Scope Reference with check
   // that it is of correct type, validate schema
@@ -34,23 +34,8 @@
       {
         type: 'image',
         imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8009'
-      },
-            {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8008'
-      },
-            {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8007'
-      },
-            {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8006'
-      },
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8002'
+      }
     ],
     toChoices: [
       {
@@ -67,10 +52,10 @@
         type: 'text',
         textContent: 'McNuggets',
         nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8005'
-      },
+      }
     ],
     answerConnections: [
-      [ 'd00b2c30-b99b-11ee-94ca-d301122f8000', 'd00b2c30-b99b-11ee-94ca-d301122f8003' ], // 0 => 0
+      [ 'd00b2c30-b99b-11ee-94ca-d301122f8000', 'd00b2c30-b99b-11ee-94ca-d301122f8003' ],
       [ 'd00b2c30-b99b-11ee-94ca-d301122f8005', 'd00b2c30-b99b-11ee-94ca-d301122f8001' ],
       ['d00b2c30-b99b-11ee-94ca-d301122f8002', 'd00b2c30-b99b-11ee-94ca-d301122f8004' ]
     ]
@@ -116,7 +101,7 @@
     nodes,
     workingStartNode: null,
     workingLine: null, // { to, from }
-    connections: [ ], // each connection is [ nodeId, nodeId ]
+    connections: [], // each connection is [ nodeId, nodeId ]
     hoverNode: null,
     selectedConnectionIndex: null
   })

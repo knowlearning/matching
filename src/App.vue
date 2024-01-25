@@ -2,6 +2,9 @@
   import { reactive, computed } from 'vue'
   import { v4 as uuid } from 'uuid'
   import Player from './components/Player.vue'
+  import Customizer from './components/Customizer.vue'
+  import newItemSchema from './helpers/newItemSchema.js'
+  const copy = x => JSON.parse(JSON.stringify(x))
 
   const data = reactive({
     mode: 'player', // or 'customizer'
@@ -10,7 +13,9 @@
   })
 
   function addNew() {
-    data.content[uuid()] = {}
+    const id = uuid()
+    data.content[id] = copy(newItemSchema)
+    data.active = id
   }
 
 
@@ -46,7 +51,14 @@
     </div>
 
     <div class="right-col">
-      <Player v-if="data.mode === 'player'" />
+      <Player
+        v-if="data.active && data.mode === 'player'"
+        :id="data.active"
+      />
+      <Customizer
+        v-if="data.active && data.mode === 'customizer'"
+        :id="data.active"
+      />
 
     </div>
 
