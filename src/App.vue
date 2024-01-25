@@ -34,7 +34,22 @@
       {
         type: 'image',
         imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8002'
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8009'
+      },
+            {
+        type: 'image',
+        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8008'
+      },
+            {
+        type: 'image',
+        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8007'
+      },
+            {
+        type: 'image',
+        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
+        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8006'
       },
     ],
     toChoices: [
@@ -61,21 +76,19 @@
     ]
   }
 
-
   // construct nodes. we need them "raw" for event handling.
   // the positioning of nodes is a convention. For every 'from' 
   // choice we look at the conventioal placemnt of the rect, and put
   // the node on the middle of the right side.  for the 'to' choices,
   // middse of the left side
 
-
-  const cardHeight = 150
-  const cardWidth = 200
-  const padding = 10
-  const width = 700
+  const cardHeight = 100
+  const cardWidth = 140
+  const padding = 8
+  const width = 560
   const l = Math.max(item.fromChoices.length, item.toChoices.length)
   const height = l*cardHeight + (l+1)*padding
-  const tolerance = 30
+  const tolerance = 40
 
   let nodes = []
   item.fromChoices.forEach((c,i) => {
@@ -255,15 +268,19 @@
     />
 
   </svg>
-  <button
-    :disabled="data.selectedConnectionIndex === null"
-    @click="removeConnectionByIndex(data.selectedConnectionIndex)"
-  >
-    Remove Connection
-  </button>
-  <button @click="handleSubmit">
-    Submit
-  </button>
+  <div class="button-wrapper">
+    <button class="remove"
+      :disabled="data.selectedConnectionIndex === null"
+      @click="removeConnectionByIndex(data.selectedConnectionIndex)"
+    >
+      Remove Connection
+    </button>
+    <button class="submit"
+      @click="handleSubmit"
+    >
+      Submit
+    </button>
+  </div>
 
 </template>
 
@@ -278,5 +295,17 @@ svg.pointer:hover {
 }
 .from-choice, .to-choice {
   fill: transparent;
+}
+.button-wrapper > button {
+  width: 200px;
+  opacity: 0.8;
+}
+.button-wrapper > button:hover {
+  width: 200px;
+  opacity: 1;
+}
+button.submit {
+  color: white;
+  background: green;
 }
 </style>
