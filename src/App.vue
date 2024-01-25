@@ -59,7 +59,7 @@
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-columns: 3fr 5fr;
+  grid-template-columns: 300px 1fr;
 }
 .left-col, .right-col {
   display: flex;
@@ -91,6 +91,7 @@
   transition: 100ms;
 }
 .left-col .item-choice {
+  font-family: monospace;
   cursor: pointer;
 }
 .left-col .item-choice:hover {
