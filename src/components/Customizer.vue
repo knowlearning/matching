@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, reactive } from 'vue';
+import { reactive } from 'vue';
 const props = defineProps(['id']);
 
 const data = reactive({ content: null })
@@ -14,7 +14,10 @@ Agent
   <div class="customizer">
     <div v-if="data.content">
       <h1>Instructions</h1>
-      <textarea v-model="data.content.instructions" placeholder="Enter matching instructions"></textarea>
+      <textarea
+        v-model="data.content.instructions"
+        placeholder="Enter matching instructions"
+      ></textarea>
     </div>
   </div>
 </template>

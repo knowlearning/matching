@@ -29,6 +29,7 @@
 </script>
 
 <template>
+
   <div class="main-wrapper">
     <div class="left-col">
       <div class="toggle-mode-wrapper">
@@ -60,10 +61,11 @@
     </div>
 
     <div class="right-col">
-      <Player
-        v-if="data.active && data.mode === 'player'"
-        :id="data.active"
-      />
+      <Suspense v-if="data.active && data.mode === 'player'">
+        <Player
+          :id="data.active"
+        />
+      </Suspense>
       <Customizer
         v-if="data.active && data.mode === 'customizer'"
         :key="data.active"
