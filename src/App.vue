@@ -1,311 +1,108 @@
 <script setup>
   import { reactive, computed } from 'vue'
   import { v4 as uuid } from 'uuid'
-  import ImageChoice from './components/ImageChoice.vue'
-  import TextChoice from './components/TextChoice.vue'
-  import {
-    pDistanceToSegment,
-    nodesConnectable,
-    nodesConnected,
-    getClosestNode,
-    getClosestNodeWithinTolerance,
-    d,
-    getSvgCoordinatesFromEvent,
-    getClosestSegmentWitinToleranceIndex,
-    sameConnection
-  } from './mathHelpers.js'
-
-  // TODO: Item should be Loaded from UUID Scope Reference with check
-  // that it is of correct type, validate schema
-  const item = {
-    name: 'McDonald\'s',
-    instructions: "Match the McDonald's Items",
-    fromChoices: [
-      {
-        type: 'image',
-        imageId: 'a3855dc0-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8000'
-      },
-      {
-        type: 'image',
-        imageId: 'afdb2c30-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8001'
-      },
-      {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8009'
-      },
-            {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8008'
-      },
-            {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8007'
-      },
-            {
-        type: 'image',
-        imageId: 'a63a1d80-b99b-11ee-94ca-d301122f8933',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8006'
-      },
-    ],
-    toChoices: [
-      {
-        type: 'text',
-        textContent: 'Shamrock Shake, Choice One but I don\'t know what happens when the text choice gets really long.',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8003'
-      },
-      {
-        type: 'text',
-        textContent: 'Big Mac',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8004'
-      },
-      {
-        type: 'text',
-        textContent: 'McNuggets',
-        nodeId: 'd00b2c30-b99b-11ee-94ca-d301122f8005'
-      },
-    ],
-    answerConnections: [
-      [ 'd00b2c30-b99b-11ee-94ca-d301122f8000', 'd00b2c30-b99b-11ee-94ca-d301122f8003' ], // 0 => 0
-      [ 'd00b2c30-b99b-11ee-94ca-d301122f8005', 'd00b2c30-b99b-11ee-94ca-d301122f8001' ],
-      ['d00b2c30-b99b-11ee-94ca-d301122f8002', 'd00b2c30-b99b-11ee-94ca-d301122f8004' ]
-    ]
-  }
-
-  // construct nodes. we need them "raw" for event handling.
-  // the positioning of nodes is a convention. For every 'from' 
-  // choice we look at the conventioal placemnt of the rect, and put
-  // the node on the middle of the right side.  for the 'to' choices,
-  // middse of the left side
-
-  const cardHeight = 100
-  const cardWidth = 140
-  const padding = 8
-  const width = 560
-  const l = Math.max(item.fromChoices.length, item.toChoices.length)
-  const height = l*cardHeight + (l+1)*padding
-  const tolerance = 40
-
-  let nodes = []
-  item.fromChoices.forEach((c,i) => {
-      nodes.push({
-      type: 'from',
-      id: c.nodeId,
-      pos: {
-        x: padding + cardWidth,
-        y: cardHeight/2 + i*(cardHeight + padding)
-      }
-    })
-  })
-  item.toChoices.forEach((c,i) => {
-      nodes.push({
-      type: 'to',
-      id: c.nodeId,
-      pos: {
-        x: width - cardWidth - padding,
-        y: cardHeight/2 + i*(cardHeight + padding)
-      }
-    })
-  })
+  import Player from './components/Player.vue'
 
   const data = reactive({
-    nodes,
-    workingStartNode: null,
-    workingLine: null, // { to, from }
-    connections: [ ], // each connection is [ nodeId, nodeId ]
-    hoverNode: null,
-    selectedConnectionIndex: null
+    mode: 'player', // or 'customizer'
+    content: {},
+    active: null
   })
 
-  const segments = computed(() => {
-    return data.connections.map(([fromId, toId]) => ([ getNodeById(fromId).pos, getNodeById(toId).pos ]))
-  })
-
-  function getComponentForChoice(choice) {
-    if (choice.type === 'image') return ImageChoice
-    else if (choice.type === 'text') return TextChoice
-    else return undefined
-  }
-  function isCorrect() {
-    const every = data.connections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
-    const only = item.answerConnections.every(c1 => data.connections.some(c2 => sameConnection(c1, c2)))
-    return every && only
+  function addNew() {
+    data.content[uuid()] = {}
   }
 
-  function handleSubmit() {
-    window.alert( isCorrect() ? 'woo' : 'boo' )
-  }
-
-  function handleMousedown(e) {
-    const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-    const closeSegmentIndex = getClosestSegmentWitinToleranceIndex(pos, tolerance, segments.value)
-    if (node) {
-      data.workingStartNode = node
-      data.workingLine = {
-        from: node.pos,
-        to: pos
-      }
-    } else if (closeSegmentIndex !== null) {
-      data.selectedConnectionIndex = closeSegmentIndex  
-    } else { // closeSegmentIndex is null
-      data.selectedConnectionIndex = null
-    }
-  }
-  function removeConnectionByIndex(i) {
-    data.connections.splice(i,1)
-    data.selectedConnectionIndex = null
-  }
-  function handleMouseup(e) {
-    if (!data.workingLine) return // ensure in "draw" mode
-
-    const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-    // if node and node is distinct from start, snap to it
-    if (node && nodesConnectable(node, data.workingStartNode, data.connections)) {
-      data.connections.push([ node.id, data.workingStartNode.id ])
-    }
-    data.workingLine = null
-    data.workingStartNode = null
-  }
-  function handleMousemove(e) {
-    data.hoverNode = null
-    const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-
-    if (data.workingLine) {
-      if (node && data.workingStartNode && nodesConnectable(node, data.workingStartNode, data.connections)) { // if there's a target node
-        data.workingLine.to = node.pos
-        data.hoverNode = node
-      }
-      else data.workingLine.to = pos
-    } else if (node) { // preview mode
-      // make node blue
-      data.hoverNode = node
-    }
-  }
-
-  function getNodeById(id) {
-    return data.nodes.find(n => n.id === id)
-  }
 
 
 </script>
 
 <template>
-  <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
-  <svg
-    :viewBox="`0 0 ${width} ${height}`"
-    :class="{
-      pointer: !!data.hoverNode
-    }"
-    @mousemove="handleMousemove"
-    @mousedown="handleMousedown"
-    @mouseup="handleMouseup"
-    :style="{
-      width: `${width}px`,
-      height: `${height}px`,
-    }"
-  >
-    <!-- RECTS / IMAGES -->
- 
-    <component class="from-choice"
-      v-for="c,i in item.fromChoices"
-      :key="`from-choice-${i}`"
-      :is="getComponentForChoice(c)"
-      v-bind="c"
-      :x="padding"
-      :y="i*cardHeight + (i+1)*padding"
-      :width="cardWidth"
-      :height="cardHeight"
-    />
+  <div class="main-wrapper">
+    <div class="left-col">
+      <div class="toggle-mode-wrapper">
+        <div
+          :class="data.mode==='player' ? 'active' : ''"
+          @click="data.mode = 'player'"
+        >Player</div>
+        <div
+          :class="data.mode==='customizer' ? 'active' : ''"
+          @click="data.mode = 'customizer'"
+        >Customizer</div>
+      </div>
 
-    <component class="to-choice"
-      v-for="c,i in item.toChoices"
-      :key="`to-choice-${i}`"
-      :is="getComponentForChoice(c)"
-      v-bind="c"
-      :x="width-cardWidth - padding"
-      :y="i*cardHeight+ (i+1)*padding"
-      :width="cardWidth"
-      :height="cardHeight"
-    />
+      <button class="new" @click="addNew">+ Add New</button>
+      <div
+        v-for="item, itemId in data.content"
+        :key="itemId"
+        :class="{
+          'item-choice' : true,
+          'active' : itemId === data.active
+        }"
+        @click="data.active = itemId"
+      >
+        {{ itemId }}
+      </div>
+    </div>
 
-    <!-- NODES -->
-    <circle
-      v-for="n,i in nodes"
-      :key="`node-${n.id}`"
-      :cx="n.pos.x"
-      :cy="n.pos.y"
-      :r="width/140"
-      :fill="data?.hoverNode?.id === n.id ? 'blue' : 'black' "
-    />
+    <div class="right-col">
+      <Player v-if="data.mode === 'player'" />
 
-    <!-- Fixed Connection -->
-    <line
-      v-for="[A, B],i in segments"
-      :key="`connection-${i}`"
-      :x1="A.x"
-      :y1="A.y"
-      :x2="B.x"
-      :y2="B.y"
-      :stroke="data.selectedConnectionIndex === i ? 'red' : 'black'"
-      :stroke-width="width/220"
-    />
+    </div>
 
-    <!-- working connection -->
-    <line v-if="data.workingLine?.from"
-      :x1="data.workingLine.from.x"
-      :y1="data.workingLine.from.y"
-      :x2="data.workingLine.to.x"
-      :y2="data.workingLine.to.y"
-      stroke="grey"
-      :stroke-width="width/220"
-    />
-
-  </svg>
-  <div class="button-wrapper">
-    <button class="remove"
-      :disabled="data.selectedConnectionIndex === null"
-      @click="removeConnectionByIndex(data.selectedConnectionIndex)"
-    >
-      Remove Connection
-    </button>
-    <button class="submit"
-      @click="handleSubmit"
-    >
-      Submit
-    </button>
   </div>
 
 </template>
 
-<style>
-svg {
-  background: #eee;
-  position: relative;
-  border-radius: 8px;
+<style scoped>
+.main-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 3fr 5fr;
 }
-svg.pointer:hover {
+.left-col, .right-col {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+.left-col {
+  text-align: left;
+  border-right: 1px solid slategray;
+}
+.left-col .toggle-mode-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+.left-col .toggle-mode-wrapper div {
+  cursor: pointer;
+  font-weight: lighter;
+}
+.left-col .toggle-mode-wrapper div.active {
+  font-weight: bolder;
+}
+.left-col button.new {
+  background: green;
+  color: white;
+  opacity: 0.7;
+}
+.left-col button.new:hover {
+  opacity: 1;
+  transition: 100ms;
+}
+.left-col .item-choice {
   cursor: pointer;
 }
-.from-choice, .to-choice {
-  fill: transparent;
+.left-col .item-choice:hover {
+  background: lightyellow;
 }
-.button-wrapper > button {
-  width: 200px;
-  opacity: 0.8;
+.left-col .item-choice.active {
+  background: yellow;
 }
-.button-wrapper > button:hover {
-  width: 200px;
-  opacity: 1;
-}
-button.submit {
-  color: white;
-  background: green;
+
+.right-col {
+  display: flex;
+  justify-content: space-around;
+
 }
 </style>
