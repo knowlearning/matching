@@ -21,12 +21,9 @@
       active_type: 'application/json;type=matching',
       active: copy(newItemSchema)
     })
-    data.content[id] = copy(newItemSchema)
+    data.content[id] = { added: Date.now() }
     data.active = id
   }
-
-
-
 </script>
 
 <template>
