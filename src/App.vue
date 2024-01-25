@@ -1,6 +1,5 @@
 <script setup>
   import { reactive, computed } from 'vue'
-  import { v4 as uuid } from 'uuid'
   import Player from './components/Player.vue'
   import Customizer from './components/Customizer.vue'
   import newItemSchema from './helpers/newItemSchema.js'
@@ -8,12 +7,19 @@
 
   const data = reactive({
     mode: 'player', // or 'customizer'
-    content: {},
+    content: null,
     active: null
   })
 
-  function addNew() {
-    const id = uuid()
+  Agent
+    .state('content')
+    .then(state => data.content = state)
+
+  async function addNew() {
+    const id = await Agent.create({
+      active_type: 'application/json;type=matching',
+      active: copy(newItemSchema)
+    })
     data.content[id] = copy(newItemSchema)
     data.active = id
   }
@@ -37,17 +43,20 @@
       </div>
 
       <button class="new" @click="addNew">+ Add New</button>
-      <div
-        v-for="item, itemId in data.content"
-        :key="itemId"
-        :class="{
-          'item-choice' : true,
-          'active' : itemId === data.active
-        }"
-        @click="data.active = itemId"
-      >
-        {{ itemId }}
+      <div v-if="data.content">
+        <div
+          v-for="item, itemId in data.content"
+          :key="itemId"
+          :class="{
+            'item-choice' : true,
+            'active' : itemId === data.active
+          }"
+          @click="data.active = itemId"
+        >
+          {{ itemId }}
+        </div>
       </div>
+      <div v-else>Loading Content...</div>
     </div>
 
     <div class="right-col">
@@ -57,6 +66,7 @@
       />
       <Customizer
         v-if="data.active && data.mode === 'customizer'"
+        :key="data.active"
         :id="data.active"
       />
 
