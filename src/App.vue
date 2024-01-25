@@ -21,6 +21,7 @@
       active: copy(newItemSchema)
     })
     data.content[id] = copy(newItemSchema)
+    data.active = id
   }
 
 
