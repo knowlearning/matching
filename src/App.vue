@@ -3,7 +3,7 @@
   import Player from './components/Player.vue'
   import Customizer from './components/Customizer.vue'
   import MatchingItemName from './components/MatchingItemName.vue'
-  import newItemSchema from './helpers/newItemSchema.js'
+  import newItemSchema from './helpers/McdonaldsItemForReference.js'
   const copy = x => JSON.parse(JSON.stringify(x))
 
   const data = reactive({
@@ -61,16 +61,21 @@
     </div>
 
     <div class="right-col">
-      <Suspense v-if="data.active && data.mode === 'player'">
+      <Suspense
+        v-if="data.active && data.mode === 'player'"
+        :key="data.active"
+      >
         <Player
           :id="data.active"
         />
       </Suspense>
-      <Customizer
-        v-if="data.active && data.mode === 'customizer'"
-        :key="data.active"
-        :id="data.active"
-      />
+      <Suspense>
+        <Customizer
+          v-if="data.active && data.mode === 'customizer'"
+          :key="data.active"
+          :id="data.active"
+        />
+      </Suspense>
 
     </div>
 

@@ -3,27 +3,30 @@ import { reactive } from 'vue';
 const props = defineProps(['id']);
 
 const data = reactive({ content: null })
-
-Agent
-  .state(props.id)
-  .then(state => data.content = state)
+const state = await Agent.state(props.id)
+data.content = state
 
 </script>
 
 <template>
   <div class="customizer">
-    <div v-if="data.content">
-      <h1>Instructions</h1>
-      <textarea
-        v-model="data.content.instructions"
-        placeholder="Enter matching instructions"
-      ></textarea>
-    </div>
+    <label for="instruction">Instructions:</label>
+    <textarea
+      id="instructions"
+      v-model="data.content.instructions"
+      placeholder="Enter matching instructions"
+    />
+    <label for="item-name">Item Name:</label>
+    <textarea
+      id="item-name"
+      v-model="data.content.name"
+    />
   </div>
 </template>
 
 <style scoped>
 .customizer {
-  
+  display: flex;
+  flex-direction: column;
 }
 </style>
