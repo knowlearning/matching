@@ -1,6 +1,5 @@
 <template>
   <div class="player">
-    {{ data.studentConnections }}
     <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
     <MatchSvg
       :toChoices="item.toChoices"
