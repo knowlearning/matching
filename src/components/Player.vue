@@ -37,27 +37,12 @@
 
 
 <style scoped>
-svg {
-  background: #eee;
-  position: relative;
-  border-radius: 8px;
-}
-svg.pointer:hover {
-  cursor: pointer;
-}
-.from-choice, .to-choice {
-  fill: transparent;
-}
-.button-wrapper > button {
-  width: 200px;
-  opacity: 0.8;
-}
-.button-wrapper > button:hover {
-  width: 200px;
-  opacity: 1;
-}
 button.submit {
   color: white;
   background: green;
+  opacity: 0.7;
+}
+button.submit:hover {
+  opacity: 1;
 }
 </style>

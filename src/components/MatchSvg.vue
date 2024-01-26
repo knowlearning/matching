@@ -145,7 +145,7 @@ export default {
 	},
 	data() {
 		return {
-			workingLine: null, // { to, from }
+			workingLine: null, // { toPos, fromPos } 
 			workingStartNode: null, 
 			hoverNode: null,
     	selectedConnectionIndex: null
@@ -251,3 +251,31 @@ export default {
 }
 
 </script>
+
+
+<style scoped>
+.match-svg {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+svg {
+  background: #eee;
+  position: relative;
+  border-radius: 8px;
+}
+svg.pointer:hover {
+  cursor: pointer;
+}
+.from-choice, .to-choice {
+  fill: transparent;
+}
+button.remove:not([disabled]) {
+	color:white;
+	background: red;
+	opacity: 0.6;
+}
+button.remove:not([disabled]):hover {
+	opacity: 0.8;
+}
+</style>
