@@ -1,6 +1,7 @@
 <script setup>
-import { reactive } from 'vue';
-const props = defineProps(['id']);
+import { reactive } from 'vue'
+import MatchSvg from './MatchSvg.vue'
+const props = defineProps(['id'])
 
 const data = reactive({ content: null })
 const state = await Agent.state(props.id)
@@ -20,6 +21,12 @@ data.content = state
     <textarea
       id="item-name"
       v-model="data.content.name"
+    />
+    <MatchSvg
+      :toChoices="data.content.toChoices"
+      :fromChoices="data.content.fromChoices"
+      :connections="data.content.answerConnections"
+      @updateConnections="data.content.answerConnections = $event"
     />
   </div>
 </template>
