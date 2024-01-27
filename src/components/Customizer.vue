@@ -30,26 +30,27 @@ function attemptAddChoice(side) {
     })
   }
 }
-function removeChoice(side) {
-  let ref
-  if (side === 'left') ref = data.content.fromChoices
-  else ref = data.content.toChoices
+function removeChoice(nodeId, side) {
+  console.log(nodeId, side)
 
-  const res = window.prompt('enter index of item to remove from left')
-  const int = parseInt(res)
-  if (typeof int === 'number' && int < ref.length) {
-    // remove any connections to that choice
-    const nodeId = ref[int].nodeId
-    data.content.answerConnections = copy(data.content.answerConnections)
-      .filter(([to,from]) => to !== nodeId && from !== nodeId)
+  // WORKS, BUT NEEDS DESIGN IMPLEMENTATION
+  
+  // let ref
+  // if (side === 'left') ref = data.content.fromChoices
+  // else ref = data.content.toChoices
 
-    const newChoices = copy(ref)
-    newChoices.splice(int,1)
-    if (side === 'left') data.content.fromChoices = newChoices
-    else data.content.toChoices = newChoices
-  } else {
-    alert(`could not resolve ${res} to valid index`)
-  }
+  // const i = ref.findIndex(choice => choice.nodeId === nodeId)
+  // if (i === -1) return
+
+  // // remove any connections to that choice
+  // data.content.answerConnections = copy(data.content.answerConnections)
+  //   .filter(([to,from]) => to !== nodeId && from !== nodeId)
+
+  // const newChoices = copy(ref)
+  // newChoices.splice(i,1)
+  // if (side === 'left') data.content.fromChoices = newChoices
+  // else data.content.toChoices = newChoices
+
 }
 
 </script>
@@ -72,11 +73,10 @@ function removeChoice(side) {
       :fromChoices="data.content.fromChoices"
       :connections="data.content.answerConnections"
       @updateConnections="data.content.answerConnections = copy($event)"
+      @handleChoiceClick="removeChoice"
     />
     <button @click="attemptAddChoice('left')">Add Left</button>
-    <button @click="removeChoice('left')">Remove Left</button>
     <button @click="attemptAddChoice('right')">Add Right</button>
-    <button @click="removeChoice('right')">Remove Right</button>
   </div>
 </template>
 

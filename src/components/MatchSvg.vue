@@ -19,6 +19,7 @@
         v-for="c,i in fromChoices"
         :key="`from-choice-${i}`"
         :is="getComponentForChoice(c)"
+        @click="$emit('handleChoiceClick', c.nodeId, 'left')"
         v-bind="c"
         :x="padding"
         :y="i*cardHeight + (i+1)*padding"
@@ -30,6 +31,7 @@
         v-for="c,i in toChoices"
         :key="`to-choice-${i}`"
         :is="getComponentForChoice(c)"
+        @click="$emit('handleChoiceClick', c.nodeId, 'right')"
         v-bind="c"
         :x="width-cardWidth - padding"
         :y="i*cardHeight+ (i+1)*padding"
@@ -245,8 +247,7 @@ export default {
 		},
 		getNodeById(id) {
 			return this.nodes.find(n => n.id === id)
-		},
-
+		}
 	}, // end methods
 }
 
