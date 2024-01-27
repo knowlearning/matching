@@ -30,27 +30,13 @@ function attemptAddChoice(side) {
     })
   }
 }
-function removeChoice(nodeId, side) {
-  console.log(nodeId, side)
-
-  // WORKS, BUT NEEDS DESIGN IMPLEMENTATION
-  
-  // let ref
-  // if (side === 'left') ref = data.content.fromChoices
-  // else ref = data.content.toChoices
-
-  // const i = ref.findIndex(choice => choice.nodeId === nodeId)
-  // if (i === -1) return
-
-  // // remove any connections to that choice
-  // data.content.answerConnections = copy(data.content.answerConnections)
-  //   .filter(([to,from]) => to !== nodeId && from !== nodeId)
-
-  // const newChoices = copy(ref)
-  // newChoices.splice(i,1)
-  // if (side === 'left') data.content.fromChoices = newChoices
-  // else data.content.toChoices = newChoices
-
+function removeChoice({ nodeId }) {
+  data.content.fromChoices = copy(data.content.fromChoices)
+    .filter(c => c.nodeId !== nodeId)
+  data.content.toChoices = copy(data.content.toChoices)
+    .filter(c => c.nodeId !== nodeId)
+  data.content.answerConnections = copy(data.content.answerConnections)
+    .filter(([to,from]) => to !== nodeId && from !== nodeId)
 }
 
 </script>
@@ -72,8 +58,9 @@ function removeChoice(nodeId, side) {
       :toChoices="data.content.toChoices"
       :fromChoices="data.content.fromChoices"
       :connections="data.content.answerConnections"
+      editMode
       @updateConnections="data.content.answerConnections = copy($event)"
-      @handleChoiceClick="removeChoice"
+      @removeChoice="removeChoice"
     />
     <button @click="attemptAddChoice('left')">Add Left</button>
     <button @click="attemptAddChoice('right')">Add Right</button>

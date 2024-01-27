@@ -14,30 +14,31 @@
       }"
     >
       <!-- RECTS / IMAGES -->
-   
-      <component class="from-choice"
-        v-for="c,i in fromChoices"
-        :key="`from-choice-${i}`"
-        :is="getComponentForChoice(c)"
-        @click="$emit('handleChoiceClick', c.nodeId, 'left')"
-        v-bind="c"
-        :x="padding"
-        :y="i*cardHeight + (i+1)*padding"
+      <svg 
+  			v-for="c,i in [ ...fromChoices, ...toChoices ]"
+   			:key="`choice-${i}`"
+   			:x="xPosForJoinedChoiceIndex(i)"
+        :y="yPosForJoinedChoiceIndex(i)"
         :width="cardWidth"
         :height="cardHeight"
-      />
-
-      <component class="to-choice"
-        v-for="c,i in toChoices"
-        :key="`to-choice-${i}`"
-        :is="getComponentForChoice(c)"
-        @click="$emit('handleChoiceClick', c.nodeId, 'right')"
-        v-bind="c"
-        :x="width-cardWidth - padding"
-        :y="i*cardHeight+ (i+1)*padding"
-        :width="cardWidth"
-        :height="cardHeight"
-      />
+	    >
+	      <component
+	        :is="getComponentForChoice(c)"
+	        @click="$emit('handleChoiceClick', c.nodeId, 'right')"
+	        v-bind="c"
+	        width="100%"
+	        height="100%"
+	        :pointer-events="editMode ? 'none' : 'all'"
+	      />
+	      <!-- CIRCLE BELOW PLACHOLDER FOR EDIT LAYOVER -->
+	      <circle v-if="editMode"
+	      	@click="$emit('removeChoice', c)"
+	      	width="100%"
+	      	height="100%"
+	      	fill="red"
+	      	r="50"
+	      />
+	    </svg>
 
       <!-- NODES -->
       <circle
@@ -102,6 +103,11 @@ export default {
 	name: 'match-svg',
 	components: { ImageChoice, TextChoice },
 	props: {
+		editMode: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		cardHeight: {
 			type: Number,
 			required: false,
@@ -247,7 +253,16 @@ export default {
 		},
 		getNodeById(id) {
 			return this.nodes.find(n => n.id === id)
-		}
+		},
+		xPosForJoinedChoiceIndex(i) {
+			return (i<this.fromChoices.length) ?
+				this.padding :  this.width - this.cardWidth - this.padding
+		},
+		yPosForJoinedChoiceIndex(i) {
+			if (i >= this.fromChoices.length) i = i - this.fromChoices.length
+			return i*this.cardHeight + (i+1)*this.padding
+			
+		},
 	}, // end methods
 }
 
