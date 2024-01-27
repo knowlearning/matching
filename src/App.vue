@@ -24,6 +24,12 @@
     data.content[id] = { added: Date.now() }
     data.active = id
   }
+
+  function componentForMode() {
+    if (data.mode === 'player') return Player
+    else if (data.mode === 'customizer') return Customizer
+    else return undefined
+  }
 </script>
 
 <template>
@@ -61,22 +67,12 @@
     </div>
 
     <div class="right-col">
-      <Suspense
-        v-if="data.active && data.mode === 'player'"
-        :key="data.active"
-      >
-        <Player
+      <Suspense v-if="data.active" :key="data.active">
+        <component
+          :is="componentForMode()"
           :id="data.active"
         />
       </Suspense>
-      <Suspense>
-        <Customizer
-          v-if="data.active && data.mode === 'customizer'"
-          :key="data.active"
-          :id="data.active"
-        />
-      </Suspense>
-
     </div>
 
   </div>
