@@ -3,7 +3,7 @@
   import Player from './components/Player.vue'
   import Customizer from './components/Customizer.vue'
   import MatchingItemName from './components/MatchingItemName.vue'
-  import newItemSchema from './helpers/McdonaldsItemForReference.js'
+  import newItemSchema from './helpers/newItemSchema.js'
   const copy = x => JSON.parse(JSON.stringify(x))
 
   const data = reactive({
@@ -23,6 +23,7 @@
     })
     data.content[id] = { added: Date.now() }
     data.active = id
+    data.mode = 'customizer'
   }
 
   function componentForMode() {

@@ -223,7 +223,7 @@ export default {
 			// if node and node is distinct from start, snap to it
 			if (node && nodesConnectable(node, this.workingStartNode, this.connections)) {
 				const newConnection = [ node.id, this.workingStartNode.id ]
-				this.$emit('updateConnections', [ ...copy(this.connections), newConnection ])
+				this.$emit('updateConnections', [ ...this.connections, newConnection ])
 			}
 			this.workingLine = null
 			this.workingStartNode = null
