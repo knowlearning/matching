@@ -25,6 +25,11 @@
     data.active = id
     data.mode = 'customizer'
   }
+  function removeContent(id) {
+    if (!confirm(`Are you sure you want remove item?`)) return
+    if (data.active === id) data.active = null
+    delete data.content[id]
+  }
 
   function componentForMode() {
     if (data.mode === 'player') return Player
@@ -62,6 +67,10 @@
           <Suspense>
             <MatchingItemName :id="itemId" />
           </Suspense>
+          <span
+            class="remove-symbol"
+            @click="removeContent(itemId)"
+          >&#x2715;</span>
         </div>
       </div>
       <div v-else>Loading Content...</div>
@@ -96,6 +105,7 @@
   text-align: left;
   border-right: 1px solid slategray;
 }
+
 .left-col .toggle-mode-wrapper {
   display: flex;
   justify-content: space-around;
@@ -119,6 +129,9 @@
 .left-col .item-choice {
   font-family: monospace;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .left-col .item-choice:hover {
   background: lightyellow;
@@ -126,10 +139,20 @@
 .left-col .item-choice.active {
   background: yellow;
 }
+.left-col .item-choice .remove-symbol {
+  font-size: 1rem;
+  font-weight: bolder;
+  padding-right: 4px;
+  color: red;
+  cursor: pointer ;
+  opacity: 0.2;
+}
+.left-col .item-choice .remove-symbol:hover {
+  opacity: 1;
+}
 
 .right-col {
-  display: flex;
-  justify-content: space-around;
+
 
 }
 </style>
