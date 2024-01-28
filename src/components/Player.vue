@@ -1,255 +1,48 @@
+<template>
+  <div class="player">
+    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <MatchSvg
+      :toChoices="item.toChoices"
+      :fromChoices="item.fromChoices"
+      :connections="data.studentConnections"
+      @updateConnections="data.studentConnections = $event"
+    />
+    <button class="submit" @click="handleSubmit"> Submit </button>
+  </div>
+</template>
+
 <script setup>
-  import { reactive, computed } from 'vue'
-  import { v4 as uuid } from 'uuid'
-  import ImageChoice from './ImageChoice.vue'
-  import TextChoice from './TextChoice.vue'
-  import {
-    pDistanceToSegment,
-    nodesConnectable,
-    nodesConnected,
-    getClosestNode,
-    getClosestNodeWithinTolerance,
-    d,
-    getSvgCoordinatesFromEvent,
-    getClosestSegmentWitinToleranceIndex,
-    sameConnection
-  } from '../helpers/mathHelpers.js'
+  import { reactive } from 'vue'
+  import MatchSvg from './MatchSvg/index.vue'
+  import { sameConnection } from '../helpers/mathHelpers.js'
 
   const props = defineProps(['id'])
   let item = null
-  item = await Agent.state(props.id)
-
-  // construct nodes. we need them "raw" for event handling.
-  // the positioning of nodes is a convention. For every 'from' 
-  // choice we look at the conventioal placemnt of the rect, and put
-  // the node on the middle of the right side.  for the 'to' choices,
-  // middse of the left side
-
-  const cardHeight = 100
-  const cardWidth = 140
-  const padding = 8
-  const width = 560
-  const l = Math.max(item.fromChoices.length, item.toChoices.length)
-  const height = l*cardHeight + (l+1)*padding
-  const tolerance = 40
-
-  let nodes = []
-  item.fromChoices.forEach((c,i) => {
-      nodes.push({
-      type: 'from',
-      id: c.nodeId,
-      pos: {
-        x: padding + cardWidth,
-        y: cardHeight/2 + i*(cardHeight + padding)
-      }
-    })
-  })
-  item.toChoices.forEach((c,i) => {
-      nodes.push({
-      type: 'to',
-      id: c.nodeId,
-      pos: {
-        x: width - cardWidth - padding,
-        y: cardHeight/2 + i*(cardHeight + padding)
-      }
-    })
-  })
+  item = await Agent.state(props.id)  
 
   const data = reactive({
-    nodes,
-    workingStartNode: null,
-    workingLine: null, // { to, from }
-    connections: [], // each connection is [ nodeId, nodeId ]
-    hoverNode: null,
-    selectedConnectionIndex: null
+    studentConnections: [], // each connection is [ nodeId, nodeId ]
   })
-
-  const segments = computed(() => {
-    return data.connections.map(([fromId, toId]) => ([ getNodeById(fromId).pos, getNodeById(toId).pos ]))
-  })
-
-  function getComponentForChoice(choice) {
-    if (choice.type === 'image') return ImageChoice
-    else if (choice.type === 'text') return TextChoice
-    else return undefined
-  }
-  function isCorrect() {
-    const every = data.connections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
-    const only = item.answerConnections.every(c1 => data.connections.some(c2 => sameConnection(c1, c2)))
-    return every && only
-  }
 
   function handleSubmit() {
     window.alert( isCorrect() ? 'woo' : 'boo' )
   }
 
-  function handleMousedown(e) {
-    const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-    const closeSegmentIndex = getClosestSegmentWitinToleranceIndex(pos, tolerance, segments.value)
-    if (node) {
-      data.workingStartNode = node
-      data.workingLine = {
-        from: node.pos,
-        to: pos
-      }
-    } else if (closeSegmentIndex !== null) {
-      data.selectedConnectionIndex = closeSegmentIndex  
-    } else { // closeSegmentIndex is null
-      data.selectedConnectionIndex = null
-    }
+  function isCorrect() {
+    const every = data.studentConnections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
+    const only = item.answerConnections.every(c1 => data.studentConnections.some(c2 => sameConnection(c1, c2)))
+    return every && only
   }
-  function removeConnectionByIndex(i) {
-    data.connections.splice(i,1)
-    data.selectedConnectionIndex = null
-  }
-  function handleMouseup(e) {
-    if (!data.workingLine) return // ensure in "draw" mode
-
-    const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-    // if node and node is distinct from start, snap to it
-    if (node && nodesConnectable(node, data.workingStartNode, data.connections)) {
-      data.connections.push([ node.id, data.workingStartNode.id ])
-    }
-    data.workingLine = null
-    data.workingStartNode = null
-  }
-  function handleMousemove(e) {
-    data.hoverNode = null
-    const pos = getSvgCoordinatesFromEvent(e)
-    const node = getClosestNodeWithinTolerance(pos, tolerance, data.nodes)
-
-    if (data.workingLine) {
-      if (node && data.workingStartNode && nodesConnectable(node, data.workingStartNode, data.connections)) { // if there's a target node
-        data.workingLine.to = node.pos
-        data.hoverNode = node
-      }
-      else data.workingLine.to = pos
-    } else if (node) { // preview mode
-      // make node blue
-      data.hoverNode = node
-    }
-  }
-
-  function getNodeById(id) {
-    return data.nodes.find(n => n.id === id)
-  }
-
-
 </script>
 
-<template>
-  <div class="player">
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
-    <svg
-      :viewBox="`0 0 ${width} ${height}`"
-      :class="{
-        pointer: !!data.hoverNode
-      }"
-      @mousemove="handleMousemove"
-      @mousedown="handleMousedown"
-      @mouseup="handleMouseup"
-      :style="{
-        width: `${width}px`,
-        height: `${height}px`,
-      }"
-    >
-      <!-- RECTS / IMAGES -->
-   
-      <component class="from-choice"
-        v-for="c,i in item.fromChoices"
-        :key="`from-choice-${i}`"
-        :is="getComponentForChoice(c)"
-        v-bind="c"
-        :x="padding"
-        :y="i*cardHeight + (i+1)*padding"
-        :width="cardWidth"
-        :height="cardHeight"
-      />
-
-      <component class="to-choice"
-        v-for="c,i in item.toChoices"
-        :key="`to-choice-${i}`"
-        :is="getComponentForChoice(c)"
-        v-bind="c"
-        :x="width-cardWidth - padding"
-        :y="i*cardHeight+ (i+1)*padding"
-        :width="cardWidth"
-        :height="cardHeight"
-      />
-
-      <!-- NODES -->
-      <circle
-        v-for="n,i in nodes"
-        :key="`node-${n.id}`"
-        :cx="n.pos.x"
-        :cy="n.pos.y"
-        :r="width/140"
-        :fill="data?.hoverNode?.id === n.id ? 'blue' : 'black' "
-      />
-
-      <!-- Fixed Connection -->
-      <line
-        v-for="[A, B],i in segments"
-        :key="`connection-${i}`"
-        :x1="A.x"
-        :y1="A.y"
-        :x2="B.x"
-        :y2="B.y"
-        :stroke="data.selectedConnectionIndex === i ? 'red' : 'black'"
-        :stroke-width="width/220"
-      />
-
-      <!-- working connection -->
-      <line v-if="data.workingLine?.from"
-        :x1="data.workingLine.from.x"
-        :y1="data.workingLine.from.y"
-        :x2="data.workingLine.to.x"
-        :y2="data.workingLine.to.y"
-        stroke="grey"
-        :stroke-width="width/220"
-      />
-
-    </svg>
-    <div class="button-wrapper">
-      <button class="remove"
-        :disabled="data.selectedConnectionIndex === null"
-        @click="removeConnectionByIndex(data.selectedConnectionIndex)"
-      >
-        Remove Connection
-      </button>
-      <button class="submit"
-        @click="handleSubmit"
-      >
-        Submit
-      </button>
-    </div>
-  </div>
-</template>
 
 <style scoped>
-svg {
-  background: #eee;
-  position: relative;
-  border-radius: 8px;
-}
-svg.pointer:hover {
-  cursor: pointer;
-}
-.from-choice, .to-choice {
-  fill: transparent;
-}
-.button-wrapper > button {
-  width: 200px;
-  opacity: 0.8;
-}
-.button-wrapper > button:hover {
-  width: 200px;
-  opacity: 1;
-}
 button.submit {
   color: white;
   background: green;
+  opacity: 0.7;
+}
+button.submit:hover {
+  opacity: 1;
 }
 </style>

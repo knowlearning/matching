@@ -1,9 +1,21 @@
 <template>
-  <foreignObject class="text-choice">
-    <div>
-      {{ textContent }}
-    </div>
-  </foreignObject>
+  <svg>
+    <rect
+      width="100%"
+      height="100%"
+      fill="transparent"
+    />
+    <foreignObject
+      width="100%"
+      height="100%"
+      class="text-choice"
+      pointer-events="none"
+    >
+      <div>
+        {{ textContent }}
+      </div>
+    </foreignObject>
+  </svg>
 </template>
 
 <script>
@@ -23,7 +35,6 @@ export default {
 
 <style scoped>
 .text-choice {
-  pointer-events: none;
   user-select: none;
 }
 .text-choice div {
