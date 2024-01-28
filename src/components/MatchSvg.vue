@@ -33,7 +33,8 @@
 	      <ChoiceEditOverlay v-if="editMode"
 	      	height="100%"
 	      	width="100%"
-	      	@edit="handleEdit($event, c.nodeId)"
+	      	@edit="$emit('editChoice', c.nodeId)"
+	      	@remove="$emit('removeChoice', c.nodeId)"
 	      />
 
 	    </svg>
@@ -199,10 +200,6 @@ export default {
 			if (choice.type === 'image') return ImageChoice
  			else if (choice.type === 'text') return TextChoice
 			else return undefined
-  	},
-  	handleEdit(a,b) {
-  		console.log(a)
-  		console.log(b)
   	},
 		handleMousedown(e) {
 			const pos = getSvgCoordinatesFromEvent(e)

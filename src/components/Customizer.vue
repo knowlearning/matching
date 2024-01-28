@@ -21,7 +21,8 @@
       :connections="data.content.answerConnections"
       :editMode="data.editChoices"
       @updateConnections="data.content.answerConnections = copy($event)"
-      @removeChoice="removeChoice"
+      @removeChoice="handleRemoveChoice"
+      @editChoice="handleEditChoice"
     />
     <button @click="data.editChoices = !data.editChoices">
       {{ data.editChoices ? 'Hide' : 'Show'}} Edit Choices
@@ -64,13 +65,29 @@ function attemptAddChoice(side) {
     })
   }
 }
-function removeChoice({ nodeId }) {
+function handleEditChoice(nodeId) {
+  const res = window.prompt('updating choice.  enter text or uuid of image')
+  if (!res) return
+  const newChoice = isUUID(res)
+    ? { type: 'image', imageId: res, nodeId } 
+    : { type: 'text', textContent: res, nodeId }
+
+  data.content.fromChoices = copy(data.content.fromChoices)
+    .map(c => c.nodeId === nodeId ? newChoice : c)
+  data.content.toChoices = copy(data.content.toChoices)
+    .map(c => c.nodeId === nodeId ? newChoice : c)
+  data.editChoices = false
+}
+function handleRemoveChoice(nodeId) {
+  if (!confirm('are you sure you want to delete this choice?')) return
+
   data.content.fromChoices = copy(data.content.fromChoices)
     .filter(c => c.nodeId !== nodeId)
   data.content.toChoices = copy(data.content.toChoices)
     .filter(c => c.nodeId !== nodeId)
   data.content.answerConnections = copy(data.content.answerConnections)
     .filter(([to,from]) => to !== nodeId && from !== nodeId)
+  data.editChoices = false
 }
 </script>
 
