@@ -2,6 +2,7 @@
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 600 400"
+		style="opacity: 0.8;"
 	>
 		<rect width="600" height="400" fill="orange" opacity="0.5" />
 		<ArrowController
