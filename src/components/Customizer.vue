@@ -47,11 +47,13 @@ const state = await Agent.state(props.id)
 data.content = state
 
 function attemptAddChoice(side) {
+  const res = window.prompt('enter text or uuid of image')
+  if (!res) return
+
   let ref
   if (side === 'left') ref = data.content.fromChoices
   else ref = data.content.toChoices
 
-  const res = window.prompt('enter text or uuid of image')
   if (isUUID(res)) {
     ref.push({
       type: 'image',
