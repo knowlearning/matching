@@ -6,12 +6,12 @@
 		<rect width="600" height="400" fill="orange" opacity="0.5" />
 		<ArrowController
 			x="200" y="0" width="400" height="400"
+			@move="$emit('move', $event)"
 		/>
 		<EditSvg
 			x="25" y="25" width="150" height="150"
 			@click="$emit('edit')"
 		/>
-
 		<RemoveSvg
 			x="25" y="225" width="150" height="150"
 			@click="$emit('remove')"

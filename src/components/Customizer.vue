@@ -23,6 +23,7 @@
       @updateConnections="data.content.answerConnections = copy($event)"
       @removeChoice="handleRemoveChoice"
       @editChoice="handleEditChoice"
+      @move="handleMove"
     />
     <button @click="data.editChoices = !data.editChoices">
       {{ data.editChoices ? 'Hide' : 'Show'}} Edit Choices
@@ -33,7 +34,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
-import MatchSvg from './MatchSvg.vue'
+import MatchSvg from './MatchSvg/index.vue'
 const copy = x => JSON.parse(JSON.stringify(x))
 
 const props = defineProps(['id'])
@@ -65,6 +66,51 @@ function attemptAddChoice(side) {
     })
   }
 }
+function handleMove(nodeId, dir) {
+  // tedious logic, made code-grosser by the reactivity situation
+  // for right / left, ignore if already on that side, if not push to end of other choice array and remove from own.  
+  const fromCopy = copy(data.content.fromChoices)
+  const toCopy = copy(data.content.toChoices)
+
+  const choiceCopy = copy([ ...fromCopy, ...toCopy].find(c => c.nodeId === nodeId))
+  const inLeftColumn = fromCopy.some(c => c.nodeId === nodeId)
+  const inRightColumn = !inLeftColumn // assume it somewhere!
+  const choiceIndex = inLeftColumn ? fromCopy.findIndex(c => c.nodeId === nodeId) : toCopy.findIndex(c => c.nodeId === nodeId)
+
+  if (inLeftColumn && dir === 'right') {
+    removeConnectionsToId(nodeId)
+    data.content.fromChoices = fromCopy.filter(c => c.nodeId !== nodeId)
+    data.content.toChoices = [ ...toCopy, choiceCopy ]
+  } else if (inRightColumn && dir === 'left') {
+    removeConnectionsToId(nodeId)
+    data.content.toChoices = toCopy.filter(c => c.nodeId !== nodeId)
+    data.content.fromChoices = [ ...fromCopy, choiceCopy ]
+  } else if (inLeftColumn && dir === 'up') {
+    moveArrayElementUp(fromCopy, choiceIndex)
+    data.content.fromChoices = fromCopy
+  } else if (inRightColumn && dir === 'up') {
+    moveArrayElementUp(toCopy, choiceIndex)
+    data.content.toChoices = toCopy
+  } else if (inLeftColumn && dir === 'down') {
+    moveArrayElementDown(fromCopy, choiceIndex)
+    data.content.fromChoices = fromCopy
+  } else if (inRightColumn && dir === 'down') {
+    moveArrayElementDown(toCopy, choiceIndex)
+    data.content.toChoices = toCopy
+  }
+
+}
+function moveArrayElementUp(arr, i) {
+  if (i > 0 && i < arr.length) {
+    [arr[i], arr[i-1]] = [arr[i-1], arr[i]]
+  }
+}
+function moveArrayElementDown(arr, i) {
+  if (i >= 0 && i < arr.length - 1) {
+    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+  }
+}
+
 function handleEditChoice(nodeId) {
   const res = window.prompt('updating choice.  enter text or uuid of image')
   if (!res) return
@@ -85,10 +131,14 @@ function handleRemoveChoice(nodeId) {
     .filter(c => c.nodeId !== nodeId)
   data.content.toChoices = copy(data.content.toChoices)
     .filter(c => c.nodeId !== nodeId)
-  data.content.answerConnections = copy(data.content.answerConnections)
-    .filter(([to,from]) => to !== nodeId && from !== nodeId)
+  removeConnectionsToId(nodeId)
   data.editChoices = false
 }
+function removeConnectionsToId(nodeId) {
+  data.content.answerConnections = copy(data.content.answerConnections)
+    .filter(([to,from]) => to !== nodeId && from !== nodeId)
+}
+
 </script>
 
 <style scoped>

@@ -6,7 +6,7 @@
 		<g
 			class="btn"
 			transform="translate(200, 100)"
-			@click="$emit('up')"
+			@click="$emit('move', 'up')"
 		>
 			<circle cx="0" cy="0" r="60"/>
 			<polygon points="0,-30 30,22 -30,22" />
@@ -14,7 +14,7 @@
 		<g
 			class="btn"
 			transform="rotate(90, 300, 200) translate(300,200)" 
-			@click="$emit('right')"
+			@click="$emit('move', 'right')"
 		>
 			<circle cx="0" cy="0" r="60"/>
 			<polygon points="0,-30 30,22 -30,22" />
@@ -22,7 +22,7 @@
 		<g
 			class="btn"
 			transform="rotate(180, 200, 300) translate(200 300)"
-			@click="$emit('down')"
+			@click="$emit('move', 'down')"
 		>
 			<circle cx="0" cy="0" r="60"/>
 			<polygon points="0,-30 30,22 -30,22" />
@@ -30,7 +30,7 @@
 		<g
 			class="btn"
 			transform="rotate(270, 100, 200) translate(100, 200)"
-			@click="$emit('left')"
+			@click="$emit('move', 'left')"
 		>
 			<circle cx="0" cy="0" r="60"/>
 			<polygon points="0,-30 30,22 -30,22" />

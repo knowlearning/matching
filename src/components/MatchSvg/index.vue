@@ -35,6 +35,7 @@
 	      	width="100%"
 	      	@edit="$emit('editChoice', c.nodeId)"
 	      	@remove="$emit('removeChoice', c.nodeId)"
+	      	@move="$emit('move', c.nodeId, $event)"
 	      />
 
 	    </svg>
@@ -95,7 +96,7 @@ import {
 	getSvgCoordinatesFromEvent,
 	getClosestSegmentWitinToleranceIndex,
 	sameConnection
-} from '../helpers/mathHelpers.js'
+} from '../../helpers/mathHelpers.js'
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
