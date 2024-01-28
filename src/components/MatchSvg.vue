@@ -30,14 +30,12 @@
 	        height="100%"
 	        :pointer-events="editMode ? 'none' : 'all'"
 	      />
-	      <!-- CIRCLE BELOW PLACHOLDER FOR EDIT LAYOVER -->
-	      <circle v-if="editMode"
-	      	@click="$emit('removeChoice', c)"
-	      	width="100%"
+	      <ChoiceEditOverlay v-if="editMode"
 	      	height="100%"
-	      	fill="red"
-	      	r="50"
+	      	width="100%"
+	      	@edit="handleEdit($event, c.nodeId)"
 	      />
+
 	    </svg>
 
       <!-- NODES -->
@@ -85,6 +83,7 @@
 <script>
 import ImageChoice from './ImageChoice.vue'
 import TextChoice from './TextChoice.vue'
+import ChoiceEditOverlay from './ChoiceEditOverlay.vue'
 import {
 	pDistanceToSegment,
 	nodesConnectable,
@@ -101,7 +100,7 @@ const copy = x => JSON.parse(JSON.stringify(x))
 
 export default {
 	name: 'match-svg',
-	components: { ImageChoice, TextChoice },
+	components: { ImageChoice, TextChoice, ChoiceEditOverlay },
 	props: {
 		editMode: {
 			type: Boolean,
@@ -200,6 +199,10 @@ export default {
 			if (choice.type === 'image') return ImageChoice
  			else if (choice.type === 'text') return TextChoice
 			else return undefined
+  	},
+  	handleEdit(a,b) {
+  		console.log(a)
+  		console.log(b)
   	},
 		handleMousedown(e) {
 			const pos = getSvgCoordinatesFromEvent(e)
