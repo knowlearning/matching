@@ -4,6 +4,8 @@
   import Customizer from './components/Customizer.vue'
   import MatchingItemName from './components/MatchingItemName.vue'
   import newItemSchema from './helpers/newItemSchema.js'
+  import { validate as isUUID } from 'uuid'
+
   const copy = x => JSON.parse(JSON.stringify(x))
 
   const data = reactive({
@@ -16,14 +18,31 @@
     .state('content')
     .then(state => data.content = state)
 
-  async function addNew() {
+  async function addNew(questionDef) {
+    if (!questionDef) questionDef = copy(newItemSchema)
+
     const id = await Agent.create({
       active_type: 'application/json;type=matching',
-      active: copy(newItemSchema)
+      active: questionDef
     })
     data.content[id] = { added: Date.now() }
     data.active = id
     data.mode = 'customizer'
+  }
+  async function copyExisting() {
+    const id = window.prompt('enter uuid of m.c. question to copy')
+    if (!id || !isUUID(id)) {
+      alert('entry is not valid uuid')
+      return
+    }
+
+    const { active_type } = await Agent.metadata(id)
+    if (active_type !== 'application/json;type=matching') {
+      alert('id is not of correct type for matching question')
+      return
+    }
+    const stateToCopy = await Agent.state(id)
+    this.addNew(copy(stateToCopy))
   }
   function removeContent(id) {
     if (!confirm(`Are you sure you want remove item?`)) return
@@ -53,7 +72,8 @@
         >Customizer</div>
       </div>
 
-      <button class="new" @click="addNew">+ Add New</button>
+      <button class="new" @click="addNew()">+ Add New</button>
+      <button class="new" @click="copyExisting()">+ Copy Existing</button>
       <div v-if="data.content">
         <div
           v-for="item, itemId in data.content"

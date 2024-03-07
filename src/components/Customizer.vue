@@ -1,5 +1,6 @@
 <template>
   <div class="customizer">
+    <div>Item Scope Id :: {{ id }} </div>
     <label for="item-name">Item Name:</label>
     <textarea
       id="item-name"
