@@ -42,7 +42,7 @@
       return
     }
     const stateToCopy = await Agent.state(id)
-    this.addNew(copy(stateToCopy))
+    addNew(copy(stateToCopy))
   }
   function removeContent(id) {
     if (!confirm(`Are you sure you want remove item?`)) return
