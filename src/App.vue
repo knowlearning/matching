@@ -83,15 +83,15 @@
           </Suspense>
           <span
             class="remove-symbol"
-            @click="removeContent(itemId)"
+            @click.stop="removeContent(itemId)"
           >&#x2715;</span>
         </div>
       </div>
       <div v-else>Loading Content...</div>
     </div>
 
-    <div class="right-col">
-      <Suspense v-if="data.active && data.mode">
+    <div class="right-col" v-if="data.active && data.mode">
+      <Suspense>
         <PlayOrCustomizeByTypeSwitcher
           :key="`${data.active}-${data.mode}`"
           :id="data.active"
