@@ -14,7 +14,7 @@
 <script setup>
   import { reactive } from 'vue'
   import MatchSvg from './MatchSvg/index.vue'
-  import { sameConnection } from '../helpers/mathHelpers.js'
+  import { sameConnection } from '../../helpers/mathHelpers.js'
 
   const props = defineProps(['id'])
   let item = null

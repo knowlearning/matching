@@ -1,14 +1,17 @@
 <template>
 	<Suspense>
-		<Player :id="id" />
+		<PlayOrCustomizeByTypeSwitcher
+			:id="id"
+			mode="player"
+		/>
 	</Suspense>
 </template>
 
 <script>
-import Player from './Player.vue'
+import PlayOrCustomizeByTypeSwitcher from './PlayOrCustomizeByTypeSwitcher.vue'
 export default {
 	name: 'embedded-player',
-	components: { Player },
+	components: { PlayOrCustomizeByTypeSwitcher },
 	props: {
 		id: {
 			type: String,

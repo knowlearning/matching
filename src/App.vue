@@ -1,10 +1,9 @@
 <script setup>
   import { reactive, computed } from 'vue'
-  import Player from './components/Player.vue'
-  import Customizer from './components/Customizer.vue'
-  import MatchingItemName from './components/MatchingItemName.vue'
-  import newItemSchema from './helpers/newItemSchema.js'
-  import { validate as isUUID } from 'uuid'
+  import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
+  import ItemName from './components/ItemName.vue'
+  import { chooseTypeSwal, copyItemSwal } from './helpers/swallows.js'
+  import questionTypes from './helpers/questionTypes.js'
 
   const copy = x => JSON.parse(JSON.stringify(x))
 
@@ -18,47 +17,42 @@
     .state('content')
     .then(state => data.content = state)
 
-  async function addNew(questionDef) {
-    if (!questionDef) questionDef = copy(newItemSchema)
-
-    const id = await Agent.create({
-      active_type: 'application/json;type=matching',
-      active: questionDef
-    })
-    data.content[id] = { added: Date.now() }
-    data.active = id
-    data.mode = 'customizer'
+  async function addNew() {      
+    const { value: active_type } = await chooseTypeSwal()
+    if (active_type) {
+      const newItemId = await Agent.create({
+        active_type,
+        active: copy(questionTypes[active_type].newItemSchema)
+      })
+      // add new to content, set to active in customizer
+      data.content[newItemId] = { added: Date.now() }
+      data.active = newItemId
+      data.mode = 'customizer'
+    }
   }
   async function copyExisting() {
-    const id = window.prompt('enter uuid of m.c. question to copy')
-    if (!id || !isUUID(id)) {
-      alert('entry is not valid uuid')
-      return
-    }
+    const { value: idToCopy } = await copyItemSwal() // validates id and type 
+    if (!idToCopy) return
 
-    const { active_type } = await Agent.metadata(id)
-    if (active_type !== 'application/json;type=matching') {
-      alert('id is not of correct type for matching question')
-      return
-    }
-    const stateToCopy = await Agent.state(id)
-    addNew(copy(stateToCopy))
+    const { active_type } = await Agent.metadata(idToCopy)
+    const stateToCopy = await Agent.state(idToCopy)
+    const newItemId = await Agent.create({
+      active_type,
+      active: copy(stateToCopy)
+    })
+    // add new to content, set to active in customizer
+    data.content[newItemId] = { added: Date.now() }
+    data.active = newItemId
+    data.mode = 'customizer'
   }
   function removeContent(id) {
     if (!confirm(`Are you sure you want remove item?`)) return
     if (data.active === id) data.active = null
     delete data.content[id]
   }
-
-  function componentForMode() {
-    if (data.mode === 'player') return Player
-    else if (data.mode === 'customizer') return Customizer
-    else return undefined
-  }
 </script>
 
 <template>
-
   <div class="main-wrapper">
     <div class="left-col">
       <div class="toggle-mode-wrapper">
@@ -72,7 +66,7 @@
         >Customizer</div>
       </div>
 
-      <button class="new" @click="addNew()">+ Add New</button>
+      <button class="new" @click="addNew">+ Add New</button>
       <button class="new" @click="copyExisting()">+ Copy Existing</button>
       <div v-if="data.content">
         <div
@@ -85,7 +79,7 @@
           @click="data.active = itemId"
         >
           <Suspense>
-            <MatchingItemName :id="itemId" />
+            <ItemName :id="itemId" />
           </Suspense>
           <span
             class="remove-symbol"
@@ -97,10 +91,11 @@
     </div>
 
     <div class="right-col">
-      <Suspense v-if="data.active" :key="data.active">
-        <component
-          :is="componentForMode()"
+      <Suspense v-if="data.active && data.mode">
+        <PlayOrCustomizeByTypeSwitcher
+          :key="`${data.active}-${data.mode}`"
           :id="data.active"
+          :mode="data.mode"
         />
       </Suspense>
     </div>
