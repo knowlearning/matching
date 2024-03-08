@@ -20,6 +20,8 @@ const initialLoad = async () => {
         if (route === '') {
         	createApp(App).mount('#app')
         } else if (await routeIsUUIDOfValidType(route)) {
+            // cannot use PlayOrCustomizeByTypeSwitcher directly
+            // because we need to wrap in a suspense element
         	createApp(EmbeddedPlayer, { id: route }).mount('#app')
         } else {
         	createApp(NotFound).mount('#app')
