@@ -5,6 +5,7 @@ import './style.css'
 import App from './App.vue'
 import NotFound from './components/NotFound.vue'
 import EmbeddedPlayer from './components/EmbeddedPlayer.vue'
+import questionTypes from './helpers/questionTypes.js'
 
 window.Agent = Agent
 
@@ -19,6 +20,8 @@ const initialLoad = async () => {
         if (route === '') {
         	createApp(App).mount('#app')
         } else if (await routeIsUUIDOfValidType(route)) {
+            // cannot use PlayOrCustomizeByTypeSwitcher directly
+            // because we need to wrap in a suspense element
         	createApp(EmbeddedPlayer, { id: route }).mount('#app')
         } else {
         	createApp(NotFound).mount('#app')
@@ -30,7 +33,7 @@ async function routeIsUUIDOfValidType(route) {
 	if (!isUUID(route)) return false
 	
 	const { active_type } = await Agent.metadata(route)
-	return !!(active_type && active_type === 'application/json;type=matching')
+	return !!(active_type && Object.keys(questionTypes).includes(active_type))
 }
 
 initialLoad()

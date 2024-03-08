@@ -96,7 +96,7 @@ import {
 	getSvgCoordinatesFromEvent,
 	getClosestSegmentWitinToleranceIndex,
 	sameConnection
-} from '../../helpers/mathHelpers.js'
+} from '../../../helpers/mathHelpers.js'
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
