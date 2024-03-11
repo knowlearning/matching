@@ -5,29 +5,37 @@
   import { chooseTypeSwal, copyItemSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
 
+  const TEST_CONTENT_TAG = 'd8bf5ec0-dfe1-11ee-bfb6-93dd9ff85ba9'
+
   const copy = x => JSON.parse(JSON.stringify(x))
 
   const data = reactive({
     mode: 'player', // or 'customizer'
     content: null,
-    active: null
+    active: null,
+    tags: null
   })
 
   Agent
     .state('content')
     .then(state => data.content = state)
+  Agent
+    .state('tags')
+    .then(state => {
+      data.tags = state
+      //  initialize tags we want to manage
+      if (!data.tags[TEST_CONTENT_TAG]) {
+        data.tags[TEST_CONTENT_TAG] = {}
+      }
+    })
 
   async function addNew() {      
     const { value: active_type } = await chooseTypeSwal()
     if (active_type) {
-      const newItemId = await Agent.create({
+      createContent(
         active_type,
-        active: copy(questionTypes[active_type].newItemSchema)
-      })
-      // add new to content, set to active in customizer
-      data.content[newItemId] = { added: Date.now() }
-      data.active = newItemId
-      data.mode = 'customizer'
+        copy(questionTypes[active_type].newItemSchema)
+      )
     }
   }
   async function copyExisting() {
@@ -36,19 +44,21 @@
 
     const { active_type } = await Agent.metadata(idToCopy)
     const stateToCopy = await Agent.state(idToCopy)
-    const newItemId = await Agent.create({
-      active_type,
-      active: copy(stateToCopy)
-    })
+    createContent(active_type, copy(stateToCopy))
+  }
+  async function createContent(active_type, active) {
+    const newItemId = await Agent.create({ active_type, active })
     // add new to content, set to active in customizer
     data.content[newItemId] = { added: Date.now() }
     data.active = newItemId
     data.mode = 'customizer'
+    data.tags[TEST_CONTENT_TAG][newItemId] = true
   }
   function removeContent(id) {
     if (!confirm(`Are you sure you want remove item?`)) return
     if (data.active === id) data.active = null
     delete data.content[id]
+    data.tags[TEST_CONTENT_TAG][id] = false
   }
 </script>
 
