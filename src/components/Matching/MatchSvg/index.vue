@@ -85,6 +85,7 @@
 <script>
 import ImageChoice from './ImageChoice.vue'
 import TextChoice from './TextChoice.vue'
+import AudioChoice from './AudioChoice.vue'
 import ChoiceEditOverlay from './ChoiceEditOverlay.vue'
 import {
 	pDistanceToSegment,
@@ -200,6 +201,7 @@ export default {
 		getComponentForChoice(choice) {
 			if (choice.type === 'image') return ImageChoice
  			else if (choice.type === 'text') return TextChoice
+			else if (choice.type === 'audio') return AudioChoice
 			else return undefined
   	},
 		handleMousedown(e) {
