@@ -13,8 +13,8 @@
       placeholder="Enter matching instructions"
     />
     <div class="add-buttons-wrapper">
-      <button @click="openFilePicker('left', ' audio')">Add Image</button>
-      <button @click="openFilePicker('right', 'audio')">Add Audio</button>
+      <button @click="openFilePicker('left','image')">Add Image</button>
+      <button @click="openFilePicker('right','audio')">Add Audio</button>
     </div>
 
     <MatchSvg
@@ -141,49 +141,22 @@ function removeConnectionsToId(nodeId) {
 }
 
 async function openFilePicker(side, fileType) {
-  const fileInput = document.createElement('input')
-  fileInput.type = 'file'
-  fileInput.accept = fileType === 'audio' ? 'audio/*' : 'image/*'
-  fileInput.addEventListener('change', async (event) => {
-    const file = event.target.files[0]
-    if (!file) return
-    const id = uuid()
-    await Agent.upload({ id, file, browser: true })
-    if (fileType === 'audio') {
-      if (side === 'left') {  // says left, but goes to right why??
-        data.content.fromChoices.push({
-          type: 'audio',
-          audioId: id,
-          // imageId: uuid('60e5b5d1-5c48-43bd-b739-a47c58bc890a'), microphone
-          nodeId: uuid()
-        })
-      } else {
-        data.content.toChoices.push({
-          type: 'audio',
-          audioId: id,
-          // imageId: uuid('60e5b5d1-5c48-43bd-b739-a47c58bc890a'),
-          nodeId: uuid()
-        })
-      }
-    } else {
-      if (side === 'left') {
-        data.content.fromChoices.push({
-          type: 'image',
-          imageId: id,
-          nodeId: uuid()
-        })
-      } else {
-        data.content.toChoices.push({
-          type: 'image',
-          imageId: id,
-          nodeId: uuid()
-        })
-      }
-    }
-    console.log('uuid:', id);
-    fileInput.value = null;
-  })
-  fileInput.click()
+  const id = uuid()
+  await Agent.upload({ id, browser: true, accept : fileType === 'audio' ? 'audio/*' : 'image/*'})
+  if (fileType === 'audio') {
+    data.content.toChoices.push({
+      type: 'audio',
+      audioId: id,
+      imageId: '60e5b5d1-5c48-43bd-b739-a47c58bc890a',
+      nodeId: uuid()
+    })
+  } else {
+    data.content.fromChoices.push({
+      type: 'image',
+      imageId: id,
+      nodeId: uuid()
+    })
+  }
 }
 </script>
 
