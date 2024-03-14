@@ -50,6 +50,7 @@
     if (data.active === id) data.active = null
     delete data.content[id]
   }
+  
 </script>
 
 <template>
@@ -98,10 +99,9 @@
           :mode="data.mode"
         />
       </Suspense>
+      
     </div>
-
   </div>
-
 </template>
 
 <style scoped>
@@ -115,6 +115,7 @@
   display: flex;
   flex-direction: column;
   padding: 4px;
+
 }
 .left-col {
   text-align: left;
@@ -170,4 +171,18 @@
     max-width: 600px;
     margin: 0 auto;
 }
+
+.audio-button {
+    background: blue;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .audio-button:hover {
+    background: darkblue;
+  }
 </style>

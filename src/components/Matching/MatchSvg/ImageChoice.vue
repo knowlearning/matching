@@ -1,5 +1,5 @@
 <template>
-  <image class="image-choice" :href="url" />
+  <image class="image-choice" :href="url"/>
 </template>
 
 <script>
@@ -26,3 +26,4 @@ export default {
   }
 }
 </script>
+

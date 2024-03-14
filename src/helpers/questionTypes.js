@@ -29,5 +29,17 @@ export default {
 			question: 'Your Question Here',
 			answer: ''
 		}
+	},
+	'application/json;type=fillInBlank' : {
+		description: 'Simple Rearrenging Question',
+		components: {
+			player: TextEntryPlayer,
+			customizer: TextEntryCustomizer
+		},
+		newItemSchema: {
+			name: 'Unnamed Fill In The Blank Item',
+			question: 'Your Question Here',
+			answer: ''
+		}
 	}
 }

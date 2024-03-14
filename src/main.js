@@ -9,6 +9,13 @@ import questionTypes from './helpers/questionTypes.js'
 
 window.Agent = Agent
 
+const name = 'Matching'
+const type = 'application/json;type=matching'
+const data = JSON.stringify({ data: { name, type } });
+const id = Agent.uuid()
+
+await Agent.create(name, type, id, data)
+
 const initialLoad = async () => {
     const { auth: { user, provider } } = await Agent.environment()
     if (provider === 'anonymous') {

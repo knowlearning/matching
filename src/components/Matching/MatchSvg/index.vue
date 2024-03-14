@@ -18,9 +18,9 @@
   			v-for="c,i in [ ...fromChoices, ...toChoices ]"
    			:key="`choice-${i}`"
    			:x="xPosForJoinedChoiceIndex(i)"
-        :y="yPosForJoinedChoiceIndex(i)"
-        :width="cardWidth"
-        :height="cardHeight"
+			:y="yPosForJoinedChoiceIndex(i)"
+			:width="cardWidth"
+			:height="cardHeight"
 	    >
 	      <component
 	        :is="getComponentForChoice(c)"
@@ -42,7 +42,7 @@
 
       <!-- NODES -->
       <circle
-        v-for="n,i in nodes"
+        v-for="n in nodes"
         :key="`node-${n.id}`"
         :cx="n.pos.x"
         :cy="n.pos.y"
@@ -295,4 +295,17 @@ button.remove:not([disabled]) {
 button.remove:not([disabled]):hover {
 	opacity: 0.8;
 }
+
+.image-choice,
+.text-choice {
+  width: 100%;
+  height: 100%;
+}
+.image-frame {
+  width: 100%; 
+  height: 100%; 
+  fill: transparent; 
+}
+
+
 </style>
