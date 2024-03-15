@@ -21,7 +21,7 @@ export default {
     const url = ref(null)
     onMounted(async () => {
       const imageUrl = await Agent.download(props.imageId).url()
-      console.log('imageUrl', imageUrl)
+      console.log('imageUrl', imageUrl) 
       url.value = imageUrl
     })
     return { url }
