@@ -3,7 +3,7 @@ import MatchingCustomizer from '../components/Matching/Customizer.vue'
 import TextEntryPlayer from '../components/TextEntry/Player.vue'
 import TextEntryCustomizer from '../components/TextEntry/Customizer.vue'
 import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
-
+import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 
 export default {
 	'application/json;type=matching' : {
@@ -32,7 +32,6 @@ export default {
 			answer: ''
 		}
 	},
-
 	'application/json;type=rearrange-items' : {
 		description: 'Rearrange Items',
 		components: {
@@ -48,7 +47,20 @@ export default {
 				'2aaaefd0-e53f-11ee-8de6-f3934262868d',
 				'2ded97b0-e53f-11ee-8de6-f3934262868d'
 			]
-
 		}
-	}
+	},
+	'application/json;type=sequence' : {
+		description: 'Sequence Item',
+		components: {
+			player: SequenceCustomizer,
+			customizer: SequenceCustomizer
+		},
+		newItemSchema: {
+			name: 'Your New Sequence',
+			items: [
+				'b2e42280-dda2-11ee-9e52-b180ab5b4386',
+				'a634f160-e561-11ee-8799-e158f951f256'
+			] // start with array of items to play
+		}
+	},
 }
