@@ -4,6 +4,7 @@ import TextEntryPlayer from '../components/TextEntry/Player.vue'
 import TextEntryCustomizer from '../components/TextEntry/Customizer.vue'
 import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
 import SequenceCustomizer from '../components/Sequence/Customizer.vue'
+import SequencePlayer from '../components/Sequence/Player.vue'
 
 export default {
 	'application/json;type=matching' : {
@@ -52,7 +53,7 @@ export default {
 	'application/json;type=sequence' : {
 		description: 'Sequence Item',
 		components: {
-			player: SequenceCustomizer,
+			player: SequencePlayer,
 			customizer: SequenceCustomizer
 		},
 		newItemSchema: {

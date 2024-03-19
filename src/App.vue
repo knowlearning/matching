@@ -125,6 +125,7 @@
   display: flex;
   flex-direction: column;
   padding: 4px;
+  height: 100%;
 }
 .left-col {
   text-align: left;
@@ -177,7 +178,7 @@
 }
 
 .right-col {
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    flex-grow: 1;
 }
 </style>
