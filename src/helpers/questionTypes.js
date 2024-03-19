@@ -30,16 +30,18 @@ export default {
 			answer: ''
 		}
 	},
-	'application/json;type=fillInBlank' : {
-		description: 'Simple Rearrenging Question',
+	'application/json;type=reArranging' : {
+		description: 'Simple Re-Arranging Question',
 		components: {
-			player: TextEntryPlayer,
-			customizer: TextEntryCustomizer
+			player: ReArrangingPlayer,
+			customizer: ReArrangingCustomizer
 		},
 		newItemSchema: {
-			name: 'Unnamed Fill In The Blank Item',
-			question: 'Your Question Here',
-			answer: ''
+			name: 'Unnamed Re-Arranging Item',
+			instructions: '',
+			fromChoices: [],
+			toChoices: [],
+			answerConnections: []
 		}
 	}
 }

@@ -16,7 +16,6 @@
       <button @click="openFilePicker('left','image')">Add Image</button>
       <button @click="openFilePicker('right','audio')">Add Audio</button>
     </div>
-
     <MatchSvg
       :toChoices="data.content.toChoices"
       :fromChoices="data.content.fromChoices"
@@ -26,7 +25,6 @@
       @removeChoice="handleRemoveChoice"
       @editChoice="handleEditChoice"
       @move="handleMove"
-
     />
     <button @click="data.editChoices = !data.editChoices">
       {{ data.editChoices ? 'Hide' : 'Show'}} Edit Choices
@@ -40,7 +38,6 @@ import { v4 as uuid, validate as isUUID } from 'uuid'
 import MatchSvg from './MatchSvg/index.vue'
 const copy = x => JSON.parse(JSON.stringify(x))
 
-
 const props = defineProps(['id'])
 
 const data = reactive({
@@ -50,7 +47,6 @@ const data = reactive({
 
 const state = await Agent.state(props.id)
 data.content = state
-
 
 function addChoice(side, type, content) {
   if (side === 'left') {
@@ -187,5 +183,4 @@ textarea#instructions {
   color: orange;
   opacity: 0.7;
 }
-
 </style>
