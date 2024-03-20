@@ -59,9 +59,9 @@ export default {
 		newItemSchema: {
 			name: 'Your New Sequence',
 			items: [
-				'b2e42280-dda2-11ee-9e52-b180ab5b4386',
-				'a634f160-e561-11ee-8799-e158f951f256'
-			] // start with array of items to play
+				{ id : 'b2e42280-dda2-11ee-9e52-b180ab5b4386' },
+				{ id : 'a634f160-e561-11ee-8799-e158f951f256' }
+			]
 		}
 	},
 }

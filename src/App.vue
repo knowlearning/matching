@@ -60,6 +60,9 @@
     delete data.content[id]
     data.tags[TEST_CONTENT_TAG][id] = false
   }
+  function handleDragStart(event, id) {
+    event.dataTransfer.setData('text', id)
+  }
 </script>
 
 <template>
@@ -89,7 +92,11 @@
           @click="data.active = itemId"
         >
           <Suspense>
-            <ItemName :id="itemId" />
+            <ItemName :id="itemId"
+              draggable="true"
+              style="cursor: grab;"
+              @dragstart="$event.dataTransfer.setData('text', itemId)"  
+            />
           </Suspense>
           <span
             class="remove-symbol"

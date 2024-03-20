@@ -22,8 +22,8 @@
 
   function handleSubmit() {
     window.alert( isCorrect() ? 'woo' : 'boo' )
-    if (isCorrect()) Agent.close({ success: true })
-    // TODO ... how to message up if incorrect? data watch?
+    if (isCorrect() && Agent.embedded) Agent.close({ success: true })
+
   }
 
   function isCorrect() {

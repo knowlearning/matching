@@ -5,17 +5,21 @@
 			:activeItem="data.activeItem"
 			@select="data.activeItem = $event"
 		/>
+
 		<div
-			v-if="data.activeItem"
+			v-for="{ id: item } in questionDef.items"
+			:key="`play-${item}`"
+			v-show="item === data.activeItem"
 			class="embedded-question-wrapper"
 		>
 			<Suspense>
 				<vueEmbedComponent
-					:id="data.activeItem"
-					@close="handleClose(data.activeItem, $event)"
+					:id="item"
+					@close="handleClose(item, $event)"
 				/>
 			</Suspense>
 		</div>
+		
 	</div>
 </template>
 
@@ -29,6 +33,7 @@ const props = defineProps(['id'])
 
 const questionDef = await Agent.state(props.id)
 const initialCorrectMap = questionDef.items
+	.map(obj => obj.id )
 	.reduce((acc, id) => {
     acc[id] = null
     return acc
@@ -47,11 +52,10 @@ function handleClose(id, e) {
 }
 
 function getNextItem(itemId) {
-	const i = questionDef.items.indexOf(itemId)
+	const i = questionDef.items.findIndex(obj => obj?.id === itemId)
 	if (i === -1) return null
 	else if (i === questionDef.items.length - 1) return null
-	else return questionDef.items[i+1]
-
+	else return questionDef.items[i+1].id
 }
 
 
