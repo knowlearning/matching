@@ -2,14 +2,14 @@
 	<div class="item-selector">
 		
 		<div
-			v-for="(isCorrect,id, i) in items"
+			v-for="(isCorrect, i) in isCorrectArray"
 			:key="i"
 			:class="{
 				oneItem: true,
 				pointer: selectable,
-				active: activeItem === id
+				active: activeItemIndex === i
 			}"
-			@click="selectItem(id)"
+			@click="selectItem(i)"
 		>
 			<svg
 				class="item-circle"
@@ -30,7 +30,7 @@
 
 			<!-- Dashed Line Btw Items -->
 			<svg class="dashed-line"
-				v-if="i !== Object.keys(items).length - 1"
+				v-if="i !== isCorrectArray.length - 1"
 				viewBox="0 0 100 100"
 			>
 				<line
@@ -53,29 +53,22 @@ export default {
 			required: false,
 			default: true
 		},
-		activeItem: {
-			type: String,
-			required: false,
-			default: 'def'
+		activeItemIndex: {
+			type: [Number, null],
+			required: true,
+
 		},
-		items: {
-			// map of ids to correct status (null, t, or f)
-			required: false, // set to true
-			type: Object,
-			default: () => ({
-				'abc' : null,
-				'def' : null,
-				'efg' : null,
-				'hij' : null,
-				'klm' : null,
-				'nop' : null
-			})
+		isCorrectArray: {
+			// array matching order of sequence [ null, t, or f ]
+			required: true, 
+			type: Array
+
 		}
 	},
 	methods: {
-		selectItem(id) {
+		selectItem(i) {
 			if (this.selectable) {
-				this.$emit('select', id)
+				this.$emit('select', i)
 			}
 		},
 		getCircleFill(isCorrect) {

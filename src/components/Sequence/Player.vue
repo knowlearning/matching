@@ -1,21 +1,21 @@
 <template>
 	<div class="sequence-player">
 		<SequenceHeader
-			:items="data.correctMap"
-			:activeItem="data.activeItem"
-			@select="data.activeItem = $event"
+			:isCorrectArray="data.isCorrectArray"
+			:activeItemIndex="data.activeItemIndex"
+			@select="data.activeItemIndex = $event"
 		/>
 
 		<div
-			v-for="{ id: item } in questionDef.items"
-			:key="`play-${item}`"
-			v-show="item === data.activeItem"
+			v-for="item,i in questionDef.items"
+			:key="`play-item-${i}`"
+			v-show="i === data.activeItemIndex"
 			class="embedded-question-wrapper"
 		>
 			<Suspense>
 				<vueEmbedComponent
-					:id="item"
-					@close="handleClose(item, $event)"
+					:id="item.id"
+					@close="handleClose(i, $event)"
 				/>
 			</Suspense>
 		</div>
@@ -32,32 +32,18 @@ import SequenceHeader from './SequenceHeader.vue'
 const props = defineProps(['id'])
 
 const questionDef = await Agent.state(props.id)
-const initialCorrectMap = questionDef.items
-	.map(obj => obj.id )
-	.reduce((acc, id) => {
-    acc[id] = null
-    return acc
-  }, {})
 
 const data = reactive({
-  activeItem: null,
-  correctMap: initialCorrectMap
+  activeItemIndex: 0,
+  isCorrectArray: questionDef.items.map(el => null)
 })
 
-function handleClose(id, e) {
+function handleClose(i, e) {
 	// TODO: What about other "info"... not just close on correct?
 	// Need state watching / reacting OR other messaging.
-	data.correctMap[id] = e.success
-	data.activeItem = getNextItem(id)
+	data.isCorrectArray[i] = e.success
+	data.activeItemIndex = i + 1
 }
-
-function getNextItem(itemId) {
-	const i = questionDef.items.findIndex(obj => obj?.id === itemId)
-	if (i === -1) return null
-	else if (i === questionDef.items.length - 1) return null
-	else return questionDef.items[i+1].id
-}
-
 
 </script>
 
