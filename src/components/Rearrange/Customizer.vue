@@ -1,97 +1,108 @@
 <template>
-<div class="rearrange-customizer">
+<div class="rearrange-customizer" v-if="data.content">
 	<h3>Rearrange Column Customizer</h3>
 	<h4>Item Scope Id :: {{ id }}</h4>
 	<label for="item-name">Item Name:</label>
 	<textarea id="item-name" v-model="data.content.name"></textarea>
 	<br>
-		<div>
-		<draggable v-model="imageData" group="images" @end="onDragEnd" item-key="imageUrl">
+	<div class="upload-wrapper">
+		<div
+			class="upload-icon"
+			@click="uploadImage"
+		>
+			<i class="fas fa-image" />
+		</div>
+		<div
+			class="audio-icon"
+			@click="uploadAudio"
+		>
+			<i class="fas fa-music" />
+		</div>
+		<div class="volume-icon" @click="toggleAudioPlayback">
+			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
+		</div>
+	</div>
+	<div>
+		<draggable v-model="data.content.images" group="images" @end="onDragEnd" item-key="imageUrl">
 			<template #item="{ element, index }">
-			<div class="image-row">
-				<div class="image-and-buttons">
-				<img :src="element.imageUrl" class="choice" v-if="element.imageUrl" />
-					<div class="upload-wrapper">
-						<div class="upload-icon" @click="uploadImage" v-if="!element.imageUrl">
-						<i class="fas fa-image"></i>
-						</div>
-						<div class="audio-icon" @click="uploadAudio" v-if="!element.imageUrl && !element.audioUrl">
-						<i class="fas fa-music"></i>
-						</div>
-						<div class="volume-icon" @click="toggleAudioPlayback(index)" v-if="element.audioUrl">
-						<i :class="audioPlaying[index] ? 'fas fa-pause' : 'fas fa-volume-up'"></i>
-						</div>
+				<div class="image-row">
+					<div class="image-and-buttons">
+						<klImage
+							:id="element.id"
+							class="choice"
+						/>
 					</div>
 				</div>
-			</div>
 			</template>
 		</draggable>
-		</div>
+	</div>
 </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import draggable from 'vuedraggable'
+import klImage from './kl-image.vue'
 
 const props = defineProps(['id'])
 
-const data = reactive({
-content: {
-	name: '',
-	images: []
-}
+const data = ref({
+	content: null
 })
 
+let imageData
+
+Agent
+	.state(props.id)
+	.then(state => {
+		if (!state.name) state.name = ''
+		if (!state.audioId) state.audioId = null
+		if (!state.images) state.images = []
+		data.value.content = state
+
+		imageData = data.value.content.images
+	})
+
 let audio = null;
-const audioPlaying = reactive({}); 
+const audioPlaying = ref(false); 
 
 async function uploadImage() {
-const id = uuid();
-await Agent.upload({ id, browser: true, accept: 'image/*' });
-data.content.images.push(id);
-addNewRow();
-const imageUrl = await Agent.download(id).url();
-imageData[imageData.length - 1].imageUrl = imageUrl;
+	const id = uuid();
+	await Agent.upload({ id, browser: true, accept: 'image/*' });
+	imageData.push({ id })
 }
 
 async function uploadAudio() {
-const id = uuid();
-await Agent.upload({ id, browser: true, accept: 'audio/*' });
-data.content.audioId = id;
-const audioUrl = await Agent.download(id).url();
-imageData[0].audioUrl = audioUrl;
+	const id = uuid();
+	await Agent.upload({ id, browser: true, accept: 'audio/*' });
+	data.value.content.audioId = id;
 }
 
-function toggleAudioPlayback(index) {
-if (audioPlaying[index]) {
-	audio.pause();
-} else {
-	if (!audio) {
-	audio = new Audio(imageData[0].audioUrl);
-	}
-	if (audio.paused) {
-	audio.play();
+function toggleAudioPlayback() {
+	if (audioPlaying.value) {
+		audio.pause();
 	} else {
-	audio.pause();
-	audio.currentTime = 0;
+		if (!audio) {
+			audio = new Audio(imageData[0].audioUrl);
+		}
+		if (audio.paused) {
+			audio.play();
+		} else {
+			audio.pause();
+			audio.currentTime = 0;
+		}
 	}
+	audioPlaying.value = !audioPlaying.value;
 }
-audioPlaying[index] = !audioPlaying[index];
-}
-
-function addNewRow() {
-imageData.push({ imageUrl: '' });
-}
-
-const imageData = reactive([
-{ imageUrl: '', audioUrl: '' }
-]);
 
 function onDragEnd(event) {
-const draggedElement = imageData.splice(event.oldIndex, 1)[0];
-imageData.splice(event.newIndex, 0, draggedElement);
+	const imageDataCopy = structuredClone(imageData)
+	const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
+	imageDataCopy.splice(event.newIndex, 0, draggedElement);
+
+	data.value.content.images = imageDataCopy
+	imageData = imageDataCopy
 }
 </script>
 
