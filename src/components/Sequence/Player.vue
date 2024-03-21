@@ -16,6 +16,7 @@
 				<vueEmbedComponent
 					:id="item.id"
 					@close="handleClose(i, $event)"
+					:namespace="`sequence-${id}-item-${i}`"
 				/>
 			</Suspense>
 		</div>

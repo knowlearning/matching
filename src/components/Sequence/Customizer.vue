@@ -37,8 +37,9 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
+import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
+import { unsupportedTypeSwal } from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
-
 
 const props = defineProps(['id'])
 
@@ -48,10 +49,14 @@ const data = reactive({
   content: state
 })
 
-function handleDrop(e) {
-	const droppedData = e.dataTransfer.getData('text');
-	// TODO CHECK AND VALIDATE IS UUID AND SUPPORTED TYPE
-	data.content.items.push({ id: droppedData })
+async function handleDrop(e) {
+	const attemptedId = e.dataTransfer.getData('text')
+	const { active_type } = await Agent.metadata(attemptedId)
+	if (!active_type || !sequenceImportableTypes.includes(active_type)) {
+		await unsupportedTypeSwal(attemptedId, active_type)
+	} else {
+		data.content.items.push({ id: attemptedId })		
+	}
 }
 function removeItem(i) {
 	const itemsCopy = JSON.parse(JSON.stringify(data.content.items))

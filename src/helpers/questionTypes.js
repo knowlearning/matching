@@ -6,7 +6,7 @@ import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
 import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
 
-export default {
+const questionTypes = {
 	'application/json;type=matching' : {
 		description: 'Simple Matching Question',
 		components: {
@@ -65,3 +65,11 @@ export default {
 		}
 	},
 }
+
+let sequenceImportableTypes = Object.keys(questionTypes)
+	.filter(item => !item.includes('sequence'))
+sequenceImportableTypes.push('application/json;type=karel-task&version=1.0.1')
+// note not including karel maps
+
+export { sequenceImportableTypes }
+export default questionTypes
