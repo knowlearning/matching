@@ -1,9 +1,8 @@
 <template>
 	<div class="sequence-customizer">
 	  <h3>Sequence Customizer</h3>
-	  {{ data.content.items }}
-		<h4>Item Scope Id :: {{ id }} </h4>
-    	<label for="item-name">Item Name:</label>
+		<h4>Scope Id :: {{ id }} </h4>
+    	<label for="item-name">Sequence Name:</label>
     	<textarea
 	      id="item-name"
 	      v-model="data.content.name"
@@ -14,6 +13,7 @@
 				@drag.prevent
 				@drop.prevent="handleDrop"
 	    >
+		    <h4>Drag Items on To Add</h4>
 		    <div v-for="({ id:item }, i) in data.content.items" :key="item">
 		    	<button
 		    		class="small-inline-button"
@@ -26,8 +26,8 @@
 		    	<button
 		    		class="small-inline-button remove"
 		    		@click="removeItem(i)"
-		    		>x</button>
-		    	<span>{{ item }}:::</span>
+		    	>x</button>
+		    	<span>{{ i + 1 }}. </span>
 		    	<ItemName :id="item" />
 		    </div>
 		  </div>
@@ -87,6 +87,12 @@ function moveItemDown(i) {
 	flex-direction: column;
 	align-items: center;
 }
+.sequence-customizer > h3 {
+	margin-bottom: 0;
+}
+.sequence-customizer > h4 {
+	margin-top: 0;
+}
 .item-list-wrapper {
 	display: flex;
 	flex-direction: column;
@@ -94,8 +100,14 @@ function moveItemDown(i) {
 	font-family: monospace;
 	min-height: 300px;
 	min-width:600px;
-	background: pink;
-
+	background: antiquewhite;
+	padding: 20px;
+	margin-top: 20px;
+}
+.item-list-wrapper > h4 {
+	margin: 0;
+	text-align: center;
+	width: 100%;
 }
 button.small-inline-button {
 	display: inline-flex;
@@ -115,6 +127,7 @@ button.small-inline-button:hover {
 button.small-inline-button.remove {
 	background: lightcoral;
 	font-size: 1rem;
+	margin-right: 10px;
 }
 button.small-inline-button.remove:hover {
 	background: red;
