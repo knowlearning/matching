@@ -9,11 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@knowlearning/agents": "^0.9.112",
+    "@knowlearning/agents": "^0.9.125",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "sweetalert2": "^11.10.6",
     "uuid": "^9.0.1",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.6.2",
