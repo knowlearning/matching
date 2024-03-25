@@ -4,7 +4,6 @@ import TextEntryPlayer from '../components/TextEntry/Player.vue'
 import TextEntryCustomizer from '../components/TextEntry/Customizer.vue'
 import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
 import RearrangePlayer from '../components/Rearrange/Player.vue'
-import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 
 export default {
 	'application/json;type=matching' : {
@@ -43,19 +42,5 @@ export default {
 			question: '?? Question Text ??',
 			answer : ''
 		}
-	},
-	'application/json;type=sequence' : {
-		description: 'Sequence Item',
-		components: {
-			player: SequenceCustomizer,
-			customizer: SequenceCustomizer
-		},
-		newItemSchema: {
-			name: 'Your New Sequence',
-			items: [
-				'b2e42280-dda2-11ee-9e52-b180ab5b4386',
-				'a634f160-e561-11ee-8799-e158f951f256'
-			] // start with array of items to play
-		}
-	},
+	}
 }
