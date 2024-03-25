@@ -182,17 +182,4 @@
     margin: 0 auto;
 }
 
-.audio-button {
-    background: blue;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-
-  .audio-button:hover {
-    background: darkblue;
-  }
 </style>
