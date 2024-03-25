@@ -11,18 +11,21 @@ export default {
     imageId: {
       type: String,
       required: true
+    },
+    nodeId: {
+      type: String,
+      required: true
     }
   },
   setup(props) {
-    const url = ref(null);
-
+    const url = ref(null)
     onMounted(async () => {
-      url.value = await Agent.download(props.imageId).url();
+      const imageUrl = await Agent.download(props.imageId).url()
+      console.log('imageUrl', imageUrl) 
+      url.value = imageUrl
     })
-
-    return {
-      url
-    }
+    return { url }
   }
 }
 </script>
+

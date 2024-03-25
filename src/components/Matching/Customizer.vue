@@ -13,8 +13,8 @@
       placeholder="Enter matching instructions"
     />
     <div class="add-buttons-wrapper">
-      <button @click="attemptAddChoice('left')">Add Choice to Left</button>
-      <button @click="attemptAddChoice('right')">Add Choice to Right</button>
+      <button @click="openFilePicker('left','image')">Add Image</button>
+      <button @click="openFilePicker('right','audio')">Add Audio</button>
     </div>
     <MatchSvg
       :toChoices="data.content.toChoices"
@@ -44,27 +44,21 @@ const data = reactive({
   content: null,
   editChoices: false
 })
+
 const state = await Agent.state(props.id)
 data.content = state
 
-function attemptAddChoice(side) {
-  const res = window.prompt('enter text or uuid of image')
-  if (!res) return
-
-  let ref
-  if (side === 'left') ref = data.content.fromChoices
-  else ref = data.content.toChoices
-
-  if (isUUID(res)) {
-    ref.push({
-      type: 'image',
-      imageId: res,
+function addChoice(side, type, content) {
+  if (side === 'left') {
+    data.content.fromChoices.push({
+      type: type,
+      content: content,
       nodeId: uuid()
     })
   } else {
-    ref.push({
-      type: 'text',
-      textContent: res,
+    data.content.toChoices.push({
+      type: type,
+      content: content,
       nodeId: uuid()
     })
   }
@@ -119,7 +113,7 @@ function handleEditChoice(nodeId) {
   if (!res) return
   const newChoice = isUUID(res)
     ? { type: 'image', imageId: res, nodeId } 
-    : { type: 'text', textContent: res, nodeId }
+    : { type: 'audio', audioId: res, nodeId}
 
   data.content.fromChoices = copy(data.content.fromChoices)
     .map(c => c.nodeId === nodeId ? newChoice : c)
@@ -142,6 +136,24 @@ function removeConnectionsToId(nodeId) {
     .filter(([to,from]) => to !== nodeId && from !== nodeId)
 }
 
+async function openFilePicker(side, fileType) {
+  const id = uuid()
+  await Agent.upload({ id, browser: true, accept : fileType === 'audio' ? 'audio/*' : 'image/*'})
+  if (fileType === 'audio') {
+    data.content.toChoices.push({
+      type: 'audio',
+      audioId: id,
+      imageId: '60e5b5d1-5c48-43bd-b739-a47c58bc890a',
+      nodeId: uuid()
+    })
+  } else {
+    data.content.fromChoices.push({
+      type: 'image',
+      imageId: id,
+      nodeId: uuid()
+    })
+  }
+}
 </script>
 
 <style scoped>
@@ -166,7 +178,9 @@ textarea#item-name {
 textarea#instructions {
   height: 150px;
 }
-.add-buttons-wrapper {
-
+.audio-button {
+  background: green;
+  color: orange;
+  opacity: 0.7;
 }
 </style>
