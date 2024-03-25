@@ -128,6 +128,7 @@ function onDragEnd(event) {
 // 	data.value.content.images = imageDataCopy
 // 	imageData = imageDataCopy
 // }
+
 </script>
 
 <style scoped>
