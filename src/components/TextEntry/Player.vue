@@ -3,7 +3,7 @@
     <h3>{{ item.name }}</h3>
     <p>{{ item.question }}</p>
     <input
-      @keypress.enter="submit"
+      @keyup.enter="handleSubmit"
       v-model="data.userInput"
     >
     <button class="submit" @click="handleSubmit"> Submit </button>
@@ -16,12 +16,21 @@
   const props = defineProps(['id'])
   const item = await Agent.state(props.id)  
 
-  const data = reactive({
-    userInput: ''
-  })
+
+  let userRunState
+  if (Agent.embedded) {
+    userRunState = await Agent.state(`play-${props.id}`)
+    if (!userRunState.userInput) userRunState.userInput = ''
+  } else {
+    userRunState = { userInput: '' }
+  }
+
+  const data = reactive(userRunState)
 
   function handleSubmit() {
     window.alert( isCorrect() ? 'woo' : 'boo' )
+    if (isCorrect() && Agent.embedded) Agent.close({ success: true })
+
   }
 
   function isCorrect() {
