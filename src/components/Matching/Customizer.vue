@@ -42,7 +42,7 @@ const props = defineProps(['id'])
 
 const data = reactive({
   content: null,
-  editChoices: false,
+  editChoices: false
 })
 
 const state = await Agent.state(props.id)
