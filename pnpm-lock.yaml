@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@knowlearning/agents':
-    specifier: ^0.9.125
-    version: 0.9.125
+    specifier: ^0.9.128
+    version: 0.9.128
   '@vitejs/plugin-basic-ssl':
     specifier: ^1.1.0
     version: 1.1.0(vite@5.1.5)
@@ -20,6 +20,9 @@ dependencies:
   vue:
     specifier: ^3.4.21
     version: 3.4.21
+  vuedraggable:
+    specifier: ^4.1.0
+    version: 4.1.0(vue@3.4.21)
 
 devDependencies:
   '@vitejs/plugin-vue':
@@ -241,8 +244,8 @@ packages:
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
 
-  /@knowlearning/agents@0.9.125:
-    resolution: {integrity: sha512-X1iqX/K57DW4/WQUfpGvYi9dL8w7a+IYIN9ud3s/FjKb7PI0EfmrNO/FmZ+sGPnhGv/xNyhANeDbnhNW+vrCOg==}
+  /@knowlearning/agents@0.9.128:
+    resolution: {integrity: sha512-b88hjxN6DW6CilOPjwJHrmXWQguoNt49jscGRi/TWRFmaKnJj7HZAcrQ1t4uxM/gaNZLw1fU2M3WBHUTvdkIqA==}
     dependencies:
       fast-json-patch: 3.1.1
       uuid: 8.3.2
@@ -529,6 +532,10 @@ packages:
       '@rollup/rollup-win32-x64-msvc': 4.12.1
       fsevents: 2.3.3
 
+  /sortablejs@1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
+    dev: false
+
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -598,6 +605,15 @@ packages:
       '@vue/runtime-dom': 3.4.21
       '@vue/server-renderer': 3.4.21(vue@3.4.21)
       '@vue/shared': 3.4.21
+
+  /vuedraggable@4.1.0(vue@3.4.21):
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      sortablejs: 1.14.0
+      vue: 3.4.21
+    dev: false
 
   /vuex@4.1.0(vue@3.4.21):
     resolution: {integrity: sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==}

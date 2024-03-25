@@ -3,6 +3,7 @@ import MatchingCustomizer from '../components/Matching/Customizer.vue'
 import TextEntryPlayer from '../components/TextEntry/Player.vue'
 import TextEntryCustomizer from '../components/TextEntry/Customizer.vue'
 import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
+import RearrangePlayer from '../components/Rearrange/Player.vue'
 import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
 
@@ -30,24 +31,6 @@ const questionTypes = {
 		newItemSchema: {
 			name: 'Unnamed Text Entry Item',
 			question: 'Your Question Here',
-			answer: ''
-		}
-	},
-	'application/json;type=rearrange-items' : {
-		description: 'Rearrange Items',
-		components: {
-			player: RearrangeCustomizer,
-			customizer: RearrangeCustomizer
-		},
-		newItemSchema: {
-			name: 'New Rearrange Item',
-			question: '?? Question Text ??',
-			items: [
-				'24f35050-e53f-11ee-8de6-f3934262868d',
-				'27e39270-e53f-11ee-8de6-f3934262868d',
-				'2aaaefd0-e53f-11ee-8de6-f3934262868d',
-				'2ded97b0-e53f-11ee-8de6-f3934262868d'
-			]
 		}
 	},
 	'application/json;type=sequence' : {
@@ -64,16 +47,16 @@ const questionTypes = {
 			]
 		}
 	},
-  'application/json;type=fillInBlank' : {
-		description: 'Simple Rearrenging Question',
+	'application/json;type=rearrange-items' : {
+		description: 'Rearrange Items',
 		components: {
-			player: TextEntryPlayer,
-			customizer: TextEntryCustomizer
+			player: RearrangePlayer,
+			customizer: RearrangeCustomizer
 		},
 		newItemSchema: {
-			name: 'Unnamed Fill In The Blank Item',
-			question: 'Your Question Here',
-			answer: ''
+			name: 'New Rearrange Item',
+			question: '?? Question Text ??',
+			answer : ''
 		}
 	}
 }

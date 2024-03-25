@@ -26,3 +26,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.image-choice {
+  width: 200px; /* İstenilen boyut */
+}
+
+</style>
