@@ -3,28 +3,36 @@
 	<h3>Rearrange Column Customizer</h3>
 	<h4>Item Scope Id :: {{ id }}</h4>
 	<label for="item-name">Item Name:</label>
-	<textarea id="item-name" v-model="data.content.name"></textarea>
+	<textarea 
+		id="item-name" 
+		v-model="data.content.name">
+	</textarea>
+	<label for="instruction">Instructions:</label>
+	<textarea 
+		id="instructions" 
+		v-model="data.content.instructions" 
+		placeholder="Enter matching instructions">
+	</textarea>
 	<br>
 	<div class="upload-wrapper">
-		<div
-			class="upload-icon"
+		<button
 			@click="uploadImage"
 		>
-			<i class="fas fa-image" />
-		</div>
-		<div
-			class="audio-icon"
+			Add Image
+		</button>
+		<button
 			@click="uploadAudio"
 		>
-			<i class="fas fa-music" />
-		</div>
-		<div class="volume-icon" @click="toggleAudioPlayback">
-			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-		</div>
+			Add Audio
+		</button>
 	</div>
+	<br>
 	<div>
+		<div class="volume-icon" @click="toggleAudioPlayback">
+			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
+		</div>
 		<draggable v-model="data.content.images" group="images" @end="onDragEnd" item-key="imageUrl">
-			<template #item="{ element, index }">
+			<template #item="{ element }">
 				<div class="image-row">
 					<div class="image-and-buttons">
 						<klImage
@@ -40,18 +48,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import draggable from 'vuedraggable'
 import klImage from './kl-image.vue'
 
+
 const props = defineProps(['id'])
-
-const data = ref({
-	content: null
-})
-
-let imageData
+const data = ref({ content: null })
+const audioPlaying = ref(false)
+let imageData = []
+let audio = null
 
 Agent
 	.state(props.id)
@@ -64,8 +71,6 @@ Agent
 		imageData = data.value.content.images
 	})
 
-let audio = null;
-const audioPlaying = ref(false); 
 
 async function uploadImage() {
 	const id = uuid();
@@ -79,31 +84,50 @@ async function uploadAudio() {
 	data.value.content.audioId = id;
 }
 
-function toggleAudioPlayback() {
-	if (audioPlaying.value) {
-		audio.pause();
-	} else {
-		if (!audio) {
-			audio = new Audio(imageData[0].audioUrl);
-		}
-		if (audio.paused) {
-			audio.play();
-		} else {
-			audio.pause();
-			audio.currentTime = 0;
-		}
-	}
-	audioPlaying.value = !audioPlaying.value;
+async function toggleAudioPlayback() {
+    const audioId = data.value.content.audioId;
+    if (!audioId) return;
+
+    const audioUrl = await Agent.download(audioId).url();
+
+    if (!audio) {
+        audio = new Audio(audioUrl);
+        audio.addEventListener('ended', () => {
+            audioPlaying.value = false;
+        });
+    }
+
+    if (audioPlaying.value) {
+        audio.pause();
+        audioPlaying.value = false;
+    } else {
+        audio.play();
+        audioPlaying.value = true;
+    }
 }
+
+
+
+
 
 function onDragEnd(event) {
-	const imageDataCopy = structuredClone(imageData)
-	const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
-	imageDataCopy.splice(event.newIndex, 0, draggedElement);
+    const imageDataCopy = JSON.parse(JSON.stringify(imageData));
+    const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
+    imageDataCopy.splice(event.newIndex, 0, draggedElement);
 
-	data.value.content.images = imageDataCopy
-	imageData = imageDataCopy
+    data.value.content.images = imageDataCopy;
+    imageData = imageDataCopy;
 }
+
+
+// function onDragEnd(event) {
+// 	const imageDataCopy = structuredClone(imageData)
+// 	const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
+// 	imageDataCopy.splice(event.newIndex, 0, draggedElement);
+
+// 	data.value.content.images = imageDataCopy
+// 	imageData = imageDataCopy
+// }
 </script>
 
 <style scoped>
@@ -111,6 +135,20 @@ function onDragEnd(event) {
 display: flex;
 flex-direction: column;
 align-items: center;
+}
+label {
+  font-weight: bolder;
+}
+textarea {
+  width: 300px;
+  margin-bottom: 12px;
+}
+textarea#item-name {
+  text-align: center;
+  height: 16px;
+}
+textarea#instructions {
+  height: 150px;
 }
 
 .image-row {
@@ -158,7 +196,7 @@ cursor: pointer;
 }
 
 .volume-icon {
-margin-left: 100px;
+margin-left: 10px;
 color: grey;
 cursor: pointer;
 }
