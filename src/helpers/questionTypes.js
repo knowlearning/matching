@@ -6,6 +6,8 @@ import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
 import RearrangePlayer from '../components/Rearrange/Player.vue'
 import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
+import SelectionOfWordsCustomizer from '../components/SelectionOfWords/Customizer.vue'
+import SelectionOfWordsPlayer from '../components/SelectionOfWords/Player.vue'
 
 const questionTypes = {
 	'application/json;type=matching' : {
@@ -57,6 +59,19 @@ const questionTypes = {
 			name: 'New Rearrange Item',
 			question: '?? Question Text ??',
 			answer : ''
+		}
+	},
+	'application/json;type=selection-of-words' : {
+		description: 'Selection of Words',
+		components: {
+			player: SelectionOfWordsPlayer,
+			customizer: SelectionOfWordsCustomizer
+		},
+		newItemSchema: {
+			name: 'New Selection of Words Item',
+			question: '?? Question Text ??',
+			choices: [],
+			answer: []
 		}
 	}
 }
