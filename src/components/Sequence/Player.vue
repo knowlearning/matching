@@ -28,7 +28,7 @@
 
 <script setup>
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 
 const props = defineProps(['id'])
@@ -42,8 +42,11 @@ const data = reactive({
   isCorrectArray: questionDef.items.map(el => null),
   timeOnTasks: questionDef.items.map(el => 0)
 })
+const intervalId = ref(null)
+intervalId.value = setInterval(updateTimeOnTasks, 1000)
 
-const intervalId = setInterval(updateTimeOnTasks, 1000)
+onBeforeUnmount(() => clearInterval(intervalId.value) )
+
 function updateTimeOnTasks() {
 	const i = data.activeItemIndex
 	console.log(i, Number.isInteger(i))
