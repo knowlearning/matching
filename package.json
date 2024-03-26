@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@knowlearning/agents": "^0.9.128",
+    "@knowlearning/agents": "^0.9.130",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "sweetalert2": "^11.10.6",
     "uuid": "^9.0.1",
