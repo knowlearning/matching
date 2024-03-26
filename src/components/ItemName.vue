@@ -1,8 +1,10 @@
 <template>
-  <vueScopeComponent
-    :id="props.id"
-    :path="['name']"
-  />
+  <span>
+    <vueScopeComponent
+      :id="props.id"
+      :path="['name']"
+    />
+  </span>
 </template>
 
 <script setup>
