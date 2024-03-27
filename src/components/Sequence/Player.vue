@@ -28,7 +28,7 @@
 
 <script setup>
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { reactive, computed, ref, onBeforeUnmount } from 'vue'
+import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 
 const props = defineProps(['id'])
@@ -40,18 +40,20 @@ const data = reactive({
   // both arrays below conventionally match index of items to the info
   // if a third comes, unify to an array of objects with isCorrect and time etc
   isCorrectArray: questionDef.items.map(el => null),
-  timeOnTasks: questionDef.items.map(el => 0)
+  timeOnTasks: questionDef.items.map(el => 0),
+  totalTime: 0
 })
-const intervalId = ref(null)
-intervalId.value = setInterval(updateTimeOnTasks, 1000)
 
-onBeforeUnmount(() => clearInterval(intervalId.value) )
+const intervalId = setInterval(updateTimeTracking, 1000)
 
-function updateTimeOnTasks() {
+onBeforeUnmount(() => clearInterval(intervalId) )
+
+function updateTimeTracking() {
 	const i = data.activeItemIndex
 	console.log(i, Number.isInteger(i))
-	if (!Number.isInteger(i)) return
-	else data.timeOnTasks[i] ++
+	data.totalTime ++
+	if (Number.isInteger(i)) data.timeOnTasks[i] ++
+
 }
 
 function handleClose(i, e) {
