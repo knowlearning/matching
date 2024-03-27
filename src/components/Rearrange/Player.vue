@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from './kl-image.vue'
 
