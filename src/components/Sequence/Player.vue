@@ -5,7 +5,11 @@
 			:activeItemIndex="data.activeItemIndex"
 			@select="data.activeItemIndex = $event"
 		/>
-		{{ data.timeOnTasks }}
+		<div>
+			<h4>Temp Time Tracking</h4>
+			<p>Total: {{ data.totalTime }}</p>
+			<p>Tasks: {{ data.timeOnTasks.join(', ') }}</p>
+		</div>
 
 		<div
 			v-for="item,i in questionDef.items"
