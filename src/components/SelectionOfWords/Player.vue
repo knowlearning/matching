@@ -1,8 +1,6 @@
 <template>
-    <div class="player" @click="playState.persistentKlState.counter += 1">
-        {{ playState.persistentKlState }}
-        <!--
-        <h3 v-if="data.content.instructions">{{ data.content.instructions }}</h3>
+    <div class="player">
+        <!-- <h3 v-if="data.content.instructions">{{ data.content.instructions }}</h3> -->
         <div>
             <div class="volume-icon" @click="toggleAudioPlayback">
                 <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
@@ -26,30 +24,26 @@
                 </div>
             </div>
         </div>
-        -->
     </div>
 </template>
 
 <script setup>
 import { defineProps, ref, reactive } from 'vue'
-import KlImage from './kl-image.vue'
+import klImage from './kl-image.vue'
 
 const props = defineProps(['id'])
-const item = await Agent.state(props.id)
-
 const data = reactive({ content: null })
-
-const playState = reactive({ persistentKlState: null })
+const imageData = reactive([[], []])
+const audioPlaying = ref(false)
 
 Agent
   .state(`word-select-player-state-${props.id}`)
   .then(state => {
-    // Here we could put our if (!state.whateverwewant) state.whateverwewant = ['cool', 'stuff'] statements
-    if (!state.counter) state.counter = 0
-    console.log('Got our state!', state)
-
-    playState.persistentKlState = state
+    if (!state.imageData) state.imageData = [[], []]
+    if (!state.selected) state.selected = [[], []]
+    data.content = state
+    imageData[0] = state.imageData[0]
+    imageData[1] = state.imageData[1]
   })
-
-
 </script>
+
