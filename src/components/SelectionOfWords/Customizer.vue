@@ -26,18 +26,43 @@
       </div>
       <div class="image-row">
         <div class="column-left">
-          <div v-for="(option, index) in imageData[0]" :key="index" class="image-and-buttons-left">
-            <p style="color: black;">{{ index + 1 }}) <kl-image :id="option.id" /></p>
-            <div class="option-circle" @click="isSelected(index, 0)">
-              <i :class="{ 'fas fa-check-circle': isSelected(index, 0), 'far fa-circle': !isSelected(index, 0) }" style="font-size: 1.5em; color: black;"></i>
+          <div
+            v-for="(option, index) in imageData[0]"
+            :key="index"
+            class="image-and-buttons-left"
+            @click="selectOption(index, 'left')"
+          >
+            <p style="color: black;">
+              {{ index + 1 }})
+              <kl-image :id="option.id" />
+            </p>
+            <div class="option-circle" @click="isSelected(index, 'left')">
+              <i
+                :class="{
+                  'fas fa-check-circle': isSelected(index, 'left'),
+                  'far fa-circle': !isSelected(index, 'left')
+                }"
+                style="font-size: 1.5em; color: black;"
+              />
             </div>
           </div>
         </div>
         <div class="column-right">
-          <div v-for="(option, index) in imageData[1]" :key="index" class="image-and-buttons-right">
+          <div
+            v-for="(option, index) in imageData[1]"
+            :key="index"
+            class="image-and-buttons-right"
+            @click="selectOption(index, 'right')"
+          >
             <p style="color: black;">{{ index + 1 }}) <kl-image :id="option.id" /></p>
             <div class="option-circle" @click="isSelected(index, 0)">
-              <i :class="{ 'fas fa-check-circle': isSelected(index, 1), 'far fa-circle': !isSelected(index, 1) }" style="font-size: 1.5em; color: black;"></i>
+              <i
+                :class="{
+                  'fas fa-check-circle': isSelected(index, 'right'),
+                  'far fa-circle': !isSelected(index, 'right')
+                }"
+                style="font-size: 1.5em; color: black;"
+              />
             </div>
           </div>
         </div>
@@ -52,11 +77,10 @@ import { v4 as uuid } from 'uuid'
 import klImage from './kl-image.vue'
 
 const props = defineProps(['id'])
-const data = ref({ content: null })
+const data = reactive({ content: null })
 const audioPlaying = ref(false)
 const imageData = reactive([[], []])
 let audio = null
-const selectedOptions = new Map()
 
 
 Agent
@@ -65,18 +89,20 @@ Agent
     if (!state.name) state.name = ''
     if (!state.audioId) state.audioId = null
     if (!state.images) state.images = []
-    data.value.content = state
+    if (!state.selectedOptions) state.selectedOptions = {}
 
-    separateImages(data.value.content.images)
+    data.content = state
+
+    separateImages(data.content.images)
   })
 
 async function uploadImage(side) {
   try {
     const id = uuid()
     const response = await Agent.upload({ id, browser: true, accept: 'image/*' })
-    data.value.content.images.push({ id, url: response.url, type: side })
+    data.content.images.push({ id, url: response.url, type: side })
 
-    separateImages(data.value.content.images)
+    separateImages(data.content.images)
   } catch (error) {
     console.error('Error uploading image:', error)
     alert('Error uploading image. Please try again.')
@@ -98,11 +124,11 @@ function separateImages(images) {
 async function uploadAudio() {
 	const id = uuid();
 	await Agent.upload({ id, browser: true, accept: 'audio/*' });
-	data.value.content.audioId = id;
+	data.content.audioId = id;
 }
 
 async function toggleAudioPlayback() {
-  const audioId = data.value.content.audioId;
+  const audioId = data.content.audioId;
   if (!audioId) return;
 
   const audioUrl = await Agent.download(audioId).url();
@@ -124,19 +150,15 @@ async function toggleAudioPlayback() {
 
 function selectOption(index, side) {
   const key = `${index}-${side}`
-  if (selectedOptions.has(key)) {
-    selectedOptions.delete(key)
-  } else {
-    selectedOptions.set(key, true)
-  }
+  const so = data.content.selectedOptions
+
+  if (so[key]) delete so[key]
+  else so[key] = true
 }
 
 function isSelected(index, side) {
-  return selectedOptions.has(`${index}-${side}`)
+  return !!data.content.selectedOptions[`${index}-${side}`]
 }
-
-
-
 
 </script>
 
