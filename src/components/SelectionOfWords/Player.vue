@@ -1,6 +1,34 @@
 <template>
     <div class="player">
-        <!-- <h3 v-if="data.content.instructions">{{ data.content.instructions }}</h3> -->
+        <div>
+            <h1>Item Configuration</h1>
+            {{ itemState }}
+        </div>
+        <div v-if="itemState.configuration">
+            <h1>Player state</h1>
+            {{ playState }}
+            <h1>Left</h1>
+            <div
+              v-for="{ id } in leftImages"
+              :key="id"
+              @click="playState.persistentKlState.selected[id] = !playState.persistentKlState.selected[id]"
+            >
+                {{ id }}
+                <span v-if="playState.persistentKlState.selected[id]">Woo!</span>
+            </div>
+            <h1>RIGHT!</h1>
+            <div
+              v-for="{ id } in rightImages"
+              :key="id"
+              @click="playState.persistentKlState.selected[id] = !playState.persistentKlState.selected[id]"
+            >
+                {{ id }}
+                <span v-if="playState.persistentKlState.selected[id]">Woo!</span>
+            </div>
+        </div>
+        <div v-else>Loading...</div>
+        <!--
+        <h3 v-if="data.content.instructions">{{ data.content.instructions }}</h3>
         <div>
             <div class="volume-icon" @click="toggleAudioPlayback">
                 <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
@@ -24,26 +52,46 @@
                 </div>
             </div>
         </div>
+        -->
     </div>
 </template>
 
 <script setup>
-import { defineProps, ref, reactive } from 'vue'
+import { defineProps, ref, reactive, computed } from 'vue'
 import klImage from './kl-image.vue'
 
 const props = defineProps(['id'])
 const data = reactive({ content: null })
-const imageData = reactive([[], []])
 const audioPlaying = ref(false)
+
+const itemState = reactive({ configuration: null })
+const playState = reactive({ persistentKlState: null })
+
+const leftImages = computed(() => {
+    if (itemState.configuration) {
+        return itemState.configuration.images.filter(({ type }) => type === 'left')
+    }
+    else return []
+})
+
+const rightImages = computed(() => {
+    if (itemState.configuration) {
+        return itemState.configuration.images.filter(({ type }) => type === 'right')
+    }
+    else return []
+})
 
 Agent
   .state(`word-select-player-state-${props.id}`)
   .then(state => {
-    if (!state.imageData) state.imageData = [[], []]
-    if (!state.selected) state.selected = [[], []]
-    data.content = state
-    imageData[0] = state.imageData[0]
-    imageData[1] = state.imageData[1]
+    if (!state.selected) state.selected = {}
+
+    playState.persistentKlState = state
   })
+
+Agent
+  .state(props.id)
+  .then(state => itemState.configuration = state)
+
 </script>
 
