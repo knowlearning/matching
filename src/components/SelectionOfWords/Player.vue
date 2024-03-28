@@ -1,5 +1,7 @@
 <template>
-    <div v-if="data.content" class="player">
+    <div class="player" @click="playState.persistentKlState.counter += 1">
+        {{ playState.persistentKlState }}
+        <!--
         <h3 v-if="data.content.instructions">{{ data.content.instructions }}</h3>
         <div>
             <div class="volume-icon" @click="toggleAudioPlayback">
@@ -24,6 +26,7 @@
                 </div>
             </div>
         </div>
+        -->
     </div>
 </template>
 
@@ -35,6 +38,18 @@ const props = defineProps(['id'])
 const item = await Agent.state(props.id)
 
 const data = reactive({ content: null })
+
+const playState = reactive({ persistentKlState: null })
+
+Agent
+  .state(`word-select-player-state-${props.id}`)
+  .then(state => {
+    // Here we could put our if (!state.whateverwewant) state.whateverwewant = ['cool', 'stuff'] statements
+    if (!state.counter) state.counter = 0
+    console.log('Got our state!', state)
+
+    playState.persistentKlState = state
+  })
 
 
 </script>
