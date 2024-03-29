@@ -149,16 +149,28 @@ async function toggleAudioPlayback() {
 }
 
 function selectOption(index, side) {
-  const key = `${index}-${side}`
-  const so = data.content.selectedOptions
+  const key = `${index}-${side}`;
+  const oppositeSide = side === 'left' ? 'right' : 'left';
+  const oppositeKey = `${index}-${oppositeSide}`;
+  const so = data.content.selectedOptions;
 
-  if (so[key]) delete so[key]
-  else so[key] = true
+  // Eğer zaten seçiliyse, sadece seçimi kaldır
+  if (so[key]) {
+    delete so[key];
+  } else {
+    // Diğer taraftaki seçimi kaldır
+    delete so[oppositeKey];
+    // Yeni seçimi ekle
+    so[key] = true;
+  }
 }
+
 
 function isSelected(index, side) {
-  return !!data.content.selectedOptions[`${index}-${side}`]
+  return data.content.selectedOptions.hasOwnProperty(`${index}-${side}`);
 }
+
+
 
 </script>
 
@@ -199,7 +211,6 @@ textarea#instructions {
   justify-content: space-between;
   cursor: pointer;
   margin: 15px;
-  object-fit: contain;
 }
 .column-left, .column-right {
   flex: 1;
@@ -243,8 +254,5 @@ button {
 
 .upload-icon i, .audio-icon i, .volume-icon i {
   font-size: 24px;
-}
-.image-row {
-  gap: 10px;
 }
 </style>
