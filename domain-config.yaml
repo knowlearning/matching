@@ -50,16 +50,15 @@ agent: |
 
     child.on('mutate', ({ scope, patch }) => {
       if (scope === 'tags') {
-        Agent.log('GOT TAG MUTATION')
         patch.forEach(async ({ path, value }) => {
           if (path.length === 2) {
             const [ tagId, contentId ] = path
             if (!agentTags[tagId]) agentTags[tagId] = {}
             if (!value) {
-              delete agentTags[tagId][contentId]
+              agentTags[tagId][contentId] = { user, partition: user, value: null }
             }
             else {
-              agentTags[tagId][contentId] = value
+              agentTags[tagId][contentId] = { user, partition: user, value }
             }
           }
         })

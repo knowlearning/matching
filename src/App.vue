@@ -5,9 +5,10 @@
   import { chooseTypeSwal, copyItemSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
 
-  const TEST_CONTENT_TAG = 'd8bf5ec0-dfe1-11ee-bfb6-93dd9ff85ba9'
+
 
   const copy = x => JSON.parse(JSON.stringify(x))
+  const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
   const data = reactive({
     mode: 'player', // or 'customizer'
@@ -16,16 +17,23 @@
     tags: null
   })
 
-  Agent
-    .state('content')
-    .then(state => data.content = state)
+  async function fetchMyContent() {
+    const { auth: { user } } = await Agent.environment()
+    data.content = (await Agent.query(
+      'taggings-for-tag',
+      [ MY_CONTENT_TAG, user ],
+      'tags.knowlearning.systems'
+    )).map(obj => obj.target)
+  }
+  fetchMyContent()
+
+
   Agent
     .state('tags')
     .then(state => {
       data.tags = state
-      //  initialize tags we want to manage
-      if (!data.tags[TEST_CONTENT_TAG]) {
-        data.tags[TEST_CONTENT_TAG] = {}
+      if (!data.tags[MY_CONTENT_TAG]) {
+        data.tags[MY_CONTENT_TAG] = {}
       }
     })
 
@@ -41,24 +49,22 @@
   async function copyExisting() {
     const { value: idToCopy } = await copyItemSwal() // validates id and type 
     if (!idToCopy) return
-
     const { active_type } = await Agent.metadata(idToCopy)
     const stateToCopy = await Agent.state(idToCopy)
     createContent(active_type, copy(stateToCopy))
   }
   async function createContent(active_type, active) {
     const newItemId = await Agent.create({ active_type, active })
-    // add new to content, set to active in customizer
-    data.content[newItemId] = { added: Date.now() }
+    data.content.push(newItemId)
     data.active = newItemId
     data.mode = 'customizer'
-    data.tags[TEST_CONTENT_TAG][newItemId] = true
+    data.tags[MY_CONTENT_TAG][newItemId] = true
   }
   function removeContent(id) {
     if (!confirm(`Are you sure you want remove item?`)) return
     if (data.active === id) data.active = null
-    delete data.content[id]
-    data.tags[TEST_CONTENT_TAG][id] = false
+    data.content = data.content.filter(content => content !== id)
+    data.tags[MY_CONTENT_TAG][id] = false
   }
   function handleDragStart(event, id) {
     event.dataTransfer.setData('text', id)
@@ -83,7 +89,7 @@
       <button class="new" @click="copyExisting()">+ Copy Existing</button>
       <div v-if="data.content">
         <div
-          v-for="item, itemId in data.content"
+          v-for="itemId in data.content"
           :key="itemId"
           :class="{
             'item-choice' : true,
