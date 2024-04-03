@@ -26,26 +26,26 @@
       </div>
       <div class="image-row">
         <div class="column-left">
-          <div
-            v-for="(option, index) in imageData[0]"
-            :key="index"
-            class="image-and-buttons-left"
-            @click="selectOption(index, 'left')"
-          >
-            <p style="color: black;">
-              {{ index + 1 }})
-              <kl-image :id="option.id" />
-            </p>
-            <div class="option-circle" @click="isSelected(index, 'left')">
-              <i
-                :class="{
-                  'fas fa-check-circle': isSelected(index, 'left'),
-                  'far fa-circle': !isSelected(index, 'left')
-                }"
-                style="font-size: 1.5em; color: black;"
-              />
+            <div
+              v-for="(option, index) in imageData[0]"
+              :key="index"
+              class="image-and-buttons-left"
+              @click="selectOption(index, 'left')"
+            >
+              <p style="color: black;">
+                {{ index + 1 }})
+                <kl-image :id="option.id" />
+              </p>
+              <div class="option-circle" @click="isSelected(index, 'left')">
+                <i
+                  :class="{
+                    'fas fa-check-circle': isSelected(index, 'left'),
+                    'far fa-circle': !isSelected(index, 'left')
+                  }"
+                  style="font-size: 1.5em; color: black;"
+                />
+              </div>
             </div>
-          </div>
         </div>
         <div class="column-right">
           <div
@@ -82,7 +82,6 @@ const audioPlaying = ref(false)
 const imageData = reactive([[], []])
 let audio = null
 
-
 Agent
   .state(props.id)
   .then(state => {
@@ -95,7 +94,6 @@ Agent
 
     separateImages(data.content.images)
   })
-
 async function uploadImage(side) {
   try {
     const id = uuid()
@@ -108,7 +106,6 @@ async function uploadImage(side) {
     alert('Error uploading image. Please try again.')
   }
 }
-
 function separateImages(images) {
   imageData[0] = []
   imageData[1] = []
@@ -120,13 +117,11 @@ function separateImages(images) {
     }
   })
 }
-
 async function uploadAudio() {
 	const id = uuid();
 	await Agent.upload({ id, browser: true, accept: 'audio/*' });
 	data.content.audioId = id;
 }
-
 async function toggleAudioPlayback() {
   const audioId = data.content.audioId;
   if (!audioId) return;
@@ -147,31 +142,21 @@ async function toggleAudioPlayback() {
     audioPlaying.value = true;
   }
 }
-
 function selectOption(index, side) {
   const key = `${index}-${side}`;
   const oppositeSide = side === 'left' ? 'right' : 'left';
   const oppositeKey = `${index}-${oppositeSide}`;
   const so = data.content.selectedOptions;
 
-  // Eğer zaten seçiliyse, sadece seçimi kaldır
   if (so[key]) {
     delete so[key];
   } else {
-    // Diğer taraftaki seçimi kaldır
     delete so[oppositeKey];
-    // Yeni seçimi ekle
-    so[key] = true;
-  }
-}
-
-
+    so[key] = true; 
+}}
 function isSelected(index, side) {
   return data.content.selectedOptions.hasOwnProperty(`${index}-${side}`);
 }
-
-
-
 </script>
 
 <style scoped>
@@ -200,7 +185,6 @@ textarea#instructions {
   margin-bottom: 10px;
   object-fit: contain;
 }
-
 .image-and-buttons-left, .image-and-buttons-right {
   background: antiquewhite;
   object-fit: contain;
@@ -215,12 +199,10 @@ textarea#instructions {
 .column-left, .column-right {
   flex: 1;
 }
-
 .upload-wrapper {
   display: flex;
   align-items: center;
 }
-
 .upload-icon, .audio-icon {
   display: flex;
   align-items: center;
@@ -236,22 +218,18 @@ textarea#instructions {
 .upload-icon {
   margin-right: 10px;
 }
-
 .audio-icon {
   margin-left: 100px;
   cursor: pointer;
 }
-
 .volume-icon {
   margin-left: 10px;
   color: grey;
   cursor: pointer;
 }
-
 button {
   margin-left: 10px;
 }
-
 .upload-icon i, .audio-icon i, .volume-icon i {
   font-size: 24px;
 }
