@@ -1,13 +1,14 @@
 <template>
 <div class="player">
     <h2 v-if= "item?.name">{{ item.name }}</h2>
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <h3 v-if="item?.instructions">Instructions:{{ item.instructions }}</h3>
     <div class="image-container">
         <i 
         :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
         style="cursor: pointer;"
         @click="toggleAudioPlayback"
         />
+        <div class="content">
         <draggable v-model="userOrderedImages" @end="onDragEnd" item-key="id">
             <template #item="{ element }">
                 <div class="image-row">
@@ -21,6 +22,7 @@
                 </div>
             </template>
         </draggable>
+      </div>
     </div>
     <button 
     class="submit" 
@@ -126,7 +128,11 @@ textarea#instructions {
 .choice {
     width: 200px;
 }
-
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 
 </style>

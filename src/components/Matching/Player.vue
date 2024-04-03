@@ -1,6 +1,6 @@
 <template>
   <div class="player">
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <h3 v-if="item?.instructions">Instructions: {{ item.instructions }}</h3>
     <MatchSvg
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
