@@ -54,7 +54,6 @@ onBeforeUnmount(() => clearInterval(intervalId) )
 
 function updateTimeTracking() {
 	const i = data.activeItemIndex
-	console.log(i, Number.isInteger(i))
 	data.totalTime ++
 	if (Number.isInteger(i)) data.timeOnTasks[i] ++
 

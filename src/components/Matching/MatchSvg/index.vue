@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import ImageChoice from './ImageChoice.vue'
+import ImageSvgChoice from './ImageSvgChoice.vue'
 import TextChoice from './TextChoice.vue'
 import AudioChoice from './AudioChoice.vue'
 import ChoiceEditOverlay from './ChoiceEditOverlay.vue'
@@ -103,7 +103,7 @@ const copy = x => JSON.parse(JSON.stringify(x))
 
 export default {
 	name: 'match-svg',
-	components: { ImageChoice, TextChoice, ChoiceEditOverlay },
+	components: { ImageSvgChoice, TextChoice, ChoiceEditOverlay },
 	props: {
 		editMode: {
 			type: Boolean,
@@ -199,7 +199,7 @@ export default {
 
 	methods: {
 		getComponentForChoice(choice) {
-			if (choice.type === 'image') return ImageChoice
+			if (choice.type === 'image') return ImageSvgChoice
  			else if (choice.type === 'text') return TextChoice
 			else if (choice.type === 'audio') return AudioChoice
 			else return undefined

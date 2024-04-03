@@ -51,7 +51,7 @@
 import { reactive, ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import draggable from 'vuedraggable'
-import klImage from './kl-image.vue'
+import klImage from '../kl-image.vue'
 
 
 const props = defineProps(['id'])
