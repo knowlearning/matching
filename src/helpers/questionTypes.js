@@ -9,7 +9,7 @@ import SequencePlayer from '../components/Sequence/Player.vue'
 import SelectionOfWordsCustomizer from '../components/SelectionOfWords/Customizer.vue'
 import SelectionOfWordsPlayer from '../components/SelectionOfWords/Player.vue'
 import RowSelectionOfWordsCustomizer from '../components/RowSelectionOfWords/Customizer.vue'
-// import RowSelectionOfWordsPlayer from '../components/RowSelectionOfWords/Player.vue'
+import RowSelectionOfWordsPlayer from '../components/RowSelectionOfWords/Player.vue'
 
 const questionTypes = {
 	'application/json;type=matching' : {
@@ -79,7 +79,7 @@ const questionTypes = {
 	'application/json;type=selection-of-words-row' : {
 		description: 'Selection of Words Row',
 		components: {
-			player: RowSelectionOfWordsCustomizer,
+			player: RowSelectionOfWordsPlayer,
 			customizer: RowSelectionOfWordsCustomizer
 		},
 		newItemSchema: {

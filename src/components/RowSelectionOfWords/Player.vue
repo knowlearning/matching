@@ -1,199 +1,131 @@
 <template>
-    <div class="player">
-      <h2 v-if="itemState.configuration">Item Name: {{ itemState.configuration.name }}</h2>
-      <h3 v-if="itemState.configuration">Instructions: {{ itemState.configuration.instructions }}</h3>
-      <div>
-        <div class="volume-icon" @click="toggleAudioPlayback">
-          <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
-        </div>
-        <div class="image-row">
-          <div class="column-left">
-            <div
-              v-for="(image, index) in leftImages"
-              :key="image.id"
-              :id="image.id"
-              @click="selectOption(index, 'left')"
-              class="image"
-            >
-              <p style="color: black;">
-                {{ leftAlphabetIndex[index] }}) <kl-image :id="image.id" />
-              </p>
-              <div class="option-circle" @click="isSelected(index, 'left')">
-                <i
-                  :class="{
-                    'fas fa-check-circle': isSelected(index, 'left'),
-                    'far fa-circle': !isSelected(index, 'left')
-                  }"
-                  style="font-size: 1.5em; color: black;"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="column-right">
-            <div
-              v-for="(image, index) in rightImages"
-              :key="image.id"
-              :id="image.id"
-              @click="selectOption(index, 'right')"
-              class="image"
-            >
-              <p style="color: black;">{{ rightAlphabetIndex[index] }}) <kl-image :id="image.id" /></p>
-              <div class="option-circle" @click="isSelected(index, 'right')">
-                <i
-                  :class="{
-                    'fas fa-check-circle': isSelected(index, 'right'),
-                    'far fa-circle': !isSelected(index, 'right')
-                  }"
-                  style="font-size: 1.5em; color: black;"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button 
-        class="submit" 
-        @click="handleSubmit" 
-        :disabled="submitted">{{ submitted ? 'Submitted' : 'Submit' }}
+  <button
+    @click="submit"
+    style="width:300px; background: green; color: white; margin-bottom:20px;"
+  >Gross Temp Submit Button</button>
+  <div class="row-player" v-if="questionDef">
+    <div class="audio-area">
+      <button
+        @click="toggleAudioPlayback"
+        :disabled="!questionDef.audioId"
+      >
+        <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
       </button>
     </div>
-  </template>
-  
+    <div class="item-area">
+      <div
+        v-for="choice,i in questionDef.choices"
+        :key="`choice-${i}`"
+        :class="{
+            choice: true,
+            selected: userSelected === i
+        }"
+        @click="userSelected = (userSelected === i ? null : i)"
+      >
+        <div class="choice-inner">
+          <KlImage v-if="isUUID(choice.content)"
+            :id="choice.content"
+            :size="{ width: '100px', height: '100px' }"
+          />
+          <div v-else>{{ choice.content }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import klImage from '../kl-image.vue'
+import { ref } from 'vue'
+import { validate as isUUID } from 'uuid'
+import KlImage from '../kl-image.vue'
 
 const props = defineProps(['id'])
-const itemState = reactive({ configuration: null })
-const audioPlaying = ref(false)
+let questionDef
+await Agent
+  .state(props.id)
+  .then(state => questionDef = state )
 let audio = null
-const submitted = ref(false);
+let audioPlaying = ref(false)
+setLocalAudio()
+let userSelected = ref(null)
 
-Agent
-.state(`word-select-player-state-${props.id}`)
-.then(state => {
-    if (!state.selectedOptions) state.selectedOptions = {}
-    playState.persistentKlState = state
-    playState.selectedImages = state.selectedOptions
-})
+async function setLocalAudio() {
+  const audioId = questionDef.audioId
+  if (!audioId) return
 
-Agent
-.state(props.id)
-.then(state => itemState.configuration = state)
-
-const playState = reactive({
-    persistentKlState: null,
-    selectedImages: {}
-})
-const leftImages = computed(() => {
-    if (itemState.configuration) {
-        return itemState.configuration.images.filter(({ type }) => type === 'left')
-    } else return []
-})
-const rightImages = computed(() => {
-    if (itemState.configuration) {
-        return itemState.configuration.images.filter(({ type }) => type === 'right')
-    } else return []
-})
-const audioId = computed(() => {
-    if (itemState.configuration) {
-        return itemState.configuration.audioId
-    } else return null
-})
-
-
-function selectOption(id, side) {
-const key = `${id}-${side}`;
-const oppositeSide = side === 'left' ? 'right' : 'left';
-const oppositeKey = `${id}-${oppositeSide}`;
-const selectedOptions = playState.selectedImages;
-
-if (selectedOptions[key]) {
-    delete selectedOptions[key];
-} else {
-    delete selectedOptions[oppositeKey];
-    selectedOptions[key] = true;
-}}
-function isSelected(id, side) {
-return playState.selectedImages[`${id}-${side}`]
+  const audioUrl = await Agent.download(audioId).url()
+  audio = new Audio(audioUrl) // ready for audio.play()
+  audio.addEventListener('ended', () => {
+    audioPlaying.value = false
+  })
 }
+
 async function toggleAudioPlayback() {
-const audioId = itemState.configuration.audioId;
-if (!audioId) return;
-
-const audioUrl = await Agent.download(audioId).url();
-
-if (!audio) {
-    audio = new Audio(audioUrl);
-    audio.addEventListener('ended', () => {
-        audioPlaying.value = false;
-    });
+  if (audioPlaying.value) {
+    audio.pause()
+    audioPlaying.value = false
+  } else {
+    audio.play()
+    audioPlaying.value = true
+  }
 }
-if (audioPlaying.value) {
-    audio.pause();
-    audioPlaying.value = false;
-} else {
-    audio.play();
-    audioPlaying.value = true;
-}}
-
-const leftAlphabetIndex = Array.from({length: 26}, (_, i) => String.fromCharCode(97 + i));
-const rightAlphabetIndex = Array.from({length: 26}, (_, i) => String.fromCharCode(97 + i));
-
-function handleSubmit() {
-    const correctSelections = itemState.configuration.images.filter(({ type }) => type === 'left').map(({ id }) => id)
-    const selectedImages = Object.keys(playState.selectedImages).map(key => key.split('-')[0])
-    const isCorrect = JSON.stringify(correctSelections) === JSON.stringify(selectedImages)
-
-    if (isCorrect) {
-        alert('Correct!');
-    } else {
-        alert('Incorrect!');
-    }
-    submitted.value = true;
+function submit() {
+    const correctIndex = questionDef.choices.findIndex(el => el.correct)
+    const isCorrect = userSelected.value === correctIndex
+    alert(isCorrect ? 'woo' : 'boo')
 }
+
 </script>
 
 <style scoped>
-.player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.row-player {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.image-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    object-fit: contain;
+.audio-area {
+  margin-right: 30px;
+  display: flex;
+  flex-direction: column;
 }
-.column-left, .column-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.item-area {
+  width: 400px;
+  height: 200px;
+  border: 2px solid lightgrey;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
-.image{
-    background: antiquewhite;
-    object-fit: contain;
-    padding: 20px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    margin: 15px;
+.item-area .choice {
+  width: 170px;
+  height: 180px;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
-.volume-icon {
-    cursor: pointer;
-    font-size: 2em;
-    margin-bottom: 10px;
+.selected {
+  background: lightseagreen;
 }
-.option-circle {
-    cursor: pointer;
+.choice-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
 }
-.additional-text {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
-    float: left;
+button {
+  width: 70px;
+  cursor: initial;
+}
+button:not(:disabled):hover {
+  background: #eeeeee;
+  cursor: pointer;
 }
 </style>

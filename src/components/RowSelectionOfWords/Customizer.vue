@@ -158,7 +158,7 @@ async function uploadImage(i) {
   font-size: 1.6rem;
 }
 button {
-  width: fit-content;
+  width: 70px;
   cursor: initial;
 }
 button:not(:disabled):hover {
