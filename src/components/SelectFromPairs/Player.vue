@@ -29,6 +29,7 @@ const rowsCorrect = reactive(questionDef.rows.map(r => false)) // init to array 
 function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
 	alert(isCorrect ? 'woo' : 'boo')
+	if (isCorrect && Agent.embedded) Agent.close({ success: true })
 }
 </script>
 
