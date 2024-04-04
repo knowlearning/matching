@@ -35,7 +35,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import draggable from 'vuedraggable'
-import KlImage from './kl-image.vue'
+import KlImage from '../kl-image.vue'
 
 
 const props = defineProps(['id'])

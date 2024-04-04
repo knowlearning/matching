@@ -60,8 +60,8 @@
   </template>
   
 <script setup>
-import { defineProps, ref, reactive, computed } from 'vue'
-import klImage from './kl-image.vue'
+import { ref, reactive, computed } from 'vue'
+import klImage from '../kl-image.vue'
 
 const props = defineProps(['id'])
 const itemState = reactive({ configuration: null })

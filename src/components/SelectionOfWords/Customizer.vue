@@ -72,9 +72,9 @@
 </template>
 
 <script setup>
-import { ref, defineProps, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { v4 as uuid } from 'uuid'
-import klImage from './kl-image.vue'
+import klImage from '../kl-image.vue'
 
 const props = defineProps(['id'])
 const data = reactive({ content: null })
