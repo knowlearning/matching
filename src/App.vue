@@ -31,7 +31,7 @@
     .then(state => {
       data.tags = state
       if (!data.tags[MY_CONTENT_TAG]) {
-        data.tags[MY_CONTENT_TAG] = {}
+        data.tags[MY_CONTENT_TAG] = { value: true }
       }
     })
 
@@ -56,13 +56,13 @@
     data.content.push(newItemId)
     data.active = newItemId
     data.mode = 'customizer'
-    data.tags[MY_CONTENT_TAG][newItemId] = true
+    data.tags[MY_CONTENT_TAG][newItemId] = { value: true }
   }
   function removeContent(id) {
     if (!confirm(`Are you sure you want remove item?`)) return
     if (data.active === id) data.active = null
     data.content = data.content.filter(content => content !== id)
-    data.tags[MY_CONTENT_TAG][id] = false
+    data.tags[MY_CONTENT_TAG][id] = { value: null }
   }
   function handleDragStart(event, id) {
     event.dataTransfer.setData('text', id)
