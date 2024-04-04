@@ -2,6 +2,16 @@ import Swal from 'sweetalert2'
 import { validate as isUUID } from 'uuid'
 import questionTypes from './questionTypes.js'
 
+export function inputSwal(pre) {
+	return Swal.fire({
+		input: 'text',
+		showCancelButton: true,
+		inputValue: pre,
+		icon: 'question'
+
+	})
+}
+
 export function unsupportedTypeSwal(id, type) {
 	return Swal.fire({
 		title: 'Unsupported Type',
