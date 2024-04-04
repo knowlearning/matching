@@ -87,11 +87,11 @@ const questionTypes = {
 			audioId: null,
 			choices: [
 				{	
-					content: '1?', // display string or uuid
+					content: 'พ', // display string or uuid
 					correct: false
 				},
 				{	
-					content: '2?', // display string or uuid 
+					content: 'ะ', // display string or uuid 
 					correct: true
 				}
 			]
