@@ -25,7 +25,7 @@
         <div class="choice-inner">
           <KlImage v-if="isUUID(choice.content)"
             :id="choice.content"
-            :size="{ width: '100px', height: '100px' }"
+            :size="{ width: '80px', height: '80px' }"
           />
           <div v-else>{{ choice.content }}</div>
         </div>
@@ -91,7 +91,7 @@ function submit() {
 }
 .item-area {
   width: 400px;
-  height: 200px;
+  height: 100px;
   border: 2px solid lightgrey;
 
   display: flex;
@@ -100,8 +100,8 @@ function submit() {
   justify-content: space-around;
 }
 .item-area .choice {
-  width: 170px;
-  height: 180px;
+  width: 120px;
+  height: 90px;
   cursor: pointer;
 
   display: flex;
