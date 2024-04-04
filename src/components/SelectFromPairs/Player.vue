@@ -2,12 +2,16 @@
 	<div>
 		<p>{{ questionDef.instructions }}</p>
 		<Row
+			class="row"
 			v-for="r, i in questionDef.rows"
 			:key="`row-${i}`"
 			v-bind="r"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
 		<button @click="handleSubmit">Submit</button>
+		<h3>To Delete:: rowsCorrect for Eren's reference</h3>
+		<p>{{ rowsCorrect }}</p>
+
 	</div>
 </template>
 
@@ -27,3 +31,7 @@ function handleSubmit() {
 	alert(isCorrect ? 'woo' : 'boo')
 }
 </script>
+
+<style scoped>
+.row { margin: 4px; }
+</style>

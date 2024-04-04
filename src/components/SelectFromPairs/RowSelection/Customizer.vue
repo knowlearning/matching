@@ -1,25 +1,25 @@
 <template>
-  <div class="row-editor" v-if="data.content">
+  <div class="row-editor">
     <div class="audio-area">
       <button @click="uploadAudio">
         <i class="fas fa-file-audio"></i>
       </button>
       <button
         @click="toggleAudioPlayback"
-        :disabled="!data.content.audioId"
+        :disabled="!props.audioId"
       >
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
       </button>
       <button
         @click="deleteAudio"
-        :disabled="!data.content.audioId"
+        :disabled="!props.audioId"
       >
         <i class="fas fa-trash"></i>
       </button>
     </div>
     <div class="item-area">
       <div
-        v-for="choice,i in data.content.choices"
+        v-for="choice,i in props.choices"
         :key="`choice-${i}`"
         :class="{ choice: true, correct: choice.correct }"
         @click="toggleCorrect"
@@ -50,20 +50,27 @@ import { ref, reactive } from 'vue'
 import { validate as isUUID } from 'uuid'
 import { inputSwal, unsupportedTypeSwal } from '../../../helpers/swallows.js'
 import KlImage from '../../kl-image.vue'
+const copy = x => JSON.parse(JSON.stringify(x))
 
-const props = defineProps(['id'])
-const data = reactive({ content: null })
+const emits = defineEmits(['updateRow'])
+
+const props = defineProps({
+  audioId: {
+    type: [ String, null ],
+    required: true
+  },
+  choices: {
+    type: Array,
+    required: true
+  }
+})
+
 let audio = null
 let audioPlaying = ref(false)
-
-await Agent
-  .state(props.id)
-  .then(state => data.content = state )
-
 setLocalAudio()
 
 async function setLocalAudio() {
-  const audioId = data.content.audioId
+  const audioId = props.audioId
   if (!audioId) return
 
   const audioUrl = await Agent.download(audioId).url()
@@ -75,8 +82,10 @@ async function setLocalAudio() {
 
 async function uploadAudio() {
   const id = await Agent.upload({ browser: true, accept: 'audio/*' })
-  data.content.audioId = id
-  setLocalAudio()
+  emits('updateRow', {
+    audioId: id,
+    choices: copy(props.choices)
+  })
 }
 
 async function toggleAudioPlayback() {
@@ -89,36 +98,37 @@ async function toggleAudioPlayback() {
   }
 }
 function deleteAudio() {
-    audioPlaying.value = false
-    data.content.audioId = null
-    audio = null
+  emits('updateRow', {
+    audioId: null,
+    choices: copy(props.choices)
+  })
 }
 
 async function changeChoice(i) {
-  const { isConfirmed, value } = await inputSwal(data.content.choices[i].content)
+  const { isConfirmed, value } = await inputSwal(props.choices[i].content)
   if (!isConfirmed) return
   if (!isUUID(value)) {
-    data.content.choices[i].content = value
+    props.choices[i].content = value
   } else { // check if image type
     const { active_type } = await Agent.metadata(value)
     if (!active_type || !active_type.startsWith('image')) {
       await unsupportedTypeSwal(value, active_type)
     } else {
-      data.content.choices[i].content = value
+      props.choices[i].content = value
     }
   }
 }
 
 function toggleCorrect() {
   // toggle both
-  data.content.choices[0].correct = !data.content.choices[0].correct
-  data.content.choices[1].correct = !data.content.choices[1].correct
+  props.choices[0].correct = !props.choices[0].correct
+  props.choices[1].correct = !props.choices[1].correct
 }
 
 async function uploadImage(i) {
   try {
     const id = await Agent.upload({ browser: true, accept: 'image/*' })
-    data.content.choices[i].content = id
+    props.choices[i].content = id
   } catch (error) {
     console.error('Error uploading image:', error)
     alert('Error uploading image.')
