@@ -70,20 +70,16 @@ Agent
 
 		imageData = data.value.content.images
 	})
-
-
 async function uploadImage() {
 	const id = uuid();
 	await Agent.upload({ id, browser: true, accept: 'image/*' });
 	imageData.push({ id })
 }
-
 async function uploadAudio() {
 	const id = uuid();
 	await Agent.upload({ id, browser: true, accept: 'audio/*' });
 	data.value.content.audioId = id;
 }
-
 async function toggleAudioPlayback() {
     const audioId = data.value.content.audioId;
     if (!audioId) return;
@@ -105,11 +101,6 @@ async function toggleAudioPlayback() {
         audioPlaying.value = true;
     }
 }
-
-
-
-
-
 function onDragEnd(event) {
     const imageDataCopy = JSON.parse(JSON.stringify(imageData));
     const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
@@ -118,16 +109,6 @@ function onDragEnd(event) {
     data.value.content.images = imageDataCopy;
     imageData = imageDataCopy;
 }
-
-
-// function onDragEnd(event) {
-// 	const imageDataCopy = structuredClone(imageData)
-// 	const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
-// 	imageDataCopy.splice(event.newIndex, 0, draggedElement);
-
-// 	data.value.content.images = imageDataCopy
-// 	imageData = imageDataCopy
-// }
 </script>
 
 <style scoped>
@@ -150,29 +131,16 @@ textarea#item-name {
 textarea#instructions {
   height: 150px;
 }
-
-.image-row {
-display: flex;
-align-items: center;
-margin-bottom: 10px;
-}
-
 .image-and-buttons {
-background: antiquewhite;
-padding: 20px;
-border-radius: 12px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-width: 100%;
-cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-
 .upload-wrapper {
 display: flex;
 align-items: center;
 }
-
 .upload-icon, .audio-icon {
 display: flex;
 align-items: center;
@@ -185,32 +153,34 @@ background-color: antiquewhite;
 margin-right: 10px;
 color: grey;
 }
-
 .upload-icon {
 margin-right: 10px;
 }
-
 .audio-icon {
 margin-left: 100px;
 cursor: pointer;
 }
-
 .volume-icon {
 margin-left: 10px;
 color: grey;
 cursor: pointer;
 }
-
 .choice {
-width: 200px;
+	background: antiquewhite;
+  object-fit: contain;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  margin: 15px;
+  width: 100%;
 }
-
 button {
 margin-left: 10px;
 }
-
 .upload-icon i, .audio-icon i, .volume-icon i {
 font-size: 24px;
 }
-
 </style>

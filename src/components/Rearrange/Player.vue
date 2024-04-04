@@ -1,13 +1,11 @@
 <template>
 <div class="player">
-    <h2 v-if= "item?.name">{{ item.name }}</h2>
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <h2 v-if= "item?.name"> Item Name: {{ item.name }}</h2>
+    <h3 v-if="item?.instructions">Instructions: {{ item.instructions }}</h3>
     <div class="image-container">
-        <i 
-        :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
-        style="cursor: pointer;"
-        @click="toggleAudioPlayback"
-        />
+      <div class="volume-icon" @click="toggleAudioPlayback">
+          <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
+        </div>
         <draggable v-model="userOrderedImages" @end="onDragEnd" item-key="id">
             <template #item="{ element }">
                 <div class="image-row">
@@ -31,44 +29,71 @@
 </template>
 
 <script setup>
-import { defineProps, ref, reactive, onMounted } from 'vue'
+import { defineProps, ref, reactive, onMounted, computed } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from './kl-image.vue'
 
-
 const props = defineProps(['id'])
 const item = await Agent.state(props.id)
-
-const data = reactive({
-studentConnections: [],
-})
-
-
 const submitted = ref(false)
 const userOrderedImages = ref(item.images)
 const audioPlaying = ref(false)
+let audio = null
+const data = ref({ content: null })
+
+Agent
+  .state(props.id)
+  .then(state => {
+    if (!state.name) state.name = ''
+    if (!state.instructions) state.instructions = ''
+    if (!state.images) state.images = []
+    data.value.content = state
+  })
 
 onMounted(() => {
   shuffleImages()
 })
 
-function onDragEnd(event) {
-    if (!event.detail) {
-        console.error('Event detail is null or undefined.');
-    return;
+const audioId = computed(() => {
+  if (data.value.content) {
+    return data.value.content.audioId
+  } else {
+    return null
+  }
+})
+async function toggleAudioPlayback() {
+ const audioId = data.value.content.audioId;
+  if (!audioId) return;
+
+  const audioUrl = await Agent.download(audioId).url();
+
+  if (!audio) {
+    audio = new Audio(audioUrl);
+    audio.addEventListener('ended', () => {
+      audioPlaying.value = false;
+    });
+  }
+  if (audio.paused) {
+    audio.play();
+    audioPlaying.value = true;
+  } else {
+    audio.pause();
+    audioPlaying.value = false;
+  }
 }
-if (Array.isArray(event.detail)) {
+function onDragEnd(event) {
+    if (!event || !event.detail) {
+        console.error('Event or event detail is null or undefined.');
+        return;
+    }
+
     const newOrder = event.detail.map(item => item.element);
     userOrderedImages.value = newOrder;
-} else {
-    console.error('Unexpected format for event detail:', event.detail);
-}}
+}
 
 function handleSubmit() {
   const correctOrder = item.images.map(image => image.id)
   const submittedOrder = userOrderedImages.value.map(image => image.id)
-
-  // Check if the submitted order matches the correct order
   const isCorrect = JSON.stringify(correctOrder) === JSON.stringify(submittedOrder)
     if (isCorrect) {
         alert('Correct order!');
@@ -77,7 +102,6 @@ function handleSubmit() {
     }
     submitted.value = true;
 }
-
 function shuffleImages() {
   const shuffledImages = [...userOrderedImages.value];
   for (let i = shuffledImages.length - 1; i > 0; i--) {
@@ -105,28 +129,27 @@ textarea#item-name {
 textarea#instructions {
   height: 150px;
 }
-
-.image-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
 .image-and-buttons {
-    background: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.choice {
+  background: antiquewhite;
+    object-fit: contain;
     padding: 20px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     cursor: pointer;
+    margin: 15px;
+    width: 100%;
 }
-
-.choice {
-    width: 200px;
+.volume-icon {
+    cursor: pointer;
+    font-size: 2em;
+    margin-bottom: 10px;
 }
-
-
-
 </style>
