@@ -5,8 +5,6 @@
   import { chooseTypeSwal, copyItemSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
 
-
-
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
@@ -21,7 +19,7 @@
     const { auth: { user } } = await Agent.environment()
     data.content = (await Agent.query(
       'taggings-for-tag',
-      [ MY_CONTENT_TAG, user ],
+      [ user, MY_CONTENT_TAG ],
       'tags.knowlearning.systems'
     )).map(obj => obj.target)
   }
