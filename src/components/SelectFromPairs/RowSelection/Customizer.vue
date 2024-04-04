@@ -48,8 +48,8 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { validate as isUUID } from 'uuid'
-import { inputSwal, unsupportedTypeSwal } from '../../helpers/swallows.js'
-import KlImage from '../kl-image.vue'
+import { inputSwal, unsupportedTypeSwal } from '../../../helpers/swallows.js'
+import KlImage from '../../kl-image.vue'
 
 const props = defineProps(['id'])
 const data = reactive({ content: null })

@@ -6,10 +6,8 @@ import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
 import RearrangePlayer from '../components/Rearrange/Player.vue'
 import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
-import SelectionOfWordsCustomizer from '../components/SelectionOfWords/Customizer.vue'
-import SelectionOfWordsPlayer from '../components/SelectionOfWords/Player.vue'
-import RowSelectionOfWordsCustomizer from '../components/RowSelectionOfWords/Customizer.vue'
-import RowSelectionOfWordsPlayer from '../components/RowSelectionOfWords/Player.vue'
+import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.vue'
+import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 const questionTypes = {
 	'application/json;type=matching' : {
@@ -63,37 +61,29 @@ const questionTypes = {
 			answer : ''
 		}
 	},
-	'application/json;type=selection-of-words' : {
-		description: 'Selection of Words',
+	'application/json;type=select-from-pairs' : {
+		description: 'Select from Pairs',
 		components: {
-			player: SelectionOfWordsPlayer,
-			customizer: SelectionOfWordsCustomizer
+			player: SelectFromPairsPlayer,
+			customizer: SelectFromPairsCustomizer
 		},
 		newItemSchema: {
-			name: 'New Selection of Words Item',
-			question: '?? Question Text ??',
-			choices: [],
-			answer: []
-		}
-	},
-	'application/json;type=selection-of-words-row' : {
-		description: 'Selection of Words Row',
-		components: {
-			player: RowSelectionOfWordsPlayer,
-			customizer: RowSelectionOfWordsCustomizer
-		},
-		newItemSchema: {
-			name: 'some row',
-			audioId: null,
-			choices: [
-				{	
-					content: 'พ', // display string or uuid
-					correct: false
-				},
-				{	
-					content: 'ะ', // display string or uuid 
-					correct: true
-				}
+			name: 'New Select from Pairs Item',
+			instructions: '...some instructions...',
+			rows: [
+				{
+					audioId: null,
+					choices: [
+						{	
+							content: 'พ', // display string or uuid
+							correct: false
+						},
+						{	
+							content: 'ะ', // display string or uuid 
+							correct: true
+						}
+					]
+				} // end placeholder row
 			]
 		}
 	},
