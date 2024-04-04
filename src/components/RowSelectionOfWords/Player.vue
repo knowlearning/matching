@@ -6,8 +6,8 @@
   <div class="row-player" v-if="questionDef">
     <div class="audio-area">
       <button
+        v-show="!!questionDef.audioId"
         @click="toggleAudioPlayback"
-        :disabled="!questionDef.audioId"
       >
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
       </button>
@@ -85,6 +85,7 @@ function submit() {
   align-items: center;
 }
 .audio-area {
+  width: 85px;
   margin-right: 30px;
   display: flex;
   flex-direction: column;

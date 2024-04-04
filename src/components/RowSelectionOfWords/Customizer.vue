@@ -10,6 +10,12 @@
       >
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
       </button>
+      <button
+        @click="deleteAudio"
+        :disabled="!data.content.audioId"
+      >
+        <i class="fas fa-trash"></i>
+      </button>
     </div>
     <div class="item-area">
       <div
@@ -81,6 +87,11 @@ async function toggleAudioPlayback() {
     audio.play()
     audioPlaying.value = true
   }
+}
+function deleteAudio() {
+    audioPlaying.value = false
+    data.content.audioId = null
+    audio = null
 }
 
 async function changeChoice(i) {
