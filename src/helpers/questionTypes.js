@@ -35,20 +35,6 @@ const questionTypes = {
 			question: 'Your Question Here',
 		}
 	},
-	'application/json;type=sequence' : {
-		description: 'Sequence Item',
-		components: {
-			player: SequencePlayer,
-			customizer: SequenceCustomizer
-		},
-		newItemSchema: {
-			name: 'Your New Sequence',
-			items: [
-				{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
-				{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
-			]
-		}
-	},
 	'application/json;type=rearrange-items' : {
 		description: 'Rearrange Items',
 		components: {
@@ -84,6 +70,20 @@ const questionTypes = {
 						}
 					]
 				} // end placeholder row
+			]
+		}
+	},
+	'application/json;type=sequence' : {
+		description: 'Sequence Item',
+		components: {
+			player: SequencePlayer,
+			customizer: SequenceCustomizer
+		},
+		newItemSchema: {
+			name: 'Your New Sequence',
+			items: [
+				{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
+				{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
 			]
 		}
 	},

@@ -5,10 +5,8 @@
 			:activeItemIndex="data.activeItemIndex"
 			@select="data.activeItemIndex = $event"
 		/>
-		<div>
-			<h4>Temp Time Tracking</h4>
-			<p>Total: {{ data.totalTime }}</p>
-			<p>Tasks: {{ data.timeOnTasks.join(', ') }}</p>
+		<div style="font-size: 0.6rem;">
+			Illustrative Time Tracking :::: Total {{ data.totalTime }} :::: Tasks {{ data.timeOnTasks.join(', ') }}
 		</div>
 
 		<div
