@@ -9,9 +9,6 @@
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
 		<button @click="handleSubmit">Submit</button>
-		<h3>To Delete:: rowsCorrect for Eren's reference</h3>
-		<p>{{ rowsCorrect }}</p>
-
 	</div>
 </template>
 

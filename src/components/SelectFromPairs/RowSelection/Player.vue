@@ -27,6 +27,7 @@
         </div>
       </div>
     </div>
+    <div class="placeholder"></div>
 
   </div>
 </template>
@@ -85,17 +86,17 @@ function handleChange(i) {
 
 <style scoped>
 .row-player {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 420px 1fr;
+
+
 }
 .audio-area {
-  width: 85px;
-  margin-right: 30px;
-  display: flex;
-  flex-direction: column;
+  align-self: center;
+  justify-self: right;
 }
 .item-area {
+  justify-self: center;
   width: 400px;
   height: 100px;
   border: 2px solid lightgrey;
