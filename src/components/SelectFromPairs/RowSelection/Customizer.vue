@@ -70,10 +70,9 @@ let audioPlaying = ref(false)
 setLocalAudio()
 
 async function setLocalAudio() {
-  const audioId = props.audioId
-  if (!audioId) return
+  if (!props.audioId) return
 
-  const audioUrl = await Agent.download(audioId).url()
+  const audioUrl = await Agent.download(props.audioId).url()
   audio = new Audio(audioUrl) // ready for audio.play()
   audio.addEventListener('ended', () => {
     audioPlaying.value = false
@@ -108,27 +107,47 @@ async function changeChoice(i) {
   const { isConfirmed, value } = await inputSwal(props.choices[i].content)
   if (!isConfirmed) return
   if (!isUUID(value)) {
-    props.choices[i].content = value
+    const choicesCopy = copy(props.choices)
+    choicesCopy[i].content = value
+    emits('updateRow', {
+      audioId: props.audioId,
+      choices: choicesCopy
+    })
   } else { // check if image type
     const { active_type } = await Agent.metadata(value)
     if (!active_type || !active_type.startsWith('image')) {
       await unsupportedTypeSwal(value, active_type)
     } else {
-      props.choices[i].content = value
+      const choicesCopy = copy(props.choices)
+      choicesCopy[i].content = value
+      emits('updateRow', {
+        audioId: props.audioId,
+        choices: choicesCopy
+      })
     }
   }
 }
 
 function toggleCorrect() {
   // toggle both
-  props.choices[0].correct = !props.choices[0].correct
-  props.choices[1].correct = !props.choices[1].correct
+  const choicesCopy = copy(props.choices)
+  choicesCopy[0].correct = !choicesCopy[0].correct
+  choicesCopy[1].correct = !choicesCopy[1].correct
+  emits('updateRow', {
+    audioId: props.audioId,
+    choices: choicesCopy
+  })
 }
 
 async function uploadImage(i) {
   try {
     const id = await Agent.upload({ browser: true, accept: 'image/*' })
-    props.choices[i].content = id
+    const choicesCopy = copy(props.choices)
+    choicesCopy[i].content = id
+    emits('updateRow', {
+      audioId: props.audioId,
+      choices: choicesCopy
+    })
   } catch (error) {
     console.error('Error uploading image:', error)
     alert('Error uploading image.')

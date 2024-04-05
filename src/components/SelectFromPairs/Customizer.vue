@@ -11,10 +11,9 @@
 		<div
 			class="row-wrapper"
 			v-for="r,i in data.content.rows"
-			:key="`row-${i}-${lastChanged}`"
+			:key="`row-${i}`"
 		>
 			<Row
-
 				v-bind="r"
 				@updateRow="data.content.rows[i] = $event"
 			/>
@@ -25,7 +24,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import Row from './RowSelection/Customizer.vue'
 import newRowSchema from './newRowSchema.js'
 
@@ -37,23 +36,20 @@ const props = defineProps({
 
 const state = await Agent.state(props.id)
 const data = reactive({ content: state })
-let lastChanged = ref(Date.now())
 
 function updateRow(i,payload) {
-	data.content.rows[i] = payload
-	lastChanged = Date.now()
+	data.content.rows.push()
+	const rowsCopy = copy(data.content.rows)
+	rowsCopy[i] = payload
+	data.content.rows = dataContentCopy
 }
 function addRow() {
-	const rowsCopy = copy(data.content.rows)
-	rowsCopy.push(newRowSchema)
-	data.content.rows = rowsCopy
-	lastChanged = Date.now()
+	data.content.rows.push(copy(newRowSchema))
 }
 function removeRow(i) {
-	const rowsCopy = copy(data.content.rows)
-	rowsCopy.splice(i,1)
-	data.content.rows = rowsCopy
-	lastChanged = Date.now()
+	const rowCopy = copy(data.content.rows)
+	rowCopy.splice(i,1)
+	data.content.rows = rowCopy
 }
 
 
