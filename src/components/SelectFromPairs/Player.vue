@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<p>{{ questionDef.instructions }}</p>
+		<p v-if="questionDef.instructions">{{ questionDef.instructions }}</p>
 		<Row
 			class="row"
 			v-for="r, i in questionDef.rows"

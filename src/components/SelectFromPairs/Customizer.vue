@@ -3,10 +3,9 @@
 		<h3>Select from Pairs Customizer</h3>
 		<h4>Scope Id :: {{ id }} </h4>
 		<label for="item-name">Item Name:</label>
-		<textarea
-			id="item-name"
-			v-model="data.content.name"
-		/>
+		<input id="item-name" v-model="data.content.name" />
+		<label for="instructions">Instructions (optional):</label>
+		<textarea id="instructions" v-model="data.content.instructions" />
 
 		<div
 			class="row-wrapper"
@@ -51,6 +50,21 @@ function removeRow(i) {
 	rowCopy.splice(i,1)
 	data.content.rows = rowCopy
 }
-
-
 </script>
+
+<style scoped>
+.select-from-pairs-customizer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+h3, h4, input, textarea {
+	margin: 0 0 10px 0;
+}
+input, textarea {
+	display: block;
+	text-align: center;
+	width: 400px;
+}
+</style>
