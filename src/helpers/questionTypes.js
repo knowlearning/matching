@@ -44,8 +44,8 @@ const questionTypes = {
 		newItemSchema: {
 			name: 'Your New Sequence',
 			items: [
-				{ id : 'b2e42280-dda2-11ee-9e52-b180ab5b4386' },
-				{ id : 'a634f160-e561-11ee-8799-e158f951f256' }
+				{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
+				{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
 			]
 		}
 	},
