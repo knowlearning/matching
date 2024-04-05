@@ -1,36 +1,36 @@
 <template>
 	<div class="sequence-customizer">
-	  <h3>Sequence Customizer</h3>
+		<h3>Sequence Customizer</h3>
 		<h4>Scope Id :: {{ id }} </h4>
-    	<label for="item-name">Sequence Name:</label>
-    	<textarea
-	      id="item-name"
-	      v-model="data.content.name"
-	    />
-	    <div
-	    	class="item-list-wrapper"
-				@dragover.prevent
-				@drag.prevent
-				@drop.prevent="handleDrop"
-	    >
-		    <h4>Drag Items on To Add</h4>
-		    <div v-for="({ id:item }, i) in data.content.items" :key="item">
-		    	<button
-		    		class="small-inline-button"
-		    		@click="moveItemUp(i)"
-		    	>&uarr;</button>
-		    	<button
-		    		class="small-inline-button"
-		    		@click="moveItemDown(i)"
-		    	>&darr;</button>
-		    	<button
-		    		class="small-inline-button remove"
-		    		@click="removeItem(i)"
-		    	>x</button>
-		    	<span>{{ i + 1 }}. </span>
-		    	<ItemName :id="item" />
-		    </div>
-		  </div>
+		<label for="item-name">Sequence Name:</label>
+		<textarea
+			id="item-name"
+			v-model="data.content.name"
+		/>
+		<div
+			class="item-list-wrapper"
+			@dragover.prevent
+			@drag.prevent
+			@drop.prevent="handleDrop"
+		>
+			<h4>Drag Items on To Add</h4>
+			<div v-for="({ id:item }, i) in data.content.items" :key="item">
+				<button
+					class="small-inline-button"
+					@click="moveItemUp(i)"
+				>&uarr;</button>
+				<button
+					class="small-inline-button"
+					@click="moveItemDown(i)"
+				>&darr;</button>
+				<button
+					class="small-inline-button remove"
+					@click="removeItem(i)"
+				>x</button>
+				<span>{{ i + 1 }}. </span>
+				<ItemName :id="item" />
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -46,7 +46,7 @@ const props = defineProps(['id'])
 const state = await Agent.state(props.id)
 
 const data = reactive({
-  content: state
+	content: state
 })
 
 async function handleDrop(e) {

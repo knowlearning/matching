@@ -1,12 +1,8 @@
 <template>
-  <button
-    @click="submit"
-    style="width:300px; background: green; color: white; margin-bottom:20px;"
-  >Gross Temp Submit Button</button>
-  <div class="row-player" v-if="questionDef">
+  <div class="row-player">
     <div class="audio-area">
       <button
-        v-show="!!questionDef.audioId"
+        v-show="!!props.audioId"
         @click="toggleAudioPlayback"
       >
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
@@ -14,13 +10,13 @@
     </div>
     <div class="item-area">
       <div
-        v-for="choice,i in questionDef.choices"
+        v-for="choice,i in props.choices"
         :key="`choice-${i}`"
         :class="{
             choice: true,
             selected: userSelected === i
         }"
-        @click="userSelected = (userSelected === i ? null : i)"
+        @click="handleChange(i)"
       >
         <div class="choice-inner">
           <KlImage v-if="isUUID(choice.content)"
@@ -38,20 +34,28 @@
 <script setup>
 import { ref } from 'vue'
 import { validate as isUUID } from 'uuid'
-import KlImage from '../kl-image.vue'
+import KlImage from '../../kl-image.vue'
 
-const props = defineProps(['id'])
-let questionDef
-await Agent
-  .state(props.id)
-  .then(state => questionDef = state )
+const emits = defineEmits(['entryIsCorrect'])
+
+const props = defineProps({
+  audioId: {
+    type: [ String, null ],
+    required: true
+  },
+  choices: {
+    type: Array,
+    required: true
+  }
+})
+
 let audio = null
 let audioPlaying = ref(false)
 setLocalAudio()
 let userSelected = ref(null)
 
 async function setLocalAudio() {
-  const audioId = questionDef.audioId
+  const audioId = props.audioId
   if (!audioId) return
 
   const audioUrl = await Agent.download(audioId).url()
@@ -70,10 +74,11 @@ async function toggleAudioPlayback() {
     audioPlaying.value = true
   }
 }
-function submit() {
-    const correctIndex = questionDef.choices.findIndex(el => el.correct)
-    const isCorrect = userSelected.value === correctIndex
-    alert(isCorrect ? 'woo' : 'boo')
+function handleChange(i) {
+  userSelected.value = (userSelected.value === i ? null : i)
+  const correctIndex = props.choices.findIndex(el => el.correct)
+  const isCorrect = userSelected.value === correctIndex
+  emits('entryIsCorrect', isCorrect)
 }
 
 </script>
