@@ -8,17 +8,23 @@
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
       </button>
     </div>
-    <div class="item-area">
-      <div
+    <div
+      :class="{
+        'item-area' : true,
+        'wide' : props.wideItemArea
+      }"
+    >
+      <div class="choice"
         v-for="choice,i in props.choices"
         :key="`choice-${i}`"
-        :class="{
-            choice: true,
-            selected: userSelected === i
-        }"
         @click="handleChange(i)"
       >
-        <div class="choice-inner">
+        <div
+          :class="{
+            'choice-inner' : true,
+            'selected': userSelected === i
+          }"
+        >
           <KlImage v-if="isUUID(choice.content)"
             :id="choice.content"
             :size="{ width: '80px', height: '80px' }"
@@ -47,6 +53,11 @@ const props = defineProps({
   choices: {
     type: Array,
     required: true
+  },
+  wideItemArea: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
@@ -81,15 +92,14 @@ function handleChange(i) {
   const isCorrect = userSelected.value === correctIndex
   emits('entryIsCorrect', isCorrect)
 }
-
 </script>
 
 <style scoped>
 .row-player {
+  width: 100%;
+  min-width: 800px;
   display: grid;
-  grid-template-columns: 1fr 420px 1fr;
-
-
+  grid-template-columns: 80px 1fr 80px;
 }
 .audio-area {
   align-self: center;
@@ -97,17 +107,20 @@ function handleChange(i) {
 }
 .item-area {
   justify-self: center;
-  width: 400px;
   height: 100px;
   border: 2px solid lightgrey;
-
+  width: 300px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
 }
+.item-area.wide {
+  width: 100%;
+}
 .item-area .choice {
-  width: 120px;
+  padding: 8px;
+  width: 95%;
   height: 90px;
   cursor: pointer;
 
@@ -115,6 +128,8 @@ function handleChange(i) {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  border-right: 2px solid lightgrey;
+  overflow: hidden;
 }
 .selected {
   background: lightseagreen;
@@ -127,6 +142,7 @@ function handleChange(i) {
   justify-content: center;
   font-size: 1.6rem;
 }
+
 button {
   width: 70px;
   cursor: initial;

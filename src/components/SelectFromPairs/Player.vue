@@ -6,6 +6,7 @@
 			v-for="r, i in questionDef.rows"
 			:key="`row-${i}`"
 			v-bind="r"
+			:wideItemArea="wideItemArea()"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
 		<button @click="handleSubmit">Submit</button>
@@ -14,6 +15,7 @@
 
 <script setup>
 import { reactive } from 'vue'
+import { validate as isUUID } from 'uuid'
 import Row from './RowSelection/Player.vue'
 
 const props = defineProps({
@@ -27,6 +29,16 @@ function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
 	alert(isCorrect ? 'woo' : 'boo')
 	if (isCorrect && Agent.embedded) Agent.close({ success: true })
+}
+function wideItemArea() {
+// we want ALL rows to have the same width, narrow or wide
+// go through each row. get ALL choices to see if any force wide layout
+  const allChoiceLengths = questionDef.rows.reduce((acc, currentRow) => {
+  	const rowChoiceLengths = currentRow.choices.map(c => isUUID(c.content) ? 0 : c.content.length)
+  	return [ ...acc, ...rowChoiceLengths]
+  }, [ 0 ])
+  const maxChars = Math.max( ...allChoiceLengths )
+  return maxChars > 10
 }
 </script>
 
