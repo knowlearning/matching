@@ -96,14 +96,14 @@ function handleChange(i) {
 
 <style scoped>
 .row-player {
+  display: flex;
+  justify-content: center;
   width: 100%;
-  min-width: 800px;
-  display: grid;
-  grid-template-columns: 80px 1fr 80px;
+
 }
-.audio-area {
+.audio-area, .placeholder {
+  min-width: 100px;
   align-self: center;
-  justify-self: right;
 }
 .item-area {
   justify-self: center;
