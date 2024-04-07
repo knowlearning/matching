@@ -128,9 +128,12 @@ function handleChange(i) {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  border-right: 2px solid lightgrey;
   overflow: hidden;
 }
+.item-area .choice:first-child {
+  border-right: 2px solid lightgrey;  
+}
+
 .selected {
   background: lightseagreen;
 }
