@@ -12,7 +12,7 @@
       pointer-events="none"
     >
       <div>
-        {{ textContent }}
+        {{ content }}
       </div>
     </foreignObject>
   </svg>
@@ -22,13 +22,10 @@
 export default {
   name: 'text-choice',
   props: {
-    textContent: {
+    content: { // text string
       type: String,
       required: true
     }
-  },
-  setup(props) {
-    return {}
   }
 }
 </script>

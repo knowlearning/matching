@@ -13,8 +13,9 @@
       placeholder="Enter matching instructions"
     />
     <div class="add-buttons-wrapper">
-      <button @click="openFilePicker('left','image')">Add Image</button>
-      <button @click="openFilePicker('right','audio')">Add Audio</button>
+      <button @click="openFilePicker('left','image')">New Image</button>
+      <button @click="openFilePicker('right','audio')">New Audio</button>
+      <button @click="addChoice">Add Text or By Id</button>
     </div>
     <MatchSvg
       :toChoices="data.content.toChoices"
@@ -36,6 +37,7 @@
 import { reactive } from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
 import MatchSvg from './MatchSvg/index.vue'
+import { inputSwal, unsupportedTypeSwal, areYouSure } from '../../helpers/swallows.js'
 const copy = x => JSON.parse(JSON.stringify(x))
 
 const props = defineProps(['id'])
@@ -48,20 +50,36 @@ const data = reactive({
 const state = await Agent.state(props.id)
 data.content = state
 
-function addChoice(side, type, content) {
-  if (side === 'left') {
+async function addChoice() {
+  const { isConfirmed, value } = await inputSwal()
+  if (!isConfirmed || !value) return
+
+  if (!isUUID(value)) { // not uuid, add text choice
     data.content.fromChoices.push({
-      type: type,
-      content: content,
+      type: 'text',
+      content:value,
       nodeId: uuid()
     })
-  } else {
-    data.content.toChoices.push({
-      type: type,
-      content: content,
-      nodeId: uuid()
-    })
+  } else { // is uuid, add type with guard if not found or not type
+    const { active_type } = await Agent.metadata(value)
+    let type // should 'audio' 'image', or undefined
+    if (active_type.startsWith('audio')) type = 'audio'
+    if (active_type.startsWith('image')) type = 'image'
+    if (type === 'audio' || type === 'image') {
+      data.content.fromChoices.push({
+        type,
+        nodeId: uuid(),
+        content: value
+      })
+    } else {
+      unsupportedTypeSwal(value, active_type)
+    }
   }
+}
+
+
+function addTextChoice(textValue) {
+
 }
 function handleMove(nodeId, dir) {
   // tedious logic, made code-grosser by the reactivity situation
@@ -108,12 +126,29 @@ function moveArrayElementDown(arr, i) {
   }
 }
 
-function handleEditChoice(nodeId) {
-  const res = window.prompt('updating choice.  enter text or uuid of image')
-  if (!res) return
-  const newChoice = isUUID(res)
-    ? { type: 'image', imageId: res, nodeId } 
-    : { type: 'audio', audioId: res, nodeId}
+async function handleEditChoice(nodeId) {
+  const previousValue = [ ...data.content.fromChoices, ...data.content.toChoices]
+    .find(el => el.nodeId === nodeId)
+    .content
+  const { isConfirmed, value } = await inputSwal(previousValue)
+  if (!isConfirmed || !value ) return
+
+  let newChoice
+
+  if (!isUUID(value)) { // handing text value
+    newChoice = { type: 'text', content: value, nodeId }
+  } else { // handling uuid value
+    const { active_type } = await Agent.metadata(value)
+    let type // 'audio' 'image', or undefined
+    if (active_type.startsWith('audio')) type = 'audio'
+    if (active_type.startsWith('image')) type = 'image'
+
+    if (type === 'audio' || type === 'image') {
+      newChoice = { type, nodeId, content: value }
+    } else {
+      unsupportedTypeSwal(value, active_type)
+    }
+  } 
 
   data.content.fromChoices = copy(data.content.fromChoices)
     .map(c => c.nodeId === nodeId ? newChoice : c)
@@ -121,8 +156,10 @@ function handleEditChoice(nodeId) {
     .map(c => c.nodeId === nodeId ? newChoice : c)
   data.editChoices = false
 }
-function handleRemoveChoice(nodeId) {
-  if (!confirm('are you sure you want to delete this choice?')) return
+
+async function handleRemoveChoice(nodeId) {
+  const { isConfirmed } = await areYouSure()
+  if (!isConfirmed) return
 
   data.content.fromChoices = copy(data.content.fromChoices)
     .filter(c => c.nodeId !== nodeId)
@@ -142,14 +179,13 @@ async function openFilePicker(side, fileType) {
   if (fileType === 'audio') {
     data.content.toChoices.push({
       type: 'audio',
-      audioId: id,
-      imageId: '60e5b5d1-5c48-43bd-b739-a47c58bc890a',
+      content: id,
       nodeId: uuid()
     })
   } else {
     data.content.fromChoices.push({
       type: 'image',
-      imageId: id,
+      content: id,
       nodeId: uuid()
     })
   }
@@ -176,7 +212,7 @@ textarea#item-name {
   height: 16px;
 }
 textarea#instructions {
-  height: 150px;
+  height: 45px;
 }
 .audio-button {
   background: green;
