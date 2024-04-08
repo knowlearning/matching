@@ -2,13 +2,21 @@ import Swal from 'sweetalert2'
 import { validate as isUUID } from 'uuid'
 import questionTypes from './questionTypes.js'
 
-export function inputSwal(pre) {
+export function areYouSure() {
+	return Swal.fire({
+		title: "Are you sure?",
+		icon: "warning",
+		confirmButtonText: 'DELETE',
+		showCancelButton: true,
+    })
+}
+
+export function inputSwal(pre = '') {
 	return Swal.fire({
 		input: 'text',
 		showCancelButton: true,
 		inputValue: pre,
 		icon: 'question'
-
 	})
 }
 

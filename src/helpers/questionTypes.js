@@ -11,7 +11,7 @@ import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 const questionTypes = {
 	'application/json;type=matching' : {
-		description: 'Simple Matching Question',
+		description: 'Matching Question',
 		components: {
 			player: MatchingPlayer,
 			customizer: MatchingCustomizer
@@ -24,17 +24,17 @@ const questionTypes = {
 			answerConnections: []
 		}
 	},
-	'application/json;type=textEntry' : {
-		description: 'Simple Text Entry Question',
-		components: {
-			player: TextEntryPlayer,
-			customizer: TextEntryCustomizer
-		},
-		newItemSchema: {
-			name: 'Unnamed Text Entry Item',
-			question: 'Your Question Here',
-		}
-	},
+	// 'application/json;type=textEntry' : {
+	// 	description: 'Text Entry Question',
+	// 	components: {
+	// 		player: TextEntryPlayer,
+	// 		customizer: TextEntryCustomizer
+	// 	},
+	// 	newItemSchema: {
+	// 		name: 'Unnamed Text Entry Item',
+	// 		question: 'Your Question Here',
+	// 	}
+	// },
 	'application/json;type=rearrange-items' : {
 		description: 'Rearrange Items',
 		components: {
@@ -48,7 +48,7 @@ const questionTypes = {
 		}
 	},
 	'application/json;type=select-from-pairs' : {
-		description: 'Select from Pairs',
+		description: 'Pair-wise Selection',
 		components: {
 			player: SelectFromPairsPlayer,
 			customizer: SelectFromPairsCustomizer
@@ -74,7 +74,7 @@ const questionTypes = {
 		}
 	},
 	'application/json;type=sequence' : {
-		description: 'Sequence Item',
+		description: 'Sequence Builder',
 		components: {
 			player: SequencePlayer,
 			customizer: SequenceCustomizer

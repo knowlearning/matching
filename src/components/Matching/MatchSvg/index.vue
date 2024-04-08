@@ -24,7 +24,6 @@
 	    >
 	      <component
 	        :is="getComponentForChoice(c)"
-	        @click="$emit('handleChoiceClick', c.nodeId, 'right')"
 	        v-bind="c"
 	        width="100%"
 	        height="100%"

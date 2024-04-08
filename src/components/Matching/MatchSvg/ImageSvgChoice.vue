@@ -8,11 +8,7 @@ import { ref, onMounted } from 'vue'
 export default {
   name: 'image-choice',
   props: {
-    imageId: {
-      type: String,
-      required: true
-    },
-    nodeId: {
+    content: { // uuid for image
       type: String,
       required: true
     }
@@ -20,7 +16,7 @@ export default {
   setup(props) {
     const url = ref(null)
     onMounted(async () => {
-      const imageUrl = await Agent.download(props.imageId).url()
+      const imageUrl = await Agent.download(props.content).url()
       url.value = imageUrl
     })
     return { url }
