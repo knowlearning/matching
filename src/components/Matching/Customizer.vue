@@ -37,7 +37,12 @@
 import { reactive } from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
 import MatchSvg from './MatchSvg/index.vue'
-import { inputSwal, unsupportedTypeSwal, areYouSure } from '../../helpers/swallows.js'
+import { inputSwal, unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
+
 const copy = x => JSON.parse(JSON.stringify(x))
 
 const props = defineProps(['id'])
@@ -77,10 +82,6 @@ async function addChoice() {
   }
 }
 
-
-function addTextChoice(textValue) {
-
-}
 function handleMove(nodeId, dir) {
   // tedious logic, made code-grosser by the reactivity situation
   // for right / left, ignore if already on that side, if not push to end of other choice array and remove from own.  
@@ -158,7 +159,7 @@ async function handleEditChoice(nodeId) {
 }
 
 async function handleRemoveChoice(nodeId) {
-  const { isConfirmed } = await areYouSure()
+  const { isConfirmed } = await areYouSureSwal(t)
   if (!isConfirmed) return
 
   data.content.fromChoices = copy(data.content.fromChoices)
