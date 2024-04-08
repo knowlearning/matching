@@ -55,7 +55,7 @@
 
   }
   async function copyExisting() {
-    const { value: idToCopy } = await copyItemSwal() // validates id and type 
+    const { value: idToCopy } = await copyItemSwal(t) // validates id and type 
     if (!idToCopy) return
     const { active_type } = await Agent.metadata(idToCopy)
     const stateToCopy = await Agent.state(idToCopy)
@@ -90,7 +90,7 @@
         <div
           :class="store.getters.language() ==='en' ? 'active' : ''"
           @click="store.dispatch('language', 'en')"
-        >English</div>
+        >English (อังกฤษ)</div>
         <div
           :class="store.getters.language() ==='th' ? 'active' : ''"
           @click="store.dispatch('language', 'th')"

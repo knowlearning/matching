@@ -1,8 +1,8 @@
 <template>
 	<div class="sequence-customizer">
-		<h3>Sequence Customizer</h3>
-		<h4>Scope Id :: {{ id }} </h4>
-		<label for="item-name">Sequence Name:</label>
+		<h3>{{ t('sequence-customizer') }}</h3>
+		<h4>{{ t('item-id') }}: {{ id }} </h4>
+		<label for="item-name">{{ t('sequence-name') }}:</label>
 		<textarea
 			id="item-name"
 			v-model="data.content.name"
@@ -13,7 +13,7 @@
 			@drag.prevent
 			@drop.prevent="handleDrop"
 		>
-			<h4>Drag Items on To Add</h4>
+			<h4>{{ t('drag-on-items-to-add') }}</h4>
 			<div v-for="({ id:item }, i) in data.content.items" :key="item">
 				<button
 					class="small-inline-button"
@@ -38,8 +38,12 @@
 <script setup>
 import { reactive, computed } from 'vue'
 import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
-import { unsupportedTypeSwal } from '../../helpers/swallows.js'
+import { unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 
@@ -58,7 +62,10 @@ async function handleDrop(e) {
 		data.content.items.push({ id: attemptedId })		
 	}
 }
-function removeItem(i) {
+async function removeItem(i) {
+	const { isConfirmed } = await areYouSureSwal(t)
+	if (!isConfirmed) return
+
 	const itemsCopy = JSON.parse(JSON.stringify(data.content.items))
 	itemsCopy.splice(i,1)
 	data.content.items = itemsCopy

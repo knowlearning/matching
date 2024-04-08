@@ -12,19 +12,22 @@ export function areYouSureSwal(t) {
     })
 }
 
-export function inputSwal(pre = '') {
+export function inputSwal(t, pre = '') {
 	return Swal.fire({
 		input: 'text',
 		showCancelButton: true,
 		inputValue: pre,
+		confirmButtonText: t('ok'),
+		cancelButtonText: t('cancel'),
 		icon: 'question'
 	})
 }
 
-export function unsupportedTypeSwal(id, type) {
+export function unsupportedTypeSwal(t, id, type) {
 	return Swal.fire({
-		title: 'Unsupported Type',
-		text: `id ${id} is of unsupported type, ${type}`,
+		title: t('unsupported-type'),
+		text: type,
+		confirmButtonText: t('ok'),
 		icon: 'warning'
 	})
 }
@@ -45,19 +48,19 @@ export function chooseTypeSwal(t) {
 	})
 }
 
-export function copyItemSwal() {
+export function copyItemSwal(t) {
 	return Swal.fire({
-		title: 'Enter ID of to Copy',
+		title: t('enter-id-of-item-to-copy'),
 		input: 'text',
 		inputAttributes: { autocapitalize: "off" },
 		showCancelButton: true,
-		cancelButtonText: 'Cancel',
-		confirmButtonText: 'Copy',
+		cancelButtonText: t('cancel'),
+		confirmButtonText: t('copy'),
 		inputValidator: async (id) => {
-			if (!isUUID(id)) return 'Input is not a valid UUID'
+			if (!isUUID(id)) return t('input-is-not-a-valid-uuid')
 			const { active_type } = await Agent.metadata(id)
 			if (!active_type || !Object.keys(questionTypes).includes(active_type)) {
-				return 'ID is not of valid type'
+				return t('input-is-not-of-valid-type')
 			}
 		}
 	})

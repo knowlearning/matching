@@ -9,7 +9,7 @@
 			:wideItemArea="wideItemArea()"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
-		<button @click="handleSubmit">Submit</button>
+		<button @click="handleSubmit">{{ t('submit') }}</button>
 	</div>
 </template>
 
@@ -17,6 +17,10 @@
 import { reactive } from 'vue'
 import { validate as isUUID } from 'uuid'
 import Row from './RowSelection/Player.vue'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps({
 	id: { type: String, required: true }

@@ -1,10 +1,10 @@
 <template>
 	<div class="select-from-pairs-customizer">
-		<h3>Select from Pairs Customizer</h3>
-		<h4>Scope Id :: {{ id }} </h4>
-		<label for="item-name">Item Name:</label>
+		<h3>{{ t('select-from-pairs-customizer') }}</h3>
+		<h4>{{ t('item-id') }}: {{ id }} </h4>
+		<label for="item-name">{{ t('item-name') }}:</label>
 		<input id="item-name" v-model="data.content.name" />
-		<label for="instructions">Instructions (optional):</label>
+		<label for="instructions">{{ t('instructions-optional') }}:</label>
 		<textarea id="instructions" v-model="data.content.instructions" />
 
 		<div
@@ -26,6 +26,10 @@
 import { reactive } from 'vue'
 import Row from './RowSelection/Customizer.vue'
 import newRowSchema from './newRowSchema.js'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const copy = x => JSON.parse(JSON.stringify(x))
 

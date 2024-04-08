@@ -54,5 +54,57 @@ export default {
   'remove' : {
     'en': 'REMOVE',
     'th': 'ลบ'
+  },
+   'select-from-pairs-customizer': {
+    'en': 'Select from Pairs Customizer',
+    'th': 'เลือกจากการปรับแต่งคู่',
+  },
+  'item-name': {
+    'en': 'Item Name',
+    'th': 'ชื่อรายการ',
+  },
+  'instructions-optional': {
+    'en': 'Instructions (optional)',
+    'th': 'คำสั่ง (ตัวเลือก)',
+  },
+  'submit': {
+    'en': 'Submit',
+    'th': 'ส่ง',
+  },
+  'copy': {
+    'en': 'Copy',
+    'th': 'คัดลอก',
+  },
+  'enter-id-of-item-to-copy': {
+    'en': 'Enter Id of Item to Copy',
+    'th': 'ป้อนรหัสของรายการที่ต้องการคัดลอก',
+  },
+  'input-is-not-a-valid-uuid': {
+    'en': 'Input is not a valid uuid',
+    'th': 'ข้อมูลที่ป้อนไม่ใช่ UUID ที่ถูกต้อง',
+  },
+  'input-is-not-of-valid-type': {
+    'en': 'Input is not of valid type',
+    'th': 'ข้อมูลที่ป้อนไม่ใช่ประเภทที่ถูกต้อง',
+  },
+  'item-id': {
+    'en': 'Item Id',
+    'th': 'รหัสรายการ',
+  },
+  'sequence-customizer': {
+    'en': 'Sequence Customizer',
+    'th': 'การปรับแต่งลำดับ',
+  },
+  'sequence-name': {
+    'en': 'Sequence Name',
+    'th': 'ชื่อลำดับ',
+  },
+  'drag-on-items-to-add': {
+    'en': 'Drag on Items to Add',
+    'th': 'ลากรายการเพื่อเพิ่ม',
+  },
+  'unsupported-type': {
+    'en': 'Unsupported Type',
+    'th': 'ประเภทไม่รองรับ'
   }
 }

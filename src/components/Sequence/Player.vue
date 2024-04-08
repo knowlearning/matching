@@ -1,6 +1,5 @@
 <template>
 	<div class="sequence-player">
-		{{ t('are-you-sure') }}
 		<SequenceHeader
 			:isCorrectArray="data.isCorrectArray"
 			:activeItemIndex="data.activeItemIndex"
