@@ -11,7 +11,7 @@ import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 const questionTypes = {
 	'application/json;type=matching' : {
-		description: 'Matching Question',
+		description: 'matching-question',
 		components: {
 			player: MatchingPlayer,
 			customizer: MatchingCustomizer
@@ -51,7 +51,7 @@ const questionTypes = {
 	// 	     }
 	// },
 	'application/json;type=rearrange-items' : {
-		description: 'Rearrange Items',
+		description: 'rearrange-question',
 		components: {
 			player: RearrangePlayer,
 			customizer: RearrangeCustomizer
@@ -71,7 +71,7 @@ const questionTypes = {
 		}
 	},
 	'application/json;type=select-from-pairs' : {
-		description: 'Pair-wise Selection',
+		description: 'select-from-pairs-question',
 		components: {
 			player: SelectFromPairsPlayer,
 			customizer: SelectFromPairsCustomizer
@@ -118,7 +118,7 @@ const questionTypes = {
 		}
 	},
 	'application/json;type=sequence' : {
-		description: 'Sequence Builder',
+		description: 'sequence-builder',
 		components: {
 			player: SequencePlayer,
 			customizer: SequenceCustomizer

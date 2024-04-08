@@ -28,17 +28,19 @@ export function unsupportedTypeSwal(id, type) {
 	})
 }
 
-export function chooseTypeSwal() {
+export function chooseTypeSwal(t) {
 	return Swal.fire({
-		title: "Select New Question Type",
+		title: t('select-question-type'),
 		input: "select",
 		inputOptions: Object.entries(questionTypes)
 			.reduce(
-				(acc, [key, val]) => ({ ...acc, [key] : val.description}),
+				(acc, [key, val]) => ({ ...acc, [key] : t(val.description) }),
 				{}
 			),
-		inputPlaceholder: "Select New Question Type",
-		showCancelButton: true
+		inputPlaceholder: t('select-question-type'),
+		showCancelButton: true,
+		confirmButtonText: t('ok'),
+		cancelButtonText: t('cancel')
 	})
 }
 
