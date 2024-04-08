@@ -1,5 +1,5 @@
 <template>
-  <svg>
+  <svg :class="{ 'clickable': clickable }" @click="playText">
     <rect
       width="100%"
       height="100%"
@@ -25,6 +25,16 @@ export default {
     content: { // text string
       type: String,
       required: true
+    },
+    clickable: { // Boolean to determine if text is clickable
+      type: Boolean,
+      default: true
+    }
+  },
+  methods: {
+    playText() {
+      const utterance = new SpeechSynthesisUtterance(this.content);
+      window.speechSynthesis.speak(utterance);
     }
   }
 }
@@ -38,10 +48,12 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-
   justify-content: center;
   align-items: center;
   background: lightgrey;
   border-radius: 6px;
+}
+.clickable {
+  cursor: pointer;
 }
 </style>
