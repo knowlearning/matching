@@ -10,7 +10,6 @@
     return store.getters.t(slug)
   }
 
-
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
@@ -42,13 +41,18 @@
     })
 
   async function addNew() {      
-    const { value: active_type } = await chooseTypeSwal()
-    if (active_type) {
-      createContent(
-        active_type,
-        copy(questionTypes[active_type].newItemSchema)
-      )
-    }
+    const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
+    if (!active_type || !isConfirmed) return
+
+    // get demo question for active language
+    const lang = store.getters.language()
+    const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
+
+    createContent(
+      active_type,
+      copy(itemToCopy)
+    )
+
   }
   async function copyExisting() {
     const { value: idToCopy } = await copyItemSwal() // validates id and type 
@@ -78,6 +82,7 @@
 <template>
   <div class="main-wrapper">
     <div class="left-col">
+
       <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
       <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
         <div
@@ -89,6 +94,7 @@
           @click="store.dispatch('language', 'th')"
         >ไทย (Thai)</div>
       </div>
+      <!-- TODO::: END TEMP AREA TO REMOVE -->
 
       <div class="toggle-mode-wrapper">
         <div

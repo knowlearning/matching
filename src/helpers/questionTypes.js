@@ -11,80 +11,133 @@ import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 const questionTypes = {
 	'application/json;type=matching' : {
-		description: 'Matching Question',
+		description: 'matching-question',
 		components: {
 			player: MatchingPlayer,
 			customizer: MatchingCustomizer
 		},
-		newItemSchema: {
-			name: 'Unnamed Matching Item',
-			instructions: '',
-			fromChoices: [],
-			toChoices: [],
-			answerConnections: []
+		newItemSchemas: {
+			default: {
+				name: 'Unnamed Matching Item',
+				instructions: '',
+				fromChoices: [],
+				toChoices: [],
+				answerConnections: []
+			},
+			th: {
+				name: 'THAI Matching item',
+				instructions: '',
+				fromChoices: [],
+				toChoices: [],
+				answerConnections: []
+			}
 		}
 	},
 	// 'application/json;type=textEntry' : {
-	// 	description: 'Text Entry Question',
-	// 	components: {
-	// 		player: TextEntryPlayer,
-	// 		customizer: TextEntryCustomizer
-	// 	},
-	// 	newItemSchema: {
-	// 		name: 'Unnamed Text Entry Item',
-	// 		question: 'Your Question Here',
-	// 	}
+	// 	    description: 'Text Entry Question',
+	// 	    components: {
+	// 		    player: TextEntryPlayer,
+	// 		    customizer: TextEntryCustomizer
+	// 	    },
+	// 	    newItemSchemas: {
+	//          default: {
+	// 	            name: 'Unnamed Text Entry Item',
+	// 	            question: 'Your Question Here',
+	//          },
+	//          th: {
+	// 	            name: 'Unnamed Text Entry Item',
+	// 	            question: 'THAI Your Question Here',
+	//          }
+	// 	     }
 	// },
 	'application/json;type=rearrange-items' : {
-		description: 'Rearrange Items',
+		description: 'rearrange-question',
 		components: {
 			player: RearrangePlayer,
 			customizer: RearrangeCustomizer
 		},
-		newItemSchema: {
-			name: 'New Rearrange Item',
-			question: '?? Question Text ??',
-			answer : ''
+		newItemSchemas: {
+			default: {
+				name: 'New Rearrange Item',
+				question: '?? Question Text ??',
+				answer : ''
+				},
+			th: {
+				name: 'THAI Rearrange Item',
+				question: '?? Question Text ??',
+				answer : ''
+			}
+
 		}
 	},
 	'application/json;type=select-from-pairs' : {
-		description: 'Pair-wise Selection',
+		description: 'select-from-pairs-question',
 		components: {
 			player: SelectFromPairsPlayer,
 			customizer: SelectFromPairsCustomizer
 		},
-		newItemSchema: {
-			name: 'New Select from Pairs Item',
-			instructions: '...some instructions...',
-			rows: [
-				{
-					audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
-					choices: [
-						{	
-							content: 'พ', // display string or uuid
-							correct: false
-						},
-						{	
-							content: 'ะ', // display string or uuid 
-							correct: true
-						}
-					]
-				} // end placeholder row
-			]
+		newItemSchemas: {
+			default: {
+				name: 'New Select from Pairs Item',
+				instructions: '...some instructions...',
+				rows: [
+					{
+						audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
+						choices: [
+							{	
+								content: 'พ', // display string or uuid
+								correct: false
+							},
+							{	
+								content: 'ะ', // display string or uuid 
+								correct: true
+							}
+						]
+					} // end placeholder row
+				]
+			},
+			th: {
+				name: 'THAI Select from Pairs Item',
+				instructions: '...some THAI instructions...',
+				rows: [
+					{
+						audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
+						choices: [
+							{	
+								content: 'พ', // display string or uuid
+								correct: false
+							},
+							{	
+								content: 'ะ', // display string or uuid 
+								correct: true
+							}
+						]
+					} // end placeholder row
+				]
+			}
 		}
 	},
 	'application/json;type=sequence' : {
-		description: 'Sequence Builder',
+		description: 'sequence-builder',
 		components: {
 			player: SequencePlayer,
 			customizer: SequenceCustomizer
 		},
-		newItemSchema: {
-			name: 'Your New Sequence',
-			items: [
-				{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
-				{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
-			]
+		newItemSchemas: {
+			default: {
+				name: 'Your New Sequence',
+				items: [
+					{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
+					{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
+				]
+			},
+			th: {
+				name: 'THAI Sequence',
+				items: [
+					{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
+					{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
+				]
+			}
 		}
 	},
 }
