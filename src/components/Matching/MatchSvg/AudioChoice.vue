@@ -1,9 +1,10 @@
 <template>
-  <image
-    :href="imageUrl"
-    @click="toggleAudio"
-    style="cursor: pointer"
-  />
+    <g id="group-for-hover-filter">
+      <image
+        :href="imageUrl"
+        @click="toggleAudio"
+      />
+    </g>
 </template>
 
 <script setup>
@@ -45,3 +46,17 @@ if (audioUrl.value) {
 }
 }
 </script>
+
+<style scoped>
+:hover {
+    cursor: pointer;
+    filter: invert(0.5);
+}
+#group-for-hover-filter image {
+    /*  card width is 140x100 magic numbers. hence magic numbers below to center */
+    x: 35;
+    y: 25;
+    width: 50%;
+    height: 50%;
+}
+</style>
