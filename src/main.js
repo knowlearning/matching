@@ -2,6 +2,7 @@ import Agent from '@knowlearning/agents/browser.js'
 import { createApp } from 'vue'
 import { validate as isUUID } from 'uuid'
 import './style.css'
+import store from './store/store.js'
 import App from './App.vue'
 import NotFound from './components/NotFound.vue'
 import EmbeddedPlayer from './components/EmbeddedPlayer.vue'
@@ -18,11 +19,15 @@ const initialLoad = async () => {
         const { pathname } = url
         const route = pathname.slice(1)
         if (route === '') {
-        	createApp(App).mount('#app')
+        	createApp(App)
+                .use(store)
+                .mount('#app')
         } else if (await routeIsUUIDOfValidType(route)) {
             // cannot use PlayOrCustomizeByTypeSwitcher directly
             // because we need to wrap in a suspense element
-        	createApp(EmbeddedPlayer, { id: route }).mount('#app')
+        	createApp(EmbeddedPlayer, { id: route })
+                .use(store)
+                .mount('#app')
         } else {
         	createApp(NotFound).mount('#app')
         }
