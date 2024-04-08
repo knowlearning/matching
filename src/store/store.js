@@ -58,7 +58,7 @@ const store = createStore({
       'sequence-builder' : {
         'en': 'Sequence Builder',
         'th': 'สร้างลำดับ'
-      },
+      }
     },
   },
    getters: {
