@@ -1,5 +1,6 @@
 <template>
 	<div class="sequence-player">
+		{{ t('are-you-sure') }}
 		<SequenceHeader
 			:isCorrectArray="data.isCorrectArray"
 			:activeItemIndex="data.activeItemIndex"
@@ -29,9 +30,17 @@
 
 
 <script setup>
+
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) {
+	return store.getters.t(slug)
+}
+
 
 const props = defineProps(['id'])
 

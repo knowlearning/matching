@@ -4,6 +4,12 @@
   import ItemName from './components/ItemName.vue'
   import { chooseTypeSwal, copyItemSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
+  import { useStore } from 'vuex'
+  const store = useStore()
+  function t(slug) {
+    return store.getters.t(slug)
+  }
+
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
@@ -72,19 +78,31 @@
 <template>
   <div class="main-wrapper">
     <div class="left-col">
+      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
+      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
+        <div
+          :class="store.getters.language() ==='en' ? 'active' : ''"
+          @click="store.dispatch('language', 'en')"
+        >English</div>
+        <div
+          :class="store.getters.language() ==='th' ? 'active' : ''"
+          @click="store.dispatch('language', 'th')"
+        >ไทย (Thai)</div>
+      </div>
+
       <div class="toggle-mode-wrapper">
         <div
           :class="data.mode==='player' ? 'active' : ''"
           @click="data.mode = 'player'"
-        >Player</div>
+        >{{ t('player' )}}</div>
         <div
           :class="data.mode==='customizer' ? 'active' : ''"
           @click="data.mode = 'customizer'"
-        >Customizer</div>
+        >{{ t('customizer' )}}</div>
       </div>
 
-      <button class="new" @click="addNew">+ Add New</button>
-      <button class="new" @click="copyExisting()">+ Copy Existing</button>
+      <button class="new" @click="addNew">+ {{ t('add-new' )}}</button>
+      <button class="new" @click="copyExisting()">+ {{ t('copy-existing') }}</button>
       <div v-if="data.content">
         <div
           v-for="itemId in data.content"
