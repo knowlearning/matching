@@ -1,21 +1,20 @@
 <template>
   <div class="customizer">
-    <div>Item Scope Id :: {{ id }} </div>
-    <label for="item-name">Item Name:</label>
+    <div>{{ t('item-id') }}: {{ id }} </div>
+    <label for="item-name">{{ t('item-name') }}:</label>
     <textarea
       id="item-name"
       v-model="data.content.name"
     />
-    <label for="instruction">Instructions:</label>
+    <label for="instruction">{{ t('instructions-optional') }}:</label>
     <textarea
       id="instructions"
       v-model="data.content.instructions"
-      placeholder="Enter matching instructions"
     />
     <div class="add-buttons-wrapper">
-      <button @click="openFilePicker('left','image')">New Image</button>
-      <button @click="openFilePicker('right','audio')">New Audio</button>
-      <button @click="addChoice">Add Text or By Id</button>
+      <button @click="openFilePicker('left','image')">{{ t('add-image') }}</button>
+      <button @click="openFilePicker('right','audio')">{{ t('add-audio') }}</button>
+      <button @click="addChoice">{{ t('add-by-text-or-by-id') }}</button>
     </div>
     <MatchSvg
       :toChoices="data.content.toChoices"
@@ -28,7 +27,8 @@
       @move="handleMove"
     />
     <button @click="data.editChoices = !data.editChoices">
-      {{ data.editChoices ? 'Hide' : 'Show'}} Edit Choices
+      <i class="fas fa-pen" />
+
     </button>
   </div>
 </template>
@@ -56,7 +56,7 @@ const state = await Agent.state(props.id)
 data.content = state
 
 async function addChoice() {
-  const { isConfirmed, value } = await inputSwal()
+  const { isConfirmed, value } = await inputSwal(t)
   if (!isConfirmed || !value) return
 
   if (!isUUID(value)) { // not uuid, add text choice
@@ -77,7 +77,7 @@ async function addChoice() {
         content: value
       })
     } else {
-      unsupportedTypeSwal(value, active_type)
+      unsupportedTypeSwal(t, value, active_type)
     }
   }
 }
@@ -131,7 +131,7 @@ async function handleEditChoice(nodeId) {
   const previousValue = [ ...data.content.fromChoices, ...data.content.toChoices]
     .find(el => el.nodeId === nodeId)
     .content
-  const { isConfirmed, value } = await inputSwal(previousValue)
+  const { isConfirmed, value } = await inputSwal(t, previousValue)
   if (!isConfirmed || !value ) return
 
   let newChoice
@@ -147,7 +147,8 @@ async function handleEditChoice(nodeId) {
     if (type === 'audio' || type === 'image') {
       newChoice = { type, nodeId, content: value }
     } else {
-      unsupportedTypeSwal(value, active_type)
+      await unsupportedTypeSwal(t, value, active_type)
+      return
     }
   } 
 

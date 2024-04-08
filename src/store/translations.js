@@ -52,7 +52,7 @@ export default {
     'th': 'สร้างลำดับ'
   },
   'remove' : {
-    'en': 'REMOVE',
+    'en': 'Remove',
     'th': 'ลบ'
   },
    'select-from-pairs-customizer': {
@@ -118,5 +118,9 @@ export default {
   'add-audio': {
     'en': 'Add Audio',
     'th': 'เพิ่มเสียง',
+  },
+  'add-by-text-or-by-id': {
+    'en': 'Add by Text or by Id',
+    'th': 'เพิ่มโดยข้อความหรือโดยรหัส'
   }
 }

@@ -76,7 +76,7 @@
 			:disabled="selectedConnectionIndex === null"
 			@click="removeConnectionByIndex(selectedConnectionIndex)"
 		>
-			Remove Connection
+			<i class="fas fa-trash" />
 		</button>
 	</div>
 </template>
@@ -97,6 +97,10 @@ import {
 	getClosestSegmentWitinToleranceIndex,
 	sameConnection
 } from '../../../helpers/mathHelpers.js'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
