@@ -6,6 +6,7 @@
 			v-for="r, i in questionDef.rows"
 			:key="`row-${i}`"
 			v-bind="r"
+			:rowIndex="i"
 			:wideItemArea="wideItemArea()"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>

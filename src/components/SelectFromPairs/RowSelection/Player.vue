@@ -1,13 +1,15 @@
 <template>
   <div class="row-player">
-    <div class="audio-area">
+    <div class="left-area">
       <button
         v-show="!!props.audioId"
         @click="toggleAudioPlayback"
       >
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
       </button>
+      <div> {{ getLabelForRowNumber() }}) </div>
     </div>
+
     <div
       :class="{
         'item-area' : true,
@@ -33,6 +35,7 @@
         </div>
       </div>
     </div>
+
     <div class="placeholder"></div>
 
   </div>
@@ -42,6 +45,9 @@
 import { ref } from 'vue'
 import { validate as isUUID } from 'uuid'
 import KlImage from '../../kl-image.vue'
+
+import { useStore } from 'vuex'
+const store = useStore()
 
 const emits = defineEmits(['entryIsCorrect'])
 
@@ -58,6 +64,10 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false
+  },
+  rowIndex: {
+    type: Number,
+    required: true
   }
 })
 
@@ -65,6 +75,15 @@ let audio = null
 let audioPlaying = ref(false)
 setLocalAudio()
 let userSelected = ref(null)
+
+
+function getLabelForRowNumber() {
+  const lang = store.getters.language()
+  const choices = (lang === 'th') ?
+    ['ก', 'ข', 'ค', 'ง', 'จ', 'ฉ', 'ช', 'ซ', 'ฌ', 'ญ', 'ฎ', 'ฏ'] : 
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
+  return choices[props.rowIndex]
+}
 
 async function setLocalAudio() {
   const audioId = props.audioId
@@ -101,9 +120,14 @@ function handleChange(i) {
   width: 100%;
 
 }
-.audio-area, .placeholder {
+.left-area, .placeholder {
   min-width: 100px;
-  align-self: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-weight: bolder;
 }
 .item-area {
   justify-self: center;
