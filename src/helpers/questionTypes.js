@@ -9,6 +9,10 @@ import SequencePlayer from '../components/Sequence/Player.vue'
 import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.vue'
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
+import mjAndKobeMatching from './mjAndKobeMatching.js'
+const copy = x => JSON.parse(JSON.stringify(x))
+
+
 const questionTypes = {
 	'application/json;type=matching' : {
 		description: 'matching-question',
@@ -17,20 +21,8 @@ const questionTypes = {
 			customizer: MatchingCustomizer
 		},
 		newItemSchemas: {
-			default: {
-				name: 'Unnamed Matching Item',
-				instructions: '',
-				fromChoices: [],
-				toChoices: [],
-				answerConnections: []
-			},
-			th: {
-				name: 'THAI Matching item',
-				instructions: '',
-				fromChoices: [],
-				toChoices: [],
-				answerConnections: []
-			}
+			default: copy(mjAndKobeMatching),
+			th: copy(mjAndKobeMatching)
 		}
 	},
 	// 'application/json;type=textEntry' : {
