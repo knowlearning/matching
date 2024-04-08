@@ -1,29 +1,29 @@
 <template>
 <div class="rearrange-customizer" v-if="data.content">
-	<h3>Rearrange Column Customizer</h3>
-	<h4>Item Scope Id :: {{ id }}</h4>
-	<label for="item-name">Item Name:</label>
+	<h3>{{ t('rearrange-column-customizer') }}</h3>
+	<h4>{{ t('item-id') }}: {{ id }}</h4>
+	<label for="item-name">{{ t('item-name') }}:</label>
 	<textarea 
 		id="item-name" 
 		v-model="data.content.name">
 	</textarea>
-	<label for="instruction">Instructions:</label>
+	<label for="instruction">{{ t('instructions-optional') }}:</label>
 	<textarea 
 		id="instructions" 
 		v-model="data.content.instructions" 
-		placeholder="Enter matching instructions">
+	>
 	</textarea>
 	<br>
 	<div class="upload-wrapper">
 		<button
 			@click="uploadImage"
 		>
-			Add Image
+			{{ t('add-image') }}
 		</button>
 		<button
 			@click="uploadAudio"
 		>
-			Add Audio
+			{{ t('add-audio') }}
 		</button>
 	</div>
 	<br>
@@ -53,6 +53,9 @@ import { v4 as uuid } from 'uuid'
 import draggable from 'vuedraggable'
 import klImage from '../kl-image.vue'
 
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 const data = ref({ content: null })

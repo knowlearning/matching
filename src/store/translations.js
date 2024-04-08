@@ -106,5 +106,17 @@ export default {
   'unsupported-type': {
     'en': 'Unsupported Type',
     'th': 'ประเภทไม่รองรับ'
+  },
+  'rearrange-column-customizer': {
+    'en': 'Rearrange Column Customizer',
+    'th': 'การปรับแต่งคอลัมน์ใหม่',
+  },
+  'add-image': {
+    'en': 'Add Image',
+    'th': 'เพิ่มรูปภาพ',
+  },
+  'add-audio': {
+    'en': 'Add Audio',
+    'th': 'เพิ่มเสียง',
   }
 }
