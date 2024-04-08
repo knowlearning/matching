@@ -1,6 +1,5 @@
 <template>
 	<div class="sequence-player">
-		{{ t('are-you-sure') }}
 		<SequenceHeader
 			:isCorrectArray="data.isCorrectArray"
 			:activeItemIndex="data.activeItemIndex"
@@ -37,10 +36,7 @@ import SequenceHeader from './SequenceHeader.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
-function t(slug) {
-	return store.getters.t(slug)
-}
-
+function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 

@@ -50,6 +50,11 @@ import { ref, reactive } from 'vue'
 import { validate as isUUID } from 'uuid'
 import { inputSwal, unsupportedTypeSwal } from '../../../helpers/swallows.js'
 import KlImage from '../../kl-image.vue'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
+
 const copy = x => JSON.parse(JSON.stringify(x))
 
 const emits = defineEmits(['updateRow'])
@@ -104,7 +109,7 @@ function deleteAudio() {
 }
 
 async function changeChoice(i) {
-  const { isConfirmed, value } = await inputSwal(props.choices[i].content)
+  const { isConfirmed, value } = await inputSwal(t, props.choices[i].content)
   if (!isConfirmed) return
   if (!isUUID(value)) {
     const choicesCopy = copy(props.choices)
@@ -116,7 +121,7 @@ async function changeChoice(i) {
   } else { // check if image type
     const { active_type } = await Agent.metadata(value)
     if (!active_type || !active_type.startsWith('image')) {
-      await unsupportedTypeSwal(value, active_type)
+      await unsupportedTypeSwal(t, value, active_type)
     } else {
       const choicesCopy = copy(props.choices)
       choicesCopy[i].content = value

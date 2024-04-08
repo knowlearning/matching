@@ -1,13 +1,13 @@
 <template>
   <div class="player">
-    <h3 v-if="item?.instructions">Instructions: {{ item.instructions }}</h3>
+    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
     <MatchSvg
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
       :connections="data.studentConnections"
       @updateConnections="data.studentConnections = $event"
     />
-    <button class="submit" @click="handleSubmit"> Submit </button>
+    <button class="submit" @click="handleSubmit"> {{ t('submit') }} </button>
   </div>
 </template>
 
@@ -15,6 +15,10 @@
   import { reactive } from 'vue'
   import MatchSvg from './MatchSvg/index.vue'
   import { sameConnection } from '../../helpers/mathHelpers.js'
+
+  import { useStore } from 'vuex'
+  const store = useStore()
+  function t(slug) { return store.getters.t(slug) }
 
   const props = defineProps(['id'])
   let item = null

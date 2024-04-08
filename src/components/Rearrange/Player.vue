@@ -24,10 +24,8 @@
         </draggable>
       </div>
     </div>
-    <button 
-    class="submit" 
-    @click="handleSubmit" 
-    :disabled="submitted">{{ submitted ? 'Submitted' : 'Submit' }}
+    <button class="submit" @click="handleSubmit">
+        {{ t('submit') }}
     </button>
 </div>
 </template>
@@ -37,6 +35,9 @@ import { ref, reactive, onMounted } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from '../kl-image.vue'
 
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 const item = await Agent.state(props.id)

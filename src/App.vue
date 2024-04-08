@@ -2,7 +2,7 @@
   import { reactive, computed } from 'vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
   import ItemName from './components/ItemName.vue'
-  import { chooseTypeSwal, copyItemSwal } from './helpers/swallows.js'
+  import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
   const store = useStore()
@@ -55,7 +55,7 @@
 
   }
   async function copyExisting() {
-    const { value: idToCopy } = await copyItemSwal() // validates id and type 
+    const { value: idToCopy } = await copyItemSwal(t) // validates id and type 
     if (!idToCopy) return
     const { active_type } = await Agent.metadata(idToCopy)
     const stateToCopy = await Agent.state(idToCopy)
@@ -68,8 +68,10 @@
     data.mode = 'customizer'
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true }
   }
-  function removeContent(id) {
-    if (!confirm(`Are you sure you want remove item?`)) return
+  async function removeContent(id) {
+    const { isConfirmed } = await areYouSureSwal(t)
+    if (!isConfirmed) return
+
     if (data.active === id) data.active = null
     data.content = data.content.filter(content => content !== id)
     data.tags[MY_CONTENT_TAG][id] = { value: null }
@@ -88,7 +90,7 @@
         <div
           :class="store.getters.language() ==='en' ? 'active' : ''"
           @click="store.dispatch('language', 'en')"
-        >English</div>
+        >English (อังกฤษ)</div>
         <div
           :class="store.getters.language() ==='th' ? 'active' : ''"
           @click="store.dispatch('language', 'th')"
