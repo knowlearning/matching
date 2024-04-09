@@ -32,9 +32,10 @@ const rowsCorrect = reactive(questionDef.rows.map(r => false)) // init to array 
 
 function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
-	alert(isCorrect ? 'woo' : 'boo')
-	if (isCorrect && Agent.embedded) Agent.close({ success: true })
+  if (Agent.embedded) Agent.close({ success: isCorrect })
+  else window.alert( isCorrect ? 'woo' : 'boo' )
 }
+
 function wideItemArea() {
 // we want ALL rows to have the same width, narrow or wide
 // go through each row. get ALL choices to see if any force wide layout

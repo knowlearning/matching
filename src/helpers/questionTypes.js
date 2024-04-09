@@ -11,6 +11,7 @@ import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 import mjAndKobeMatching from './mjAndKobeMatching.js'
 import monumentPairs from './monumentPairs.js'
+import defaultSequence from './defaultSequence.js'
 const copy = x => JSON.parse(JSON.stringify(x))
 
 
@@ -81,20 +82,8 @@ const questionTypes = {
 			customizer: SequenceCustomizer
 		},
 		newItemSchemas: {
-			default: {
-				name: 'Your New Sequence',
-				items: [
-					{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
-					{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
-				]
-			},
-			th: {
-				name: 'THAI Sequence',
-				items: [
-					{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
-					{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
-				]
-			}
+			default: copy(defaultSequence),
+			th: copy(defaultSequence)
 		}
 	},
 }

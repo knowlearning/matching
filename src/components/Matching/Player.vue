@@ -30,7 +30,8 @@
   })
 
   function handleSubmit() {
-    window.alert( isCorrect() ? 'woo' : 'boo' )
+    if (Agent.embedded) Agent.close({ success: isCorrect() })
+    else window.alert( isCorrect() ? 'woo' : 'boo' )
   }
 
   function isCorrect() {
