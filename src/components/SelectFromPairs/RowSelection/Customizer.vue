@@ -175,7 +175,7 @@ async function uploadImage(i) {
   width: 400px;
   height: 200px;
   border: 2px solid lightgrey;
-
+  border-radius: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -185,7 +185,7 @@ async function uploadImage(i) {
   width: 170px;
   height: 180px;
   cursor: pointer;
-
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
