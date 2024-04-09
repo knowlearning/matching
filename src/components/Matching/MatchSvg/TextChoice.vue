@@ -23,7 +23,7 @@
             @click="$emit('playAudio')"
             style="position: absolute; bottom: 5px; right: 5px; cursor: pointer;"
           >
-            <i class="fas fa-volume-up"></i> <!-- Font Awesome'den ses simgesi -->
+            <i class="fas fa-volume-up"></i>
           </span>
         </div>
       </div>
@@ -46,7 +46,6 @@ export default {
   },
   computed: {
     isText() {
-      // Metnin içeriği var mı yok mu kontrol ediyoruz
       return this.content.trim().length > 0;
     }
   },
