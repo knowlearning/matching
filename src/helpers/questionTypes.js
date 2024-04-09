@@ -10,6 +10,7 @@ import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 import mjAndKobeMatching from './mjAndKobeMatching.js'
+import monumentPairs from './monumentPairs.js'
 const copy = x => JSON.parse(JSON.stringify(x))
 
 
@@ -69,44 +70,8 @@ const questionTypes = {
 			customizer: SelectFromPairsCustomizer
 		},
 		newItemSchemas: {
-			default: {
-				name: 'New Select from Pairs Item',
-				instructions: '...some instructions...',
-				rows: [
-					{
-						audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
-						choices: [
-							{	
-								content: 'พ', // display string or uuid
-								correct: false
-							},
-							{	
-								content: 'ะ', // display string or uuid 
-								correct: true
-							}
-						]
-					} // end placeholder row
-				]
-			},
-			th: {
-				name: 'THAI Select from Pairs Item',
-				instructions: '...some THAI instructions...',
-				rows: [
-					{
-						audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
-						choices: [
-							{	
-								content: 'พ', // display string or uuid
-								correct: false
-							},
-							{	
-								content: 'ะ', // display string or uuid 
-								correct: true
-							}
-						]
-					} // end placeholder row
-				]
-			}
+			default: copy(monumentPairs),
+			th: copy(monumentPairs)
 		}
 	},
 	'application/json;type=sequence' : {

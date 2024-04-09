@@ -15,12 +15,24 @@
       <button @click="openFilePicker('left','image')">{{ t('add-image') }}</button>
       <button @click="openFilePicker('right','audio')">{{ t('add-audio') }}</button>
       <button @click="addChoice">{{ t('add-by-text-or-by-id') }}</button>
+      <button
+        @click="data.content.textIsPlayable = !data.content.textIsPlayable"
+      >
+        <i
+          :class="{
+            'fas': true,
+            'fa-volume-up' : data.content.textIsPlayable,
+            'fa-volume-mute' : !data.content.textIsPlayable
+          }"
+        />
+      </button>
     </div>
     <MatchSvg
       :toChoices="data.content.toChoices"
       :fromChoices="data.content.fromChoices"
       :connections="data.content.answerConnections"
       :editMode="data.editChoices"
+      :textIsPlayable="data.content.textIsPlayable"
       @updateConnections="data.content.answerConnections = copy($event)"
       @removeChoice="handleRemoveChoice"
       @editChoice="handleEditChoice"
@@ -28,7 +40,6 @@
     />
     <button @click="data.editChoices = !data.editChoices">
       <i class="fas fa-pen" />
-
     </button>
   </div>
 </template>
@@ -49,7 +60,7 @@ const props = defineProps(['id'])
 
 const data = reactive({
   content: null,
-  editChoices: false
+  editChoices: false,
 })
 
 const state = await Agent.state(props.id)
