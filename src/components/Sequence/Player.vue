@@ -5,10 +5,6 @@
 			:activeItemIndex="data.activeItemIndex"
 			@select="data.activeItemIndex = $event"
 		/>
-		<div style="font-size: 0.6rem;">
-			Illustrative Time Tracking :::: Total {{ data.totalTime }} :::: Tasks {{ data.timeOnTasks.join(', ') }}
-		</div>
-
 		<div
 			v-for="item,i in questionDef.items"
 			:key="`play-item-${i}`"
@@ -74,12 +70,12 @@ function handleClose(i, e) {
 <style>
 .sequence-player {
 	height: 100%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 .sequence-player .embedded-question-wrapper {
-	border: 2px dotted grey;
 	margin-top: 14px;
 	width: 100%;
 	height: 100%;

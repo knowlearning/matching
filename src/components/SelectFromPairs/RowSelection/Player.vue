@@ -133,6 +133,7 @@ function handleChange(i) {
   justify-self: center;
   height: 100px;
   border: 2px solid lightgrey;
+  border-radius: 8px;
   width: 300px;
   display: flex;
   flex-direction: row;
