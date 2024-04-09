@@ -15,16 +15,9 @@
       <button @click="openFilePicker('left','image')">{{ t('add-image') }}</button>
       <button @click="openFilePicker('right','audio')">{{ t('add-audio') }}</button>
       <button @click="addChoice">{{ t('add-by-text-or-by-id') }}</button>
-      <button
-        @click="data.content.textIsPlayable = !data.content.textIsPlayable"
-      >
-        <i
-          :class="{
-            'fas': true,
-            'fa-volume-up' : data.content.textIsPlayable,
-            'fa-volume-mute' : !data.content.textIsPlayable
-          }"
-        />
+      <button @click="data.content.textIsPlayable = !data.content.textIsPlayable">
+        <i v-if="data.content.textIsPlayable" class="fas fa-volume-up" />
+        <i v-else class="fas fa-volume-mute" />
       </button>
     </div>
     <MatchSvg
