@@ -1,7 +1,7 @@
 <template>
   <svg
-    :class="{ 'clickable': clickable }"
-    @click="playText"
+    :class="{ playable }"
+    @click="playable && playText()"
     style="width: 100%; height: 100%;"
   >
     <rect
@@ -15,23 +15,25 @@
       class="text-choice"
       pointer-events="none"
     >
-      <div>
-        <div style="position: relative;">
+      <div style="position: relative;">
           <span>{{ content }}</span>
-          <span
-            v-if="isText"
-            @click="$emit('playAudio')"
-            style="position: absolute; bottom: 5px; right: 5px; cursor: pointer;"
-          >
-            <i class="fas fa-volume-up"></i>
-          </span>
-        </div>
+          <i
+            v-if="playable"
+            class="fas fa-volume-up"
+            style="position: absolute; bottom: 5%; right: 5%;"
+          />
       </div>
     </foreignObject>
   </svg>
 </template>
 
 <script>
+function hasThaiCharacters(text) {
+    // Thai characters Unicode range: 0E00–0E7F
+    const thaiRegex = /[\u0E00-\u0E7F]/;
+    return thaiRegex.test(text);
+}
+
 export default {
   name: 'text-choice',
   props: {
@@ -39,19 +41,15 @@ export default {
       type: String,
       required: true
     },
-    clickable: { // Boolean to determine if text is clickable
+    playable: { // Boolean to determine if text is clickable / playable
       type: Boolean,
       default: true
     }
   },
-  computed: {
-    isText() {
-      return this.content.trim().length > 0;
-    }
-  },
   methods: {
     playText() {
-      const utterance = new SpeechSynthesisUtterance(this.content);
+      const utterance = new SpeechSynthesisUtterance(this.content)
+      if (hasThaiCharacters(this.content)) utterance.lang = "th-TH"
       window.speechSynthesis.speak(utterance);
     }
   }
@@ -71,7 +69,10 @@ export default {
   background: lightgrey;
   border-radius: 6px;
 }
-.clickable {
+.playable {
   cursor: pointer;
+}
+.playable:hover {
+  filter: invert(0.2);
 }
 </style>
