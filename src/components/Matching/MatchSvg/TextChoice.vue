@@ -1,5 +1,9 @@
 <template>
-  <svg :class="{ 'clickable': clickable }" @click="playText">
+  <svg
+    :class="{ 'clickable': clickable }"
+    @click="playText"
+    style="width: 100%; height: 100%;"
+  >
     <rect
       width="100%"
       height="100%"
@@ -12,7 +16,16 @@
       pointer-events="none"
     >
       <div>
-        {{ content }}
+        <div style="position: relative;">
+          <span>{{ content }}</span>
+          <span
+            v-if="isText"
+            @click="$emit('playAudio')"
+            style="position: absolute; bottom: 5px; right: 5px; cursor: pointer;"
+          >
+            <i class="fas fa-volume-up"></i> <!-- Font Awesome'den ses simgesi -->
+          </span>
+        </div>
       </div>
     </foreignObject>
   </svg>
@@ -29,6 +42,12 @@ export default {
     clickable: { // Boolean to determine if text is clickable
       type: Boolean,
       default: true
+    }
+  },
+  computed: {
+    isText() {
+      // Metnin içeriği var mı yok mu kontrol ediyoruz
+      return this.content.trim().length > 0;
     }
   },
   methods: {
