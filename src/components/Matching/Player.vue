@@ -15,8 +15,8 @@
   import { reactive } from 'vue'
   import MatchSvg from './MatchSvg/index.vue'
   import { sameConnection } from '../../helpers/mathHelpers.js'
-
   import { useStore } from 'vuex'
+  
   const store = useStore()
   function t(slug) { return store.getters.t(slug) }
 
