@@ -5,6 +5,7 @@
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
       :connections="data.studentConnections"
+      :textIsPlayable="item.textIsPlayable"
       @updateConnections="data.studentConnections = $event"
     />
     <button class="submit" @click="handleSubmit"> {{ t('submit') }} </button>
