@@ -24,6 +24,7 @@
 	    >
 	      <component
 	        :is="getComponentForChoice(c)"
+	        :key="`node=${c.nodeId}`"
 	        v-bind="c"
 	        :playable="textIsPlayable"
 	        width="100%"
