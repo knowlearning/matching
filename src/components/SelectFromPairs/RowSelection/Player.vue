@@ -9,7 +9,6 @@
       </button>
       <div> {{ getLabelForRowNumber() }}) </div>
     </div>
-
     <div
       :class="{
         'item-area' : true,
@@ -35,9 +34,7 @@
         </div>
       </div>
     </div>
-
     <div class="placeholder"></div>
-
   </div>
 </template>
 
@@ -118,11 +115,9 @@ function handleChange(i) {
   display: flex;
   justify-content: center;
   width: 100%;
-
 }
 .left-area, .placeholder {
   min-width: 100px;
-
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -133,6 +128,7 @@ function handleChange(i) {
   justify-self: center;
   height: 100px;
   border: 2px solid lightgrey;
+  border-radius: 8px;
   width: 300px;
   display: flex;
   flex-direction: row;
@@ -152,7 +148,7 @@ function handleChange(i) {
   width: 95%;
   height: 90px;
   cursor: pointer;
-  border-radius: 8px;
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -162,6 +158,7 @@ function handleChange(i) {
 .item-area .choice:first-child {
   border-right: 2px solid lightgrey;  
 }
+
 .choice-inner {
   position: relative;
   transition: transform 0.5s ease;
@@ -190,7 +187,6 @@ function handleChange(i) {
   justify-content: center;
   font-size: 1.6rem;
 }
-
 button {
   width: 70px;
   cursor: initial;

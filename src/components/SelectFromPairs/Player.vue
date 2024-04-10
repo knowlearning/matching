@@ -1,6 +1,11 @@
 <template>
 	<div>
 		<p v-if="questionDef.instructions">{{ questionDef.instructions }}</p>
+		<div class="audio-control">
+			<button v-show="!!questionDef.audio" @click="toggleAudioPlayback">
+				<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
+			</button>
+		</div>
 		<Row
 			class="row"
 			v-for="r, i in questionDef.rows"
@@ -15,7 +20,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { validate as isUUID } from 'uuid'
 import Row from './RowSelection/Player.vue'
 
@@ -30,11 +35,39 @@ const props = defineProps({
 const questionDef = await Agent.state(props.id)
 const rowsCorrect = reactive(questionDef.rows.map(r => false)) // init to array of false
 
+let audio = null
+let audioPlaying = ref(false)
+setLocalAudio()
+
+async function setLocalAudio() {
+	const audioId = questionDef.audio
+	if (!audioId) return
+
+	const audioUrl = await Agent.download(audioId).url()
+	audio = new Audio(audioUrl)
+	audio.addEventListener('ended', () => {
+		audioPlaying.value = false
+	})
+}
+
+async function toggleAudioPlayback() {
+	if (!audio) return
+
+	if (audioPlaying.value) {
+		audio.pause()
+		audioPlaying.value = false
+	} else {
+		audio.play()
+		audioPlaying.value = true
+	}
+}
+
 function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
-	alert(isCorrect ? 'woo' : 'boo')
-	if (isCorrect && Agent.embedded) Agent.close({ success: true })
+  if (Agent.embedded) Agent.close({ success: isCorrect })
+  else window.alert( isCorrect ? 'woo' : 'boo' )
 }
+
 function wideItemArea() {
 // we want ALL rows to have the same width, narrow or wide
 // go through each row. get ALL choices to see if any force wide layout
@@ -49,4 +82,5 @@ function wideItemArea() {
 
 <style scoped>
 .row { margin: 4px; }
+.audio-control { text-align: center; }
 </style>

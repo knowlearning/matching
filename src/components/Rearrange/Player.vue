@@ -1,6 +1,6 @@
 <template>
 <div class="player">
-    <h2 v-if= "item?.name">{{ item.name }}</h2>
+    <h2 v-if= "item?.name"> Item Name: {{ item.name }}</h2>
     <h3 v-if="item?.instructions">Instructions:{{ item.instructions }}</h3>
     <div class="image-container">
         <i 
@@ -8,6 +8,8 @@
         style="cursor: pointer;"
         @click="toggleAudioPlayback"
         />
+        <br>
+        <input type="range" min="0" :max="audio ? audio.duration : 100" v-model="currentAudioTime" @input="seekAudio">
         <div class="content">
         <draggable v-model="userOrderedImages" @end="onDragEnd" item-key="id">
             <template #item="{ element }">
@@ -31,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from '../kl-image.vue'
 
@@ -42,18 +44,60 @@ function t(slug) { return store.getters.t(slug) }
 const props = defineProps(['id'])
 const item = await Agent.state(props.id)
 
-const data = reactive({
-studentConnections: [],
-})
-
-
 const submitted = ref(false)
 const userOrderedImages = ref(item.images)
 const audioPlaying = ref(false)
+let audio = null
+const currentAudioTime = ref(0)
+
+const data = ref({ content: null })
+Agent
+  .state(props.id)
+  .then(state => {
+    if (!state.name) state.name = ''
+    if (!state.instructions) state.instructions = ''
+    if (!state.images) state.images = []
+    data.value.content = state
+  })
 
 onMounted(() => {
   shuffleImages()
 })
+
+const audioId = computed(() => {
+  if (data.value.content) {
+    return data.value.content.audioId
+  } else {
+    return null
+  }
+})
+async function toggleAudioPlayback() {
+    const audioId = data.value.content.audioId;
+    if (!audioId) return;
+    const audioUrl = await Agent.download(audioId).url();
+    if (!audio) {
+        audio = new Audio(audioUrl);
+        audio.addEventListener('ended', () => {
+            audioPlaying.value = false;
+        });
+        audio.addEventListener('timeupdate', () => {
+            currentAudioTime.value = audio.currentTime;
+        });
+    }
+    if (audio.paused) {
+        audio.play();
+        audioPlaying.value = true;
+    } else {
+        audio.pause();
+        audioPlaying.value = false;
+    }
+}
+
+function seekAudio() {
+    if (audio) {
+        audio.currentTime = currentAudioTime.value;
+    }
+}
 
 function onDragEnd(event) {
     if (!event.detail) {
@@ -71,7 +115,6 @@ function handleSubmit() {
   const correctOrder = item.images.map(image => image.id)
   const submittedOrder = userOrderedImages.value.map(image => image.id)
 
-  // Check if the submitted order matches the correct order
   const isCorrect = JSON.stringify(correctOrder) === JSON.stringify(submittedOrder)
     if (isCorrect) {
         alert('Correct order!');
@@ -108,13 +151,11 @@ textarea#item-name {
 textarea#instructions {
   height: 150px;
 }
-
 .image-row {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 }
-
 .image-and-buttons {
     background: antiquewhite;
     padding: 20px;
@@ -125,7 +166,6 @@ textarea#instructions {
     width: 100%;
     cursor: pointer;
 }
-
 .choice {
     width: 200px;
 }

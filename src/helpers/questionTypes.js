@@ -10,6 +10,8 @@ import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
 import mjAndKobeMatching from './mjAndKobeMatching.js'
+import monumentPairs from './monumentPairs.js'
+import defaultSequence from './defaultSequence.js'
 const copy = x => JSON.parse(JSON.stringify(x))
 
 
@@ -69,44 +71,8 @@ const questionTypes = {
 			customizer: SelectFromPairsCustomizer
 		},
 		newItemSchemas: {
-			default: {
-				name: 'New Select from Pairs Item',
-				instructions: '...some instructions...',
-				rows: [
-					{
-						audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
-						choices: [
-							{	
-								content: 'พ', // display string or uuid
-								correct: false
-							},
-							{	
-								content: 'ะ', // display string or uuid 
-								correct: true
-							}
-						]
-					} // end placeholder row
-				]
-			},
-			th: {
-				name: 'THAI Select from Pairs Item',
-				instructions: '...some THAI instructions...',
-				rows: [
-					{
-						audioId: "ddd7e540-f2ff-11ee-8e0e-93d441d1b4a7",
-						choices: [
-							{	
-								content: 'พ', // display string or uuid
-								correct: false
-							},
-							{	
-								content: 'ะ', // display string or uuid 
-								correct: true
-							}
-						]
-					} // end placeholder row
-				]
-			}
+			default: copy(monumentPairs),
+			th: copy(monumentPairs)
 		}
 	},
 	'application/json;type=sequence' : {
@@ -116,20 +82,8 @@ const questionTypes = {
 			customizer: SequenceCustomizer
 		},
 		newItemSchemas: {
-			default: {
-				name: 'Your New Sequence',
-				items: [
-					{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
-					{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
-				]
-			},
-			th: {
-				name: 'THAI Sequence',
-				items: [
-					{ id : '3c514c80-f2fe-11ee-a9c0-33ba592e4060' },
-					{ id : '54734700-f2fe-11ee-a9c0-33ba592e4060' }
-				]
-			}
+			default: copy(defaultSequence),
+			th: copy(defaultSequence)
 		}
 	},
 }
