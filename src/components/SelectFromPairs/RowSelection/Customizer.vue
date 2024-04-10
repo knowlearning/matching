@@ -192,7 +192,22 @@ async function uploadImage(i) {
   align-items: center;
 }
 .correct {
-  background: lightseagreen;
+  border-radius: 8px; 
+  box-shadow: 0 0 10px rgba(33, 150, 243, 0.7); 
+  transition: background-color 0.5s ease;
+  background-color: blue;
+}
+.item-area .choice:first-child {
+  border-right: 2px solid lightgrey;  
+}
+.choice-inner {
+  position: relative;
+  transition: transform 0.5s ease;
+}
+
+.choice-inner:hover:not(.selected) {
+  transform: scale(1.4);
+  z-index: 1;
 }
 .choice-inner {
   width: 100%;
