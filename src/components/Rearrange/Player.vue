@@ -27,7 +27,7 @@
       </div>
     </div>
     <button class="submit" @click="handleSubmit">
-        {{ t('submit') }}
+        {{ t('next') }}
     </button>
 </div>
 </template>

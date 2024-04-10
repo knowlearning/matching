@@ -8,7 +8,7 @@
       :textIsPlayable="item.textIsPlayable"
       @updateConnections="data.studentConnections = $event"
     />
-    <button class="submit" @click="handleSubmit"> {{ t('submit') }} </button>
+    <button class="submit" @click="handleSubmit"> {{ t('next') }} </button>
   </div>
 </template>
 
@@ -40,15 +40,3 @@
     return every && only
   }
 </script>
-
-
-<style scoped>
-button.submit {
-  color: white;
-  background: green;
-  opacity: 0.7;
-}
-button.submit:hover {
-  opacity: 1;
-}
-</style>

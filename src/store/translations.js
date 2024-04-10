@@ -122,5 +122,13 @@ export default {
   'add-by-text-or-by-id': {
     'en': 'Add by Text or by Id',
     'th': 'เพิ่มโดยข้อความหรือโดยรหัส'
+  },
+  'finished': {
+    'en' : 'Finished',
+    'th' : 'สิ้นสุด'
+  },
+  'next': {
+    'en' : 'Next',
+    'th' : 'ต่อไป'
   }
 }
