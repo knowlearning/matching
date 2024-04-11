@@ -13,7 +13,6 @@
 		v-model="data.content.instructions" 
 	>
 	</textarea>
-	<br>
 	<div class="upload-wrapper">
 		<button
 			@click="uploadImage"
@@ -140,6 +139,9 @@ display: flex;
 flex-direction: column;
 align-items: center;
 }
+h3, h4 {
+	margin: 6px 0 0 0;
+}
 label {
   font-weight: bolder;
 }
@@ -152,7 +154,7 @@ textarea#item-name {
   height: 16px;
 }
 textarea#instructions {
-  height: 150px;
+  height: 40px;
 }
 
 .image-row {
