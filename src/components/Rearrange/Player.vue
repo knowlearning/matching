@@ -41,7 +41,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { ref, reactive, onMounted, computed, watch } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from '../kl-image.vue'
 
