@@ -14,7 +14,7 @@
 	>
 	</textarea>
 	<AudioBar
-		:audioId="data.content.audioId"
+		:id="data.content.audioId"
 		@change="data.content.audioId = $event"
 	/>
 

@@ -8,7 +8,7 @@
 		<textarea id="instructions" v-model="data.content.instructions" />
 
 		<AudioBar
-			:audioId="data.content.audioId"
+			:id="data.content.audioId"
 			@change="data.content.audioId = $event"
 		/>
 

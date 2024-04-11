@@ -5,13 +5,13 @@
 		</button>
 		<button
 			@click="toggleAudioPlayback"
-			:disabled="!props.audioId"
+			:disabled="!props.id"
 		>
 			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
 		</button>
 		<button
 			@click="deleteAudio"
-			:disabled="!props.audioId"
+			:disabled="!props.id"
 		>
 			<i class="fas fa-trash"></i>
 		</button>
@@ -30,7 +30,7 @@ function t(slug) { return store.getters.t(slug) }
 const emits = defineEmits(['change'])
 
 const props = defineProps({
-	audioId: {
+	id: {
 		required: true,
 		type: [ String, null ]
 	}
@@ -38,7 +38,7 @@ const props = defineProps({
 let audio = null
 const audioPlaying = ref(null)
 
-watch(() => props.audioId, setLocalAudio)
+watch(() => props.id, setLocalAudio)
 
 setLocalAudio()
 
@@ -61,9 +61,9 @@ async function uploadAudio() {
 }
 
 async function setLocalAudio() {
-	if (!props.audioId) return
+	if (!props.id) return
 
-	const audioUrl = await Agent.download(props.audioId).url()
+	const audioUrl = await Agent.download(props.id).url()
 	audio = new Audio(audioUrl)
 	audio.addEventListener('ended', () => {
 		audioPlaying.value = false

@@ -1,22 +1,6 @@
 <template>
   <div class="row-editor">
-    <div class="audio-area">
-      <button @click="uploadAudio">
-        <i class="fas fa-file-audio"></i>
-      </button>
-      <button
-        @click="toggleAudioPlayback"
-        :disabled="!props.audioId"
-      >
-        <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-      </button>
-      <button
-        @click="deleteAudio"
-        :disabled="!props.audioId"
-      >
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
+    <AudioBar :id="props.audioId" @change="handleAudioChange" />
     <div class="item-area">
       <div
         v-for="choice,i in props.choices"
@@ -50,6 +34,7 @@ import { ref, reactive } from 'vue'
 import { validate as isUUID } from 'uuid'
 import { inputSwal, unsupportedTypeSwal } from '../../../helpers/swallows.js'
 import KlImage from '../../kl-image.vue'
+import AudioBar from '../../AudioBar.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -70,40 +55,9 @@ const props = defineProps({
   }
 })
 
-let audio = null
-let audioPlaying = ref(false)
-setLocalAudio()
-
-async function setLocalAudio() {
-  if (!props.audioId) return
-
-  const audioUrl = await Agent.download(props.audioId).url()
-  audio = new Audio(audioUrl) // ready for audio.play()
-  audio.addEventListener('ended', () => {
-    audioPlaying.value = false
-  })
-}
-
-async function uploadAudio() {
-  const id = await Agent.upload({ browser: true, accept: 'audio/*' })
+function handleAudioChange(audioId) {
   emits('updateRow', {
-    audioId: id,
-    choices: copy(props.choices)
-  })
-}
-
-async function toggleAudioPlayback() {
-  if (audioPlaying.value) {
-    audio.pause()
-    audioPlaying.value = false
-  } else {
-    audio.play()
-    audioPlaying.value = true
-  }
-}
-function deleteAudio() {
-  emits('updateRow', {
-    audioId: null,
+    audioId,
     choices: copy(props.choices)
   })
 }
