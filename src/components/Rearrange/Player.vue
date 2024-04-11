@@ -200,9 +200,6 @@ textarea#instructions {
     width: 100%;
     cursor: pointer;
 }
-.choice {
-    width: 200px;
-}
 .content {
     display: flex;
     flex-direction: column;
