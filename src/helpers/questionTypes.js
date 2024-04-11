@@ -51,6 +51,7 @@ const questionTypes = {
 			customizer: RearrangeCustomizer
 		},
 		newItemSchemas: {
+			// TODO:  Update to Real Questeion Def Example + Schema
 			default: {
 				name: 'New Rearrange Item',
 				question: '?? Question Text ??',

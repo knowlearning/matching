@@ -13,6 +13,12 @@
 		v-model="data.content.instructions" 
 	>
 	</textarea>
+	<AudioBar
+		:key="`audio-bar-${data.content.audioId}`"
+		:audioId="data.content.audioId"
+		@change="data.content.audioId = $event"
+	/>
+
 	<div class="upload-wrapper">
 		<button
 			@click="uploadImage"
@@ -27,9 +33,6 @@
 	</div>
 	<br>
 	<div>
-		<div class="volume-icon" @click="toggleAudioPlayback">
-			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
-		</div>
 		<draggable v-model="data.content.images" group="images" @end="onDragEnd" item-key="imageUrl">
 			<template #item="{ element }">
 				<div class="image-row">
@@ -49,6 +52,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { v4 as uuid } from 'uuid'
+import AudioBar from '../AudioBar.vue'
 import draggable from 'vuedraggable'
 import klImage from '../kl-image.vue'
 
@@ -58,9 +62,7 @@ function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 const data = ref({ content: null })
-const audioPlaying = ref(false)
 let imageData = []
-let audio = null
 
 Agent
 	.state(props.id)
@@ -73,44 +75,11 @@ Agent
 		imageData = data.value.content.images
 	})
 
-
 async function uploadImage() {
 	const id = uuid();
 	await Agent.upload({ id, browser: true, accept: 'image/*' });
 	imageData.push({ id })
 }
-
-async function uploadAudio() {
-	const id = uuid();
-	await Agent.upload({ id, browser: true, accept: 'audio/*' });
-	data.value.content.audioId = id;
-}
-
-async function toggleAudioPlayback() {
-    const audioId = data.value.content.audioId;
-    if (!audioId) return;
-
-    const audioUrl = await Agent.download(audioId).url();
-
-    if (!audio) {
-        audio = new Audio(audioUrl);
-        audio.addEventListener('ended', () => {
-            audioPlaying.value = false;
-        });
-    }
-
-    if (audioPlaying.value) {
-        audio.pause();
-        audioPlaying.value = false;
-    } else {
-        audio.play();
-        audioPlaying.value = true;
-    }
-}
-
-
-
-
 
 function onDragEnd(event) {
     const imageDataCopy = JSON.parse(JSON.stringify(imageData));
@@ -121,15 +90,15 @@ function onDragEnd(event) {
     imageData = imageDataCopy;
 }
 
-
 // function onDragEnd(event) {
-// 	const imageDataCopy = structuredClone(imageData)
-// 	const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
-// 	imageDataCopy.splice(event.newIndex, 0, draggedElement);
+//     const imageDataCopy = structuredClone(imageData)
+//     const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
+//     imageDataCopy.splice(event.newIndex, 0, draggedElement);
 
-// 	data.value.content.images = imageDataCopy
-// 	imageData = imageDataCopy
+//     data.value.content.images = imageDataCopy
+//     imageData = imageDataCopy
 // }
+
 
 </script>
 
@@ -179,7 +148,7 @@ display: flex;
 align-items: center;
 }
 
-.upload-icon, .audio-icon {
+.upload-icon {
 display: flex;
 align-items: center;
 justify-content: center;
@@ -196,17 +165,6 @@ color: grey;
 margin-right: 10px;
 }
 
-.audio-icon {
-margin-left: 100px;
-cursor: pointer;
-}
-
-.volume-icon {
-margin-left: 10px;
-color: grey;
-cursor: pointer;
-}
-
 .choice {
 width: 200px;
 }
@@ -215,7 +173,7 @@ button {
 margin-left: 10px;
 }
 
-.upload-icon i, .audio-icon i, .volume-icon i {
+.upload-icon i {
 font-size: 24px;
 }
 
