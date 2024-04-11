@@ -139,4 +139,12 @@ export default {
     'en' : 'Incorrect',
     'th' : 'ไม่ถูกต้อง'
   },
+  'upload-warning': {
+    'en' : 'Upload Warning',
+    'th' : 'คำเตือนการอัปโหลด'
+  },
+  'long-upload-warning-html-text': {
+    'en' : 'Use small assets to ensure smooth rendering of your items.<br><br>For images, aim for around 20-50 KB.<br><br>For audio, aim for around 20-50 KB for short instructions (~5 sec) and 100-300 KB for longer instructions (~30 sec).<br><br>Uploads larger than 300 KB should be rare. Uploads larger than 1 MB will be rejected.',
+    'th' : 'ใช้ส่วนประกอบขนาดเล็กเพื่อให้การแสดงผลของรายการของคุณเรียบร้อย.<br><br>สำหรับภาพ หมายเลขที่เหมาะสมคือประมาณ 20-50 KB.<br><br>สำหรับเสียง หมายเลขที่เหมาะสมคือประมาณ 20-50 KB สำหรับคำแนะนำสั้นๆ (~5 วินาที) และ 100-300 KB สำหรับคำแนะนำที่ยาวนาน (~30 วินาที).<br><br>การอัปโหลดที่มีขนาดใหญ่กว่า 300 KB ควรเป็นเรื่องหายาก และการอัปโหลดที่มีขนาดใหญ่กว่า 1 MB จะถูกปฏิเสธ.'
+  },
 }

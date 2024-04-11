@@ -21,6 +21,11 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { uploadSizeNotificationSwal } from '../helpers/swallows.js'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const emits = defineEmits(['change'])
 
@@ -37,9 +42,22 @@ watch(() => props.audioId, setLocalAudio)
 
 setLocalAudio()
 
+async function validate(file) {
+	const SIZE_LIMIT = 1000000
+	if (file.size > SIZE_LIMIT) {
+		console.warn('file too big')
+		return false
+	} else {
+		return true
+	}
+
+}
+
 async function uploadAudio() {
-	const id = await Agent.upload({ browser: true, accept: 'audio/*' })
-	emits('change', id)
+	await uploadSizeNotificationSwal(t)
+
+	const id = await Agent.upload({ browser: true, accept: 'audio/*', validate })
+	if (id) emits('change', id)
 }
 
 async function setLocalAudio() {

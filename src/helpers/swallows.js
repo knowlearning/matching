@@ -2,6 +2,16 @@ import Swal from 'sweetalert2'
 import { validate as isUUID } from 'uuid'
 import questionTypes from './questionTypes.js'
 
+
+export function uploadSizeNotificationSwal(t) {
+		return Swal.fire({
+		title: t('upload-warning'),
+		html: t('long-upload-warning-html-text'),
+		icon: "warning",
+		confirmButtonText: t('ok'),
+    })
+}
+
 export function areYouSureSwal(t) {
 	return Swal.fire({
 		title: t('are-you-sure'),
