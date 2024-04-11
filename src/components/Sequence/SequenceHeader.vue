@@ -19,10 +19,12 @@
 					cx="50" cy="50"
 					r="48"
 					:fill="getCircleFill(isCorrect)"
+					stroke="grey"
 				/>
 				<text
 					x="50"
 					y="50"
+					:fill="isCorrect  === null ? 'grey' : 'white'"
 					text-anchor="middle"
 					alignment-baseline="middle"
 				>{{ i+1 }}</text>
@@ -72,9 +74,9 @@ export default {
 			}
 		},
 		getCircleFill(isCorrect) {
-			if (isCorrect === null) return 'mintcream'
-			else if (isCorrect === true) return 'lawngreen'
-			else return 'gold'
+			if (isCorrect === null) return 'white'
+			else if (isCorrect === true) return 'green'
+			else return 'darkorange'
 		}
 	}
 }
@@ -97,15 +99,15 @@ export default {
 .oneItem svg.item-circle {
 	width: 60px;
 	margin: 0 10px;
-	stroke-width: 1.5px;
-	stroke: transparent;
+	stroke-width: 0.5px;
 	font-size: 2.8em;
+	opacity: 0.7;
 }
 .oneItem svg.item-circle text {
 	stroke-width: 1.5px
 }
 .oneItem.active svg.item-circle {
-	stroke: grey;
+	stroke-width: 1.5px;
 	animation: pulse 1.6s ease-in-out infinite;
 }
 svg.dashed-line {

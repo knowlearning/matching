@@ -5,9 +5,10 @@
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
       :connections="data.studentConnections"
+      :textIsPlayable="item.textIsPlayable"
       @updateConnections="data.studentConnections = $event"
     />
-    <button class="submit" @click="handleSubmit"> {{ t('submit') }} </button>
+    <button class="submit" @click="handleSubmit"> {{ t('next') }} </button>
   </div>
 </template>
 
@@ -15,8 +16,8 @@
   import { reactive } from 'vue'
   import MatchSvg from './MatchSvg/index.vue'
   import { sameConnection } from '../../helpers/mathHelpers.js'
-
   import { useStore } from 'vuex'
+  
   const store = useStore()
   function t(slug) { return store.getters.t(slug) }
 
@@ -29,7 +30,8 @@
   })
 
   function handleSubmit() {
-    window.alert( isCorrect() ? 'woo' : 'boo' )
+    if (Agent.embedded) Agent.close({ success: isCorrect() })
+    else window.alert( isCorrect() ? 'woo' : 'boo' )
   }
 
   function isCorrect() {
@@ -38,15 +40,3 @@
     return every && only
   }
 </script>
-
-
-<style scoped>
-button.submit {
-  color: white;
-  background: green;
-  opacity: 0.7;
-}
-button.submit:hover {
-  opacity: 1;
-}
-</style>

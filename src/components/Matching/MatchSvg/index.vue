@@ -24,7 +24,9 @@
 	    >
 	      <component
 	        :is="getComponentForChoice(c)"
+	        :key="`node=${c.nodeId}`"
 	        v-bind="c"
+	        :playable="textIsPlayable"
 	        width="100%"
 	        height="100%"
 	        :pointer-events="editMode ? 'none' : 'all'"
@@ -154,6 +156,11 @@ export default {
 		connections: {
 			type: Array,
 			required: true
+		},
+		textIsPlayable: {
+			type: Boolean,
+			required: false,
+			default: false
 		}
 	},
 	data() {

@@ -17,8 +17,6 @@
                 @input="seekAudio"
             >
         </div>
-
-
         <div class="content">
         <draggable v-model="userOrderedImages" @end="onDragEnd" item-key="id">
             <template #item="{ element }">
@@ -36,13 +34,14 @@
       </div>
     </div>
     <button class="submit" @click="handleSubmit">
-        {{ t('submit') }}
+        {{ t('next') }}
     </button>
 </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from '../kl-image.vue'
 
@@ -71,6 +70,41 @@ Agent
 
 shuffleImages()
 
+async function toggleAudioPlayback() {
+    const audioId = data.value.content.audioId;
+    if (!audioId) return;
+    const audioUrl = await Agent.download(audioId).url();
+    if (!audio) {
+        audio = new Audio(audioUrl);
+        audio.addEventListener('ended', () => {
+            audioPlaying.value = false;
+        });
+        audio.addEventListener('timeupdate', () => {
+            currentAudioTime.value = audio.currentTime;
+        });
+    }
+    if (audio.paused) {
+        audio.play();
+        audioPlaying.value = true;
+    } else {
+        audio.pause();
+        audioPlaying.value = false;
+    }
+}
+
+function seekAudio() {
+    if (audio) {
+        audio.currentTime = currentAudioTime.value;
+    }
+}
+
+const audioId = computed(() => {
+  if (data.value.content) {
+    return data.value.content.audioId
+  } else {
+    return null
+  }
+})
 async function toggleAudioPlayback() {
     const audioId = data.value.content.audioId;
     if (!audioId) return;

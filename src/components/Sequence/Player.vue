@@ -5,10 +5,6 @@
 			:activeItemIndex="data.activeItemIndex"
 			@select="data.activeItemIndex = $event"
 		/>
-		<div style="font-size: 0.6rem;">
-			Illustrative Time Tracking :::: Total {{ data.totalTime }} :::: Tasks {{ data.timeOnTasks.join(', ') }}
-		</div>
-
 		<div
 			v-for="item,i in questionDef.items"
 			:key="`play-item-${i}`"
@@ -18,10 +14,14 @@
 			<Suspense>
 				<vueEmbedComponent
 					:id="item.id"
-					@close="handleClose(i, $event)"
+					@close="handleItemClose(i, $event)"
 					:namespace="`sequence-${id}-item-${i}`"
 				/>
 			</Suspense>
+		</div>
+		<div v-show="data.activeItemIndex === null">
+			<h3>{{ t('finished') }}</h3>
+			<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
 		</div>
 		
 	</div>
@@ -62,24 +62,26 @@ function updateTimeTracking() {
 
 }
 
-function handleClose(i, e) {
+function handleItemClose(i, e) {
 	// TODO: What about other "info"... not just close on correct?
 	// Need state watching / reacting OR other messaging.
 	data.isCorrectArray[i] = e.success
 	data.activeItemIndex =  (i === data.isCorrectArray.length - 1) ? null : i + 1
 }
-
+function handleSubmit() {
+	Agent.close()
+}
 </script>
 
 <style>
 .sequence-player {
 	height: 100%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 .sequence-player .embedded-question-wrapper {
-	border: 2px dotted grey;
 	margin-top: 14px;
 	width: 100%;
 	height: 100%;
