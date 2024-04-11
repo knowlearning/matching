@@ -20,10 +20,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-let audio = ref(null)
-const audioPlaying = ref(null)
+const emits = defineEmits(['change'])
 
 const props = defineProps({
 	audioId: {
@@ -31,7 +30,10 @@ const props = defineProps({
 		type: [ String, null ]
 	}
 })
-const emits = defineEmits(['change'])
+let audio = null
+const audioPlaying = ref(null)
+
+watch(() => props.audioId, setLocalAudio)
 
 setLocalAudio()
 
