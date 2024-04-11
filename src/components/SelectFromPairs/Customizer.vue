@@ -6,29 +6,13 @@
 		<input id="item-name" v-model="data.content.name" />
 		<label for="instructions">{{ t('instructions-optional') }}:</label>
 		<textarea id="instructions" v-model="data.content.instructions" />
-		<div class="single-audio">
-			<label for="audio">{{ t('audio-optional') }}:</label>
-			<input
-				id="audio"
-				type="text"
-				v-model="data.content.audio"
-			/>
-			<button @click="uploadAudio">
-				<i class="fas fa-file-audio"></i>
-			</button>
-			<button
-				@click="toggleAudioPlayback"
-				:disabled="!data.content.audio"
-			>
-				<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-			</button>
-			<button
-				@click="deleteAudio"
-				:disabled="!data.content.audio"
-			>
-				<i class="fas fa-trash"></i>
-			</button>
-		</div>
+
+		<AudioBar
+			:key="`audio-bar-${data.content.audioId}`"
+			:audioId="data.content.audioId"
+			@change="data.content.audioId = $event"
+		/>
+
 		<div
 			class="row-wrapper"
 			v-for="r,i in data.content.rows"
@@ -47,9 +31,9 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import Row from './RowSelection/Customizer.vue'
+import AudioBar from '../AudioBar.vue'
 import newRowSchema from './newRowSchema.js'
 import { useStore } from 'vuex'
-
 
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
@@ -61,43 +45,6 @@ const props = defineProps({
 
 const state = await Agent.state(props.id)
 const data = reactive({ content: state })
-
-let audio = null
-let audioPlaying = ref(false)
-
-async function toggleAudioPlayback() {
-	if (audioPlaying.value) {
-		audio.pause()
-	} else {
-		audio.play()
-	}
-	audioPlaying.value = !audioPlaying.value
-}
-
-async function setLocalAudio() {
-	if (!data.content.audio) return
-
-	const audioUrl = await Agent.download(data.content.audio).url()
-	audio = new Audio(audioUrl)
-	audio.addEventListener('ended', () => {
-		audioPlaying.value = false
-	})
-}
-
-
-
-
-function deleteAudio() {
-	data.content.audio = null
-	audio = null
-	audioPlaying.value = false
-}
-
-async function uploadAudio() {
-	const id = await Agent.upload({ browser: true, accept: 'audio/*' })
-	data.content.audio = id
-	setLocalAudio()
-}
 
 function updateRow(i,payload) {
 	data.content.rows.push()
@@ -113,6 +60,7 @@ function removeRow(i) {
 	rowCopy.splice(i,1)
 	data.content.rows = rowCopy
 }
+
 </script>
 
 <style scoped>

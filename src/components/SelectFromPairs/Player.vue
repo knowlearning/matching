@@ -2,7 +2,7 @@
 	<div>
 		<p v-if="questionDef.instructions">{{ questionDef.instructions }}</p>
 		<div class="audio-control">
-			<button v-show="!!questionDef.audio" @click="toggleAudioPlayback">
+			<button v-show="!!questionDef.audioId" @click="toggleAudioPlayback">
 				<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
 			</button>
 		</div>
@@ -40,7 +40,7 @@ let audioPlaying = ref(false)
 setLocalAudio()
 
 async function setLocalAudio() {
-	const audioId = questionDef.audio
+	const audioId = questionDef.audioId
 	if (!audioId) return
 
 	const audioUrl = await Agent.download(audioId).url()

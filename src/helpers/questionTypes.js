@@ -53,13 +53,15 @@ const questionTypes = {
 		newItemSchemas: {
 			default: {
 				name: 'New Rearrange Item',
-				question: '?? Question Text ??',
-				answer : ''
+				instructions: 'rearrange instructions here...',
+				images: [],
+				audioId: null
 				},
 			th: {
 				name: 'THAI Rearrange Item',
-				question: '?? Question Text ??',
-				answer : ''
+				instructions: 'rearrange instructions here...',
+				images : [],
+				audioId: null
 			}
 
 		}

@@ -13,28 +13,33 @@
 		v-model="data.content.instructions" 
 	>
 	</textarea>
-	<br>
+	<AudioBar
+		:key="`audio-bar-${data.content.audioId}`"
+		:audioId="data.content.audioId"
+		@change="data.content.audioId = $event"
+	/>
+
 	<div class="upload-wrapper">
 		<button
 			@click="uploadImage"
 		>
 			{{ t('add-image') }}
 		</button>
-		<button
-			@click="uploadAudio"
-		>
-			{{ t('add-audio') }}
-		</button>
 	</div>
 	<br>
 	<div>
-		<div class="volume-icon" @click="toggleAudioPlayback">
-			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"/>
-		</div>
-		<draggable v-model="data.content.images" group="images" @end="onDragEnd" item-key="imageUrl">
+		<draggable
+			v-model="data.content.images"
+			group="images"
+			@end="onDragEnd"
+			item-key="imageUrl"
+		>
 			<template #item="{ element }">
 				<div class="image-row">
 					<div class="image-and-buttons">
+						<button @click="removeImage(element.id)">
+							<i class="fas fa-trash" />
+						</button>
 						<klImage
 							:id="element.id"
 							class="choice"
@@ -50,6 +55,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { v4 as uuid } from 'uuid'
+import AudioBar from '../AudioBar.vue'
 import draggable from 'vuedraggable'
 import klImage from '../kl-image.vue'
 
@@ -59,9 +65,7 @@ function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 const data = ref({ content: null })
-const audioPlaying = ref(false)
 let imageData = []
-let audio = null
 
 Agent
 	.state(props.id)
@@ -74,44 +78,16 @@ Agent
 		imageData = data.value.content.images
 	})
 
+function removeImage(id) {
+	data.value.content.images = data.value.content.images
+		.filter(obj => obj.id !== id)
+}
 
 async function uploadImage() {
 	const id = uuid();
 	await Agent.upload({ id, browser: true, accept: 'image/*' });
 	imageData.push({ id })
 }
-
-async function uploadAudio() {
-	const id = uuid();
-	await Agent.upload({ id, browser: true, accept: 'audio/*' });
-	data.value.content.audioId = id;
-}
-
-async function toggleAudioPlayback() {
-    const audioId = data.value.content.audioId;
-    if (!audioId) return;
-
-    const audioUrl = await Agent.download(audioId).url();
-
-    if (!audio) {
-        audio = new Audio(audioUrl);
-        audio.addEventListener('ended', () => {
-            audioPlaying.value = false;
-        });
-    }
-
-    if (audioPlaying.value) {
-        audio.pause();
-        audioPlaying.value = false;
-    } else {
-        audio.play();
-        audioPlaying.value = true;
-    }
-}
-
-
-
-
 
 function onDragEnd(event) {
     const imageDataCopy = JSON.parse(JSON.stringify(imageData));
@@ -122,15 +98,15 @@ function onDragEnd(event) {
     imageData = imageDataCopy;
 }
 
-
 // function onDragEnd(event) {
-// 	const imageDataCopy = structuredClone(imageData)
-// 	const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
-// 	imageDataCopy.splice(event.newIndex, 0, draggedElement);
+//     const imageDataCopy = structuredClone(imageData)
+//     const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
+//     imageDataCopy.splice(event.newIndex, 0, draggedElement);
 
-// 	data.value.content.images = imageDataCopy
-// 	imageData = imageDataCopy
+//     data.value.content.images = imageDataCopy
+//     imageData = imageDataCopy
 // }
+
 
 </script>
 
@@ -139,6 +115,9 @@ function onDragEnd(event) {
 display: flex;
 flex-direction: column;
 align-items: center;
+}
+h3, h4 {
+	margin: 6px 0 0 0;
 }
 label {
   font-weight: bolder;
@@ -152,7 +131,7 @@ textarea#item-name {
   height: 16px;
 }
 textarea#instructions {
-  height: 150px;
+  height: 40px;
 }
 
 .image-row {
@@ -169,7 +148,16 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 width: 100%;
-cursor: pointer;
+cursor: grab;
+position: relative;
+}
+.image-and-buttons > button {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+.image-and-buttons > button:hover {
+	color: red;
 }
 
 .upload-wrapper {
@@ -177,7 +165,7 @@ display: flex;
 align-items: center;
 }
 
-.upload-icon, .audio-icon {
+.upload-icon {
 display: flex;
 align-items: center;
 justify-content: center;
@@ -194,17 +182,6 @@ color: grey;
 margin-right: 10px;
 }
 
-.audio-icon {
-margin-left: 100px;
-cursor: pointer;
-}
-
-.volume-icon {
-margin-left: 10px;
-color: grey;
-cursor: pointer;
-}
-
 .choice {
 width: 200px;
 }
@@ -213,7 +190,7 @@ button {
 margin-left: 10px;
 }
 
-.upload-icon i, .audio-icon i, .volume-icon i {
+.upload-icon i {
 font-size: 24px;
 }
 
