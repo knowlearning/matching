@@ -25,18 +25,21 @@
 		>
 			{{ t('add-image') }}
 		</button>
-		<button
-			@click="uploadAudio"
-		>
-			{{ t('add-audio') }}
-		</button>
 	</div>
 	<br>
 	<div>
-		<draggable v-model="data.content.images" group="images" @end="onDragEnd" item-key="imageUrl">
+		<draggable
+			v-model="data.content.images"
+			group="images"
+			@end="onDragEnd"
+			item-key="imageUrl"
+		>
 			<template #item="{ element }">
 				<div class="image-row">
 					<div class="image-and-buttons">
+						<button @click="removeImage(element.id)">
+							<i class="fas fa-trash" />
+						</button>
 						<klImage
 							:id="element.id"
 							class="choice"
@@ -74,6 +77,11 @@ Agent
 
 		imageData = data.value.content.images
 	})
+
+function removeImage(id) {
+	data.value.content.images = data.value.content.images
+		.filter(obj => obj.id !== id)
+}
 
 async function uploadImage() {
 	const id = uuid();
@@ -140,7 +148,16 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 width: 100%;
-cursor: pointer;
+cursor: grab;
+position: relative;
+}
+.image-and-buttons > button {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+.image-and-buttons > button:hover {
+	color: red;
 }
 
 .upload-wrapper {
