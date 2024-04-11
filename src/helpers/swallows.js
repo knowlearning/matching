@@ -41,7 +41,6 @@ export function chooseTypeSwal(t) {
 				(acc, [key, val]) => ({ ...acc, [key] : t(val.description) }),
 				{}
 			),
-		inputPlaceholder: t('select-question-type'),
 		showCancelButton: true,
 		confirmButtonText: t('ok'),
 		cancelButtonText: t('cancel')

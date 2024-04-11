@@ -65,7 +65,7 @@ async function toggleAudioPlayback() {
 function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
   if (Agent.embedded) Agent.close({ success: isCorrect })
-  else window.alert( isCorrect ? 'woo' : 'boo' )
+  else window.alert( isCorrect ? t('correct') : t('incorrect') )
 }
 
 function wideItemArea() {

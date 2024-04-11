@@ -114,7 +114,7 @@ function handleSubmit() {
   const isCorrect = JSON.stringify(correctOrder) === JSON.stringify(submittedOrder)
 
   if (Agent.embedded) Agent.close({ correct: isCorrect })
-  else alert( isCorrect ? 'woo' : 'boo')
+  else alert( isCorrect ? t('correct') : t('incorrect') )
 
 }
 

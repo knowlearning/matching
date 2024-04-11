@@ -130,5 +130,13 @@ export default {
   'next': {
     'en' : 'Next',
     'th' : 'ต่อไป'
-  }
+  },
+  'correct': {
+    'en' : 'Correct',
+    'th' : 'ถูกต้อง'
+  },
+  'incorrect': {
+    'en' : 'Incorrect',
+    'th' : 'ไม่ถูกต้อง'
+  },
 }
