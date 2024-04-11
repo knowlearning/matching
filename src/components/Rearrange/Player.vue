@@ -1,15 +1,24 @@
 <template>
 <div class="player">
-    <h2 v-if= "item?.name"> Item Name: {{ item.name }}</h2>
     <h3 v-if="item?.instructions">Instructions:{{ item.instructions }}</h3>
     <div class="image-container">
-        <i 
-        :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
-        style="cursor: pointer;"
-        @click="toggleAudioPlayback"
-        />
-        <br>
-        <input type="range" min="0" :max="audio ? audio.duration : 100" v-model="currentAudioTime" @input="seekAudio">
+        <div v-if="data.content?.audioId" class="audio-play-area">
+            <i 
+                :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
+                style="cursor: pointer;"
+                @click="toggleAudioPlayback"
+            />
+            <br>
+            <input
+                type="range"
+                min="0"
+                :max="audio ? audio.duration : 100"
+                v-model="currentAudioTime"
+                @input="seekAudio"
+            >
+        </div>
+
+
         <div class="content">
         <draggable v-model="userOrderedImages" @end="onDragEnd" item-key="id">
             <template #item="{ element }">
@@ -33,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed, watch } from 'vue'
+import { ref } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from '../kl-image.vue'
 
@@ -60,17 +69,8 @@ Agent
     data.value.content = state
   })
 
-onMounted(() => {
-  shuffleImages()
-})
+shuffleImages()
 
-const audioId = computed(() => {
-  if (data.value.content) {
-    return data.value.content.audioId
-  } else {
-    return null
-  }
-})
 async function toggleAudioPlayback() {
     const audioId = data.value.content.audioId;
     if (!audioId) return;
