@@ -1,6 +1,6 @@
 <template>
 <div class="player">
-    <h3 v-if="item?.instructions">Instructions:{{ item.instructions }}</h3>
+    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
     <div class="image-container">
         <div v-if="data.content?.audioId" class="audio-play-area">
             <i 
@@ -51,7 +51,6 @@ function t(slug) { return store.getters.t(slug) }
 const props = defineProps(['id'])
 const item = await Agent.state(props.id)
 
-const submitted = ref(false)
 const userOrderedImages = ref(item.images)
 const audioPlaying = ref(false)
 let audio = null
@@ -97,41 +96,6 @@ function seekAudio() {
     }
 }
 
-const audioId = computed(() => {
-  if (data.value.content) {
-    return data.value.content.audioId
-  } else {
-    return null
-  }
-})
-async function toggleAudioPlayback() {
-    const audioId = data.value.content.audioId;
-    if (!audioId) return;
-    const audioUrl = await Agent.download(audioId).url();
-    if (!audio) {
-        audio = new Audio(audioUrl);
-        audio.addEventListener('ended', () => {
-            audioPlaying.value = false;
-        });
-        audio.addEventListener('timeupdate', () => {
-            currentAudioTime.value = audio.currentTime;
-        });
-    }
-    if (audio.paused) {
-        audio.play();
-        audioPlaying.value = true;
-    } else {
-        audio.pause();
-        audioPlaying.value = false;
-    }
-}
-
-function seekAudio() {
-    if (audio) {
-        audio.currentTime = currentAudioTime.value;
-    }
-}
-
 function onDragEnd(event) {
     if (!event.detail) {
         console.error('Event detail is null or undefined.');
@@ -147,14 +111,11 @@ if (Array.isArray(event.detail)) {
 function handleSubmit() {
   const correctOrder = item.images.map(image => image.id)
   const submittedOrder = userOrderedImages.value.map(image => image.id)
-
   const isCorrect = JSON.stringify(correctOrder) === JSON.stringify(submittedOrder)
-    if (isCorrect) {
-        alert('Correct order!');
-    } else {
-        alert('Incorrect order!');
-    }
-    submitted.value = true;
+
+  if (Agent.embedded) Agent.close({ correct: isCorrect })
+  else alert( isCorrect ? 'woo' : 'boo')
+
 }
 
 function shuffleImages() {
