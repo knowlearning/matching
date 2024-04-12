@@ -12,8 +12,16 @@
       v-model="data.content.instructions"
     />
     <div class="add-buttons-wrapper">
-      <button @click="openFilePicker('left','image')">{{ t('add-image') }}</button>
-      <button @click="openFilePicker('right','audio')">{{ t('add-audio') }}</button>
+      <PickFileButton
+        fas-icon="fa-file-audio"
+        acceptType="audio/*"
+        @newFile="handleFileAdd('audio', $event)"
+      />
+      <PickFileButton
+        fas-icon="fa-file-image"
+        acceptType="image/*"
+        @newFile="handleFileAdd('image', $event)"
+      />
       <button @click="addChoice">{{ t('add-by-text-or-by-id') }}</button>
       <button @click="data.content.textIsPlayable = !data.content.textIsPlayable">
         <i v-if="data.content.textIsPlayable" class="fas fa-volume-up" />
@@ -41,8 +49,11 @@
 import { reactive } from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
 import MatchSvg from './MatchSvg/index.vue'
-import { inputSwal, unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
-
+import PickFileButton from '../PickFileButton.vue'
+import { inputSwal,
+  unsupportedTypeSwal,
+  areYouSureSwal
+} from '../../helpers/swallows.js'
 import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
@@ -179,16 +190,14 @@ function removeConnectionsToId(nodeId) {
     .filter(([to,from]) => to !== nodeId && from !== nodeId)
 }
 
-async function openFilePicker(side, fileType) {
-  const id = uuid()
-  await Agent.upload({ id, browser: true, accept : fileType === 'audio' ? 'audio/*' : 'image/*'})
+async function handleFileAdd(fileType, id) {
   if (fileType === 'audio') {
     data.content.toChoices.push({
       type: 'audio',
       content: id,
       nodeId: uuid()
     })
-  } else {
+  } else if (fileType === 'image') {
     data.content.fromChoices.push({
       type: 'image',
       content: id,

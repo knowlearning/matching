@@ -1,8 +1,11 @@
 <template>
 	<div class="audio-bar">
-		<button @click="uploadAudio">
-			<i class="fas fa-file-audio"></i>
-		</button>
+		<PickFileButton
+			fas-icon="fa-file-audio"
+			acceptType="audio/*"
+			@newFile="emits('change', $event)"
+		/>
+
 		<button
 			@click="toggleAudioPlayback"
 			:disabled="!props.id"
@@ -21,11 +24,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { uploadSizeNotificationSwal } from '../helpers/swallows.js'
-
-import { useStore } from 'vuex'
-const store = useStore()
-function t(slug) { return store.getters.t(slug) }
+import PickFileButton from './PickFileButton.vue'
 
 const emits = defineEmits(['change'])
 
@@ -41,24 +40,6 @@ const audioPlaying = ref(null)
 watch(() => props.id, setLocalAudio)
 
 setLocalAudio()
-
-async function validate(file) {
-	const SIZE_LIMIT = 1000000
-	if (file.size > SIZE_LIMIT) {
-		console.warn('file too big')
-		return false
-	} else {
-		return true
-	}
-
-}
-
-async function uploadAudio() {
-	await uploadSizeNotificationSwal(t)
-
-	const id = await Agent.upload({ browser: true, accept: 'audio/*', validate })
-	if (id) emits('change', id)
-}
 
 async function setLocalAudio() {
 	if (!props.id) return

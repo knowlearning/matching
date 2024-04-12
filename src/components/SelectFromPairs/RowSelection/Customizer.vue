@@ -19,10 +19,14 @@
         <div>
           <button
             @click.stop="changeChoice(i)"
-          ><i class="fas fa-edit"></i></button>
-          <button
-            @click.stop="uploadImage(i)"
-          ><i class="fas fa-upload"></i></button>
+          >
+            <i class="fas fa-edit" />
+          </button>
+          <PickFileButton
+            fasIcon="fa-upload"
+            acceptType="image/*"
+            @newFile="handleNewImage(i, $event)"
+          />
         </div>
       </div>
     </div>
@@ -35,6 +39,7 @@ import { validate as isUUID } from 'uuid'
 import { inputSwal, unsupportedTypeSwal } from '../../../helpers/swallows.js'
 import KlImage from '../../kl-image.vue'
 import AudioBar from '../../AudioBar.vue'
+import PickFileButton from '../../PickFileButton.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -98,19 +103,13 @@ function toggleCorrect() {
   })
 }
 
-async function uploadImage(i) {
-  try {
-    const id = await Agent.upload({ browser: true, accept: 'image/*' })
-    const choicesCopy = copy(props.choices)
-    choicesCopy[i].content = id
-    emits('updateRow', {
-      audioId: props.audioId,
-      choices: choicesCopy
-    })
-  } catch (error) {
-    console.error('Error uploading image:', error)
-    alert('Error uploading image.')
-  }
+async function handleNewImage(i, id) {
+  const choicesCopy = copy(props.choices)
+  choicesCopy[i].content = id
+  emits('updateRow', {
+    audioId: props.audioId,
+    choices: choicesCopy
+  })
 }
 </script>
 

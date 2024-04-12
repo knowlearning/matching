@@ -17,14 +17,11 @@
 		:id="data.content.audioId"
 		@change="data.content.audioId = $event"
 	/>
-
-	<div class="upload-wrapper">
-		<button
-			@click="uploadImage"
-		>
-			{{ t('add-image') }}
-		</button>
-	</div>
+	<PickFileButton
+		fasIcon="fa-plus"
+		acceptType="image/*"
+		@newFile="imageData.push({ id: $event })"
+	/>
 	<br>
 	<div>
 		<draggable
@@ -55,6 +52,7 @@
 import { reactive, ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import AudioBar from '../AudioBar.vue'
+import PickFileButton from '../PickFileButton.vue'
 import draggable from 'vuedraggable'
 import klImage from '../kl-image.vue'
 
@@ -80,12 +78,6 @@ Agent
 function removeImage(id) {
 	data.value.content.images = data.value.content.images
 		.filter(obj => obj.id !== id)
-}
-
-async function uploadImage() {
-	const id = uuid();
-	await Agent.upload({ id, browser: true, accept: 'image/*' });
-	imageData.push({ id })
 }
 
 function onDragEnd(event) {
@@ -159,28 +151,6 @@ position: relative;
 	color: red;
 }
 
-.upload-wrapper {
-display: flex;
-align-items: center;
-}
-
-.upload-icon {
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-width: 50px;
-height: 50px;
-border-radius: 50%;
-background-color: antiquewhite;
-margin-right: 10px;
-color: grey;
-}
-
-.upload-icon {
-margin-right: 10px;
-}
-
 .choice {
 width: 200px;
 }
@@ -188,9 +158,4 @@ width: 200px;
 button {
 margin-left: 10px;
 }
-
-.upload-icon i {
-font-size: 24px;
-}
-
 </style>
