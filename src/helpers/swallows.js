@@ -3,11 +3,20 @@ import { validate as isUUID } from 'uuid'
 import questionTypes from './questionTypes.js'
 
 
+export function fileNotUploadedLikelyTooLargeSwal(t) {
+	return Swal.fire({
+		title: t('not-uploaded'),
+		text: t('file-is-likely-too-large'),
+		icon: 'warning',
+		confirmButtonText: t('ok')
+	})
+}
+
 export function uploadSizeNotificationSwal(t) {
-		return Swal.fire({
+	return Swal.fire({
 		title: t('upload-warning'),
 		html: t('long-upload-warning-html-text'),
-		icon: "warning",
+		icon: 'warning',
 		confirmButtonText: t('ok'),
     })
 }
@@ -15,7 +24,7 @@ export function uploadSizeNotificationSwal(t) {
 export function areYouSureSwal(t) {
 	return Swal.fire({
 		title: t('are-you-sure'),
-		icon: "warning",
+		icon: 'warning',
 		confirmButtonText: t('remove'),
 		cancelButtonText: t('cancel'),
 		showCancelButton: true,
@@ -45,7 +54,7 @@ export function unsupportedTypeSwal(t, id, type) {
 export function chooseTypeSwal(t) {
 	return Swal.fire({
 		title: t('select-question-type'),
-		input: "select",
+		input: 'select',
 		inputOptions: Object.entries(questionTypes)
 			.reduce(
 				(acc, [key, val]) => ({ ...acc, [key] : t(val.description) }),
@@ -61,7 +70,7 @@ export function copyItemSwal(t) {
 	return Swal.fire({
 		title: t('enter-id-of-item-to-copy'),
 		input: 'text',
-		inputAttributes: { autocapitalize: "off" },
+		inputAttributes: { autocapitalize: 'off' },
 		showCancelButton: true,
 		cancelButtonText: t('cancel'),
 		confirmButtonText: t('copy'),
