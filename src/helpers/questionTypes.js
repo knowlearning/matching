@@ -9,9 +9,11 @@ import SequencePlayer from '../components/Sequence/Player.vue'
 import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.vue'
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 
-import mjAndKobeMatching from './mjAndKobeMatching.js'
-import monumentPairs from './monumentPairs.js'
-import defaultSequence from './defaultSequence.js'
+import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
+import butterflyOrdering from './demo-questions/butterflyOrdering.js'
+import monumentPairs from './demo-questions/monumentPairs.js'
+import defaultSequence from './demo-questions/defaultSequence.js'
+
 const copy = x => JSON.parse(JSON.stringify(x))
 
 
@@ -51,19 +53,8 @@ const questionTypes = {
 			customizer: RearrangeCustomizer
 		},
 		newItemSchemas: {
-			default: {
-				name: 'New Rearrange Item',
-				instructions: 'rearrange instructions here...',
-				images: [],
-				audioId: null
-				},
-			th: {
-				name: 'THAI Rearrange Item',
-				instructions: 'rearrange instructions here...',
-				images : [],
-				audioId: null
-			}
-
+			default: copy(butterflyOrdering),
+			th: copy(butterflyOrdering)
 		}
 	},
 	'application/json;type=select-from-pairs' : {

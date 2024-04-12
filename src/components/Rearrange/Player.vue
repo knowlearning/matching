@@ -113,7 +113,7 @@ function handleSubmit() {
   const submittedOrder = userOrderedImages.value.map(image => image.id)
   const isCorrect = JSON.stringify(correctOrder) === JSON.stringify(submittedOrder)
 
-  if (Agent.embedded) Agent.close({ correct: isCorrect })
+  if (Agent.embedded) Agent.close({ success: isCorrect })
   else alert( isCorrect ? t('correct') : t('incorrect') )
 
 }
@@ -158,7 +158,7 @@ textarea#instructions {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    cursor: pointer;
+    cursor: grab;
 }
 .content {
     display: flex;

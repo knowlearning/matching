@@ -19,7 +19,7 @@ const props = defineProps({
     size: {
         type: Object,
         required: false,
-        default: () => ({ width: '110px', height: '110px' })
+        default: () => ({ width: '88px', height: '88px' })
     }
 })
 const imageUrl = ref(null)
