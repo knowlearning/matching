@@ -7,9 +7,7 @@
 </template>
 
 <script>
-function o(n) {
-  return n<10 ? '0'+n : ''+n
-}
+const o = n => (n<10 ? '0'+n : ''+n)
 
 export default {
   name: 'progress-pill',

@@ -1,8 +1,8 @@
 <template>
 	<div class="sequence-player">
 		<SequenceHeader class="header"
+			:sequenceName="questionDef.name"
 			:isCorrectArray="data.isCorrectArray"
-			:activeItemIndex="data.activeItemIndex"
 			@select="data.activeItemIndex = $event"
 		/>
 		<div
@@ -39,7 +39,6 @@ import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
-
 
 import { useStore } from 'vuex'
 const store = useStore()
