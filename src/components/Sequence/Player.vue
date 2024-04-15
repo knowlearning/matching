@@ -1,8 +1,8 @@
 <template>
 	<div class="sequence-player">
-		<SequenceHeader
+		<SequenceHeader class="header"
+			:sequenceName="questionDef.name"
 			:isCorrectArray="data.isCorrectArray"
-			:activeItemIndex="data.activeItemIndex"
 			@select="data.activeItemIndex = $event"
 		/>
 		<div
@@ -23,7 +23,12 @@
 			<h3>{{ t('finished') }}</h3>
 			<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
 		</div>
-		
+		<SequenceFooter class="footer"
+			@previous="previous"
+			@next="next"
+			:activeItemIndex="data.activeItemIndex"
+			:isCorrectArray="data.isCorrectArray"
+		/>	
 	</div>
 </template>
 
@@ -33,6 +38,7 @@
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
+import SequenceFooter from './SequenceFooter.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -61,12 +67,19 @@ function updateTimeTracking() {
 	if (Number.isInteger(i)) data.timeOnTasks[i] ++
 
 }
-
+function next() {
+	const i = data.activeItemIndex
+	data.activeItemIndex = (i === data.isCorrectArray.length - 1) ? null : i + 1
+}
+function previous() {
+	const i = data.activeItemIndex
+	data.activeItemIndex = (i <= 0) ? 0 : i - 1
+}
 function handleItemClose(i, e) {
 	// TODO: What about other "info"... not just close on correct?
 	// Need state watching / reacting OR other messaging.
 	data.isCorrectArray[i] = e.success
-	data.activeItemIndex =  (i === data.isCorrectArray.length - 1) ? null : i + 1
+	next()
 }
 function handleSubmit() {
 	Agent.close()
@@ -75,20 +88,33 @@ function handleSubmit() {
 
 <style>
 .sequence-player {
-	height: 100%;
+	min-height: 100%;
 	width: 100%;
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 .sequence-player .embedded-question-wrapper {
-	margin-top: 14px;
+	flex: 1;
 	width: 100%;
-	height: 100%;
+  background-color: #f2f2f2;
 }
 .sequence-player .embedded-question-wrapper iframe {
 	width: 600px;
 	height: 600px;
 }
+.header, .footer {
+  background-color: #333;
+  color: #fff;
+  width: 100%;
+  padding: 2px 6px;
+  box-sizing: border-box;
+  text-align: center;
+  position: sticky;
+  z-index: 1000;
+}
+.header { top: 0; }
+.footer { bottom: 0; }
 </style>
 

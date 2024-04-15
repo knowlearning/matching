@@ -159,7 +159,6 @@
 .left-col, .right-col {
   display: flex;
   flex-direction: column;
-  padding: 4px;
   height: 100%;
 }
 .left-col {

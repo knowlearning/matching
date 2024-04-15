@@ -1,122 +1,78 @@
 <template>
-	<div class="item-selector">
-		
-		<div
-			v-for="(isCorrect, i) in isCorrectArray"
-			:key="i"
-			:class="{
-				oneItem: true,
-				pointer: selectable,
-				active: activeItemIndex === i
-			}"
-			@click="selectItem(i)"
-		>
-			<svg
-				class="item-circle"
-				viewBox="0 0 100 100"
-			>
-				<circle
-					cx="50" cy="50"
-					r="48"
-					:fill="getCircleFill(isCorrect)"
-					stroke="grey"
-				/>
-				<text
-					x="50"
-					y="50"
-					:fill="isCorrect  === null ? 'grey' : 'white'"
-					text-anchor="middle"
-					alignment-baseline="middle"
-				>{{ i+1 }}</text>
-			</svg>
-
-			<!-- Dashed Line Btw Items -->
-			<svg class="dashed-line"
-				v-if="i !== isCorrectArray.length - 1"
-				viewBox="0 0 100 100"
-			>
-				<line
-					x1="0" y1="50"
-					x2="100" y2="50"
-					stroke-width="10"
-					stroke="black"
-				/>
-			</svg>
+	<div class="sequence-header">
+		<div class="left"> {{ sequenceName }} </div>
+		<div>
+			<i
+				v-for="isCorrect,i in props.isCorrectArray"
+				:key="`icon-for-item-${i}`"
+				@click="$emit('select',i)"
+				:class="{
+					'fas': true,
+					'fa-check-circle': true,
+					'correct': isCorrect,
+					'incorrect': isCorrect === false
+				}"
+			/>
 		</div>
-		
+		<div class="right">{{ text }}</div>		
 	</div>
 </template>
 
-<script>
-export default {
-	props: {
-		selectable: {
-			type: Boolean,
-			required: false,
-			default: true
-		},
-		activeItemIndex: {
-			type: [Number, null],
-			required: true,
+<script setup>
+import { computed } from 'vue'
 
-		},
-		isCorrectArray: {
-			// array matching order of sequence [ null, t, or f ]
-			required: true, 
-			type: Array
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
-		}
-	},
-	methods: {
-		selectItem(i) {
-			if (this.selectable) {
-				this.$emit('select', i)
-			}
-		},
-		getCircleFill(isCorrect) {
-			if (isCorrect === null) return 'white'
-			else if (isCorrect === true) return 'green'
-			else return 'darkorange'
-		}
-	}
-}
+const o = n => (n < 10 ? '0' + n : '' + n);
+
+const props = defineProps({
+  sequenceName: {
+    type: String,
+    required: true,
+    default: 'Missing Sequence Name'
+  },
+  isCorrectArray: {
+  	type: Array,
+  	required: true
+  }
+})
+
+const numItems = computed(() => props.isCorrectArray.length)
+const numCorrect = computed(() =>  props.isCorrectArray.filter(x => x).length)
+const text = computed(() => `${t('correct')} : ${numCorrect.value} / ${numItems.value}`)
+
 </script>
 
-<style scoped>
-.item-selector {
-	user-select: none;
-	width: fit-content;
-	display: flex;
-	align-items: center;
-	justify-content: center;	
-}
-.oneItem {
-	display: flex;
-}
-.oneItem.pointer {
-	cursor: pointer;
-}
-.oneItem svg.item-circle {
-	width: 60px;
-	margin: 0 10px;
-	stroke-width: 0.5px;
-	font-size: 2.8em;
-	opacity: 0.7;
-}
-.oneItem svg.item-circle text {
-	stroke-width: 1.5px
-}
-.oneItem.active svg.item-circle {
-	stroke-width: 1.5px;
-	animation: pulse 1.6s ease-in-out infinite;
-}
-svg.dashed-line {
-	width: 10px;
-}
-@keyframes pulse {
-  000% { stroke-width: 4.8px; }
-  050% { stroke-width: 3.0px; }
-  100% { stroke-width: 4.8px; }
-}
 
+<style scoped>
+.sequence-header {
+	height: 40px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	align-content: center;
+}
+.left {
+	text-align: left;
+	margin-left: 8px;
+}
+.right {
+	text-align: right;
+	margin-right: 8px;
+}
+i {
+	cursor: pointer;
+	margin: 0 2px;
+	transition: font-size 150ms;
+}
+i.correct {
+	color: limegreen;
+}
+i.incorrect {
+	color: orangered;
+}
+i:hover {
+	font-size: 1.3rem;
+}
 </style>
