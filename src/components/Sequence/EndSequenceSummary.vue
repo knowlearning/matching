@@ -87,6 +87,7 @@ table {
 	margin: 20px 0;
 	border-collapse: collapse;
 	width: 80%;
+	max-width: 600px;
 	background: white;
 	}
 th, td {
