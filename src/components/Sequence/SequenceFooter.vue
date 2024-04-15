@@ -70,9 +70,11 @@ const displayString = computed(() => {
 	height: 42px;
 }
 .right {
-	text-align: right;
+	display: flex;
 	font-size: 1.7rem;
 	margin-right: 8px;
+	justify-content: flex-end;
+	align-items: center;
 }
 .right i {
 	cursor: pointer;
