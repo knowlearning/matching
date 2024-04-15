@@ -162,5 +162,9 @@ export default {
   'summary' : {
     'en' : 'Summary',
     'th' : 'สรุป'
+  },
+  'close' : {
+    'en' : 'Close',
+    'th' : 'ปิด'
   }
 }
