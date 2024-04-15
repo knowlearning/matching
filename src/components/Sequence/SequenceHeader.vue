@@ -1,7 +1,7 @@
 <template>
 	<div class="sequence-header">
 		<div class="left"> {{ sequenceName }} </div>
-		<div>
+		<div class="middle">
 			<i
 				v-for="isCorrect,i in props.isCorrectArray"
 				:key="`icon-for-item-${i}`"
@@ -56,12 +56,16 @@ const text = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numI
 	height: 40px;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
-	align-content: center;
-	justify-content: center;
+	align-items: center;
 }
 .left {
 	text-align: left;
 	margin-left: 8px;
+}
+.middle {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .right {
 	text-align: right;
@@ -78,7 +82,9 @@ i.correct {
 i.incorrect {
 	color: orangered;
 }
-i.active { font-size: 1.6rem; }
+i.active {
+	font-size: 1.6rem;
+}
 i:not(.active):hover {
 	font-size: 1.2rem;
 }
