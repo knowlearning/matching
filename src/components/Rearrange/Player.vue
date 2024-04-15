@@ -34,7 +34,7 @@
       </div>
     </div>
     <button class="submit" @click="handleSubmit">
-        {{ t('next') }}
+        {{ t('submit') }}
     </button>
 </div>
 </template>

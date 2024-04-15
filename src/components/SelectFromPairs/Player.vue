@@ -15,7 +15,7 @@
 			:wideItemArea="wideItemArea()"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
-		<button class="submit" @click="handleSubmit">{{ t('next') }}</button>
+		<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
 	</div>
 </template>
 

@@ -12,17 +12,23 @@
 			<span>{{ displayString }}</span>
 			<button @click="$emit('next')">&#8250;</button>
 		</div>
-		<div class="right"></div>
+		<div class="right">
+			<DisplayTime :time="time" />
+			<i @click="$emit('goToSummary')" class="fas fa-chart-bar"></i>
+		</div>
 	</div>
 </template>
 
 <script setup>
 import {ref, computed } from 'vue'
 import ProgressPill from './ProgressPill.vue'
+import DisplayTime from './DisplayTime.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
+
+function o(x) { return x<10 ? '0'+x : ''+x }
 
 const props = defineProps({
   activeItemIndex: {
@@ -32,22 +38,24 @@ const props = defineProps({
   isCorrectArray: {
     type: Array,
     required: true
+  },
+  time: {
+  	type: Number,
+  	required: true
   }
-});
+})
 
-const numberItems = computed(() => props.isCorrectArray.length);
-const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== null).length);
-const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length);
-const percentage = computed(() => numberSubmitted.value / numberItems.value);
+const numberItems = computed(() => props.isCorrectArray.length)
+const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== null).length)
+const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length)
+const percentage = computed(() => numberSubmitted.value / numberItems.value)
 const displayString = computed(() => {
-  if (props.activeItemIndex === null) return 'summary';
+  if (props.activeItemIndex === null) return t('summary')
 
-  let oneIndexed = props.activeItemIndex + 1;
-  oneIndexed = (oneIndexed < 10) ? '0' + oneIndexed : '' + oneIndexed;
-  let nItems = numberItems.value;
-  nItems =  (nItems < 10) ? '0' + nItems : '' + nItems;
-  return oneIndexed + ' / ' + nItems;
-});
+  const oneIndexed = o(props.activeItemIndex + 1)
+  const nItems = o(numberItems.value)
+  return oneIndexed + ' / ' + nItems
+})
 </script>
 
 <style scoped>
@@ -67,6 +75,19 @@ const displayString = computed(() => {
 	justify-content: center;
 	height: 42px;
 }
+.right {
+	display: flex;
+	font-size: 1.7rem;
+	justify-content: flex-end;
+	align-items: center;
+}
+.right i {
+	margin: 0 8px;
+	cursor: pointer;
+}
+.right .display-time {
+	font-size: 1rem;
+}
 button {
   background-color: transparent;
   border: none;
@@ -80,9 +101,7 @@ button {
   width: 30px;
   transform: translateY(-5px);
 }
-
 button:hover {
   font-size: 66px;
 }
-
 </style>

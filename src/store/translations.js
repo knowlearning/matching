@@ -158,5 +158,9 @@ export default {
   'attempted': {
     'en' : 'Attempted : ',
     'th' : 'พยายาม : '
+  },
+  'summary' : {
+    'en' : 'Summary',
+    'th' : 'สรุป'
   }
 }
