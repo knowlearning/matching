@@ -1,7 +1,12 @@
 <template>
 	<div class="end-sequence-summary">
 		<h3>{{ t('finished') }}</h3>
-		<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
+		<button
+			class="submit"
+			@click="$emit('close')"
+		>
+			{{ t('close') }}
+		</button>
 	</div>
 </template>
 

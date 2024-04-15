@@ -15,7 +15,7 @@
 			<Suspense>
 				<vueEmbedComponent
 					:id="item.id"
-					@close="handleItemClose(i, $event)"
+					@close="handleItemSubmit(i, $event)"
 					:namespace="`sequence-${id}-item-${i}`"
 				/>
 			</Suspense>
@@ -24,6 +24,7 @@
 		<EndSequenceSummary
 			class="embedded-question-wrapper"
 			v-show="data.activeItemIndex === null"
+			@close="handleClose"
 		/>
 
 		<SequenceFooter class="footer"
@@ -77,13 +78,13 @@ function previous() {
 	if (i === null) data.activeItemIndex = data.isCorrectArray.length - 1
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
-function handleItemClose(i, e) {
+function handleItemSubmit(i, e) {
 	// TODO: What about other "info"... not just close on correct?
 	// Need state watching / reacting OR other messaging.
 	data.isCorrectArray[i] = e.success
 	next()
 }
-function handleSubmit() {
+function handleClose() {
 	Agent.close()
 }
 </script>
