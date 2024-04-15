@@ -13,7 +13,7 @@
 			<button @click="$emit('next')">&#8250;</button>
 		</div>
 		<div class="right">
-			<span class="display-time">{{ displayTime }}</span>
+			<DisplayTime :time="time" />
 			<i @click="$emit('goToSummary')" class="fas fa-chart-bar"></i>
 		</div>
 	</div>
@@ -22,6 +22,7 @@
 <script setup>
 import {ref, computed } from 'vue'
 import ProgressPill from './ProgressPill.vue'
+import DisplayTime from './DisplayTime.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -44,11 +45,6 @@ const props = defineProps({
   }
 })
 
-const displayTime = computed(() => {
-	const mins = o(Math.floor(props.time / 60))
-	const secs = o((props.time % 60))
-	return `${mins}:${secs}`
-})
 const numberItems = computed(() => props.isCorrectArray.length)
 const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== null).length)
 const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length)
@@ -89,7 +85,7 @@ const displayString = computed(() => {
 	margin: 0 8px;
 	cursor: pointer;
 }
-.right span {
+.right .display-time {
 	font-size: 1rem;
 }
 button {
