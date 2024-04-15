@@ -56,7 +56,6 @@ button.submit:hover {
 }
 
 #app {
-  padding-top: 6px;
   width: 100vw;
   display: flex;
   flex-direction: column;
