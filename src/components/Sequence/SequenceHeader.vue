@@ -84,8 +84,6 @@ export default {
 
 <style scoped>
 .item-selector {
-	user-select: none;
-	width: fit-content;
 	display: flex;
 	align-items: center;
 	justify-content: center;	

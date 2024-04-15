@@ -154,5 +154,9 @@ export default {
   'file-is-likely-too-large': {
     'en' : 'File is likely too large',
     'th' : 'มีความเป็นไปได้ว่าไฟล์มีขนาดใหญ่เกินไป'
+  },
+  'attempted': {
+    'en' : 'Attempted : ',
+    'th' : 'พยายาม : '
   }
 }
