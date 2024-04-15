@@ -9,6 +9,12 @@
 				>
 					<td>{{	numDisplay(i) }}</td>
 					<td>
+						<i
+							class="fas fa-play-circle"
+							@click="$emit('select', i)"
+						/>
+					</td>
+					<td>
 						<vueScopeComponent :id="item.id" :path="['name']" />
 					</td>
 					<td>
@@ -90,15 +96,23 @@ th, td {
 th {
 	background-color: #f2f2f2;
 }
-i {
+i.fa-play-circle {
+	color: grey;
+	cursor: pointer;
+	font-size: 1.3rem;
+}
+i.fa-play-circle:hover {
+	color: limegreen;
+}
+i.fa-check-circle {
 	color: grey;
 	font-size: 1.2rem;
 	padding-left: 8px;
 }
-i.correct {
+i.fa-check-circle.correct {
 	color: limegreen;
 }
-i.incorrect {
+i.fa-check-circle.incorrect {
 	color: orangered;
 }
 </style>

@@ -28,6 +28,7 @@
 			:isCorrectArray="data.isCorrectArray"
 			:timeOnTasks="data.timeOnTasks"
 			@close="handleClose"
+			@select="data.activeItemIndex = $event"
 		/>
 
 		<SequenceFooter class="footer"
@@ -48,6 +49,11 @@ import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
+import { itemFeedbackSwal } from '../../helpers/swallows.js'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 
@@ -82,11 +88,10 @@ function previous() {
 	if (i === null) data.activeItemIndex = data.isCorrectArray.length - 1
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
-function handleItemSubmit(i, e) {
-	// TODO: What about other "info"... not just close on correct?
-	// Need state watching / reacting OR other messaging.
-	data.isCorrectArray[i] = e.success
-	next()
+async function handleItemSubmit(i, { success }) {
+	await itemFeedbackSwal(t, success)
+	data.isCorrectArray[i] = success
+	if (success) next()
 }
 function handleClose() {
 	Agent.close()

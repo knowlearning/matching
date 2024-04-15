@@ -166,5 +166,9 @@ export default {
   'close' : {
     'en' : 'Close',
     'th' : 'ปิด'
+  },
+  'try-again' : {
+    'en' : 'Try again',
+    'th' : 'ลองอีกครั้ง'
   }
 }
