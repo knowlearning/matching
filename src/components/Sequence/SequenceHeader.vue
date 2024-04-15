@@ -1,6 +1,7 @@
 <template>
 	<div class="sequence-header">
 		<div class="left"> {{ sequenceName }} </div>
+
 		<div class="middle">
 			<i
 				v-for="isCorrect,i in props.isCorrectArray"

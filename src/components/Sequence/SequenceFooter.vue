@@ -101,9 +101,7 @@ button {
   width: 30px;
   transform: translateY(-5px);
 }
-
 button:hover {
   font-size: 66px;
 }
-
 </style>
