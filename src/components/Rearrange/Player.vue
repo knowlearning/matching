@@ -3,11 +3,11 @@
     <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
     <div class="image-container">
         <div v-if="data.content?.audioId" class="audio-play-area">
-            <i 
-                :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
-                style="cursor: pointer;"
-                @click="toggleAudioPlayback"
-            />
+            <AudioPlayerButton
+				:id="questionDef.audioId"
+				@click="toggleAudioPlayback"
+				:disabled="!questionDef.audioId"
+			/>
             <br>
             <input
                 type="range"
@@ -43,6 +43,7 @@
 import { ref } from 'vue'
 import draggable from 'vuedraggable'
 import KlImage from '../kl-image.vue'
+import AudioPlayerButton from '../AudioPlayerButton.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -52,8 +53,6 @@ const props = defineProps(['id'])
 const item = await Agent.state(props.id)
 
 const userOrderedImages = ref(item.images)
-const audioPlaying = ref(false)
-let audio = null
 const currentAudioTime = ref(0)
 
 const data = ref({ content: null })
@@ -67,28 +66,6 @@ Agent
   })
 
 shuffleImages()
-
-async function toggleAudioPlayback() {
-    const audioId = data.value.content.audioId;
-    if (!audioId) return;
-    const audioUrl = await Agent.download(audioId).url();
-    if (!audio) {
-        audio = new Audio(audioUrl);
-        audio.addEventListener('ended', () => {
-            audioPlaying.value = false;
-        });
-        audio.addEventListener('timeupdate', () => {
-            currentAudioTime.value = audio.currentTime;
-        });
-    }
-    if (audio.paused) {
-        audio.play();
-        audioPlaying.value = true;
-    } else {
-        audio.pause();
-        audioPlaying.value = false;
-    }
-}
 
 function seekAudio() {
     if (audio) {
