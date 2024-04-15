@@ -12,7 +12,9 @@
 			<span>{{ displayString }}</span>
 			<button @click="$emit('next')">&#8250;</button>
 		</div>
-		<div class="right"></div>
+		<div class="right">
+			<i @click="$emit('goToSummary')" class="fas fa-chart-bar"></i>
+		</div>
 	</div>
 </template>
 
@@ -40,7 +42,7 @@ const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== nu
 const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length);
 const percentage = computed(() => numberSubmitted.value / numberItems.value);
 const displayString = computed(() => {
-  if (props.activeItemIndex === null) return 'summary';
+  if (props.activeItemIndex === null) return t('summary')
 
   let oneIndexed = props.activeItemIndex + 1;
   oneIndexed = (oneIndexed < 10) ? '0' + oneIndexed : '' + oneIndexed;
@@ -66,6 +68,14 @@ const displayString = computed(() => {
 	align-items: center;
 	justify-content: center;
 	height: 42px;
+}
+.right {
+	text-align: right;
+	font-size: 1.7rem;
+	margin-right: 8px;
+}
+.right i {
+	cursor: pointer;
 }
 button {
   background-color: transparent;

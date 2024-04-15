@@ -2,6 +2,7 @@
 	<div class="sequence-player">
 		<SequenceHeader class="header"
 			:sequenceName="questionDef.name"
+			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="data.isCorrectArray"
 			@select="data.activeItemIndex = $event"
 		/>
@@ -26,12 +27,12 @@
 		<SequenceFooter class="footer"
 			@previous="previous"
 			@next="next"
+			@goToSummary="data.activeItemIndex = null"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="data.isCorrectArray"
 		/>	
 	</div>
 </template>
-
 
 <script setup>
 
@@ -68,12 +69,14 @@ function updateTimeTracking() {
 
 }
 function next() {
-	const i = data.activeItemIndex
-	data.activeItemIndex = (i === data.isCorrectArray.length - 1) ? null : i + 1
+	const i = data.activeItemIndex  // expect to be null
+	if (i === null) data.activeItemIndex = 0
+	else data.activeItemIndex = (i === data.isCorrectArray.length - 1) ? null : i + 1
 }
 function previous() {
 	const i = data.activeItemIndex
-	data.activeItemIndex = (i <= 0) ? 0 : i - 1
+	if (i === null) data.activeItemIndex = data.isCorrectArray.length - 1
+	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
 function handleItemClose(i, e) {
 	// TODO: What about other "info"... not just close on correct?

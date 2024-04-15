@@ -10,7 +10,8 @@
 					'fas': true,
 					'fa-check-circle': true,
 					'correct': isCorrect,
-					'incorrect': isCorrect === false
+					'incorrect': isCorrect === false,
+					'active' : props.activeItemIndex === i
 				}"
 			/>
 		</div>
@@ -28,6 +29,10 @@ function t(slug) { return store.getters.t(slug) }
 const o = n => (n < 10 ? '0' + n : '' + n);
 
 const props = defineProps({
+	activeItemIndex: {
+		type: [ Number, null ],
+		required: true
+	},
   sequenceName: {
     type: String,
     required: true,
@@ -41,7 +46,7 @@ const props = defineProps({
 
 const numItems = computed(() => props.isCorrectArray.length)
 const numCorrect = computed(() =>  props.isCorrectArray.filter(x => x).length)
-const text = computed(() => `${t('correct')} : ${numCorrect.value} / ${numItems.value}`)
+const text = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numItems.value)}`)
 
 </script>
 
@@ -52,6 +57,7 @@ const text = computed(() => `${t('correct')} : ${numCorrect.value} / ${numItems.
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	align-content: center;
+	justify-content: center;
 }
 .left {
 	text-align: left;
@@ -72,7 +78,8 @@ i.correct {
 i.incorrect {
 	color: orangered;
 }
-i:hover {
-	font-size: 1.3rem;
+i.active { font-size: 1.6rem; }
+i:not(.active):hover {
+	font-size: 1.2rem;
 }
 </style>
