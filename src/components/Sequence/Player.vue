@@ -1,13 +1,13 @@
 <template>
 	<div class="sequence-player">
 		<SequenceHeader class="header"
-			:sequenceName="questionDef.name"
+			:sequenceName="sequenceDef.name"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="data.isCorrectArray"
 			@select="data.activeItemIndex = $event"
 		/>
 		<div
-			v-for="item,i in questionDef.items"
+			v-for="item,i in sequenceDef.items"
 			:key="`play-item-${i}`"
 			v-show="i === data.activeItemIndex"
 			class="embedded-question-wrapper"
@@ -24,6 +24,9 @@
 		<EndSequenceSummary
 			class="embedded-question-wrapper"
 			v-show="data.activeItemIndex === null"
+			:sequenceDef="sequenceDef"
+			:isCorrectArray="data.isCorrectArray"
+			:timeOnTasks="data.timeOnTasks"
 			@close="handleClose"
 		/>
 
@@ -33,6 +36,7 @@
 			@goToSummary="data.activeItemIndex = null"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="data.isCorrectArray"
+			:time="data.totalTime"
 		/>	
 	</div>
 </template>
@@ -47,14 +51,14 @@ import EndSequenceSummary from './EndSequenceSummary.vue'
 
 const props = defineProps(['id'])
 
-const questionDef = await Agent.state(props.id)
+const sequenceDef = await Agent.state(props.id)
 
 const data = reactive({
   activeItemIndex: 0,
   // both arrays below conventionally match index of items to the info
   // if a third comes, unify to an array of objects with isCorrect and time etc
-  isCorrectArray: questionDef.items.map(el => null),
-  timeOnTasks: questionDef.items.map(el => 0),
+  isCorrectArray: sequenceDef.items.map(el => null),
+  timeOnTasks: sequenceDef.items.map(el => 0),
   totalTime: 0
 })
 

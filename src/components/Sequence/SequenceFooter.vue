@@ -13,6 +13,7 @@
 			<button @click="$emit('next')">&#8250;</button>
 		</div>
 		<div class="right">
+			<span class="display-time">{{ displayTime }}</span>
 			<i @click="$emit('goToSummary')" class="fas fa-chart-bar"></i>
 		</div>
 	</div>
@@ -26,6 +27,8 @@ import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
+function o(x) { return x<10 ? '0'+x : ''+x }
+
 const props = defineProps({
   activeItemIndex: {
     required: true,
@@ -34,22 +37,29 @@ const props = defineProps({
   isCorrectArray: {
     type: Array,
     required: true
+  },
+  time: {
+  	type: Number,
+  	required: true
   }
-});
+})
 
-const numberItems = computed(() => props.isCorrectArray.length);
-const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== null).length);
-const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length);
-const percentage = computed(() => numberSubmitted.value / numberItems.value);
+const displayTime = computed(() => {
+	const mins = o(Math.floor(props.time / 60))
+	const secs = o((props.time % 60))
+	return `${mins}:${secs}`
+})
+const numberItems = computed(() => props.isCorrectArray.length)
+const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== null).length)
+const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length)
+const percentage = computed(() => numberSubmitted.value / numberItems.value)
 const displayString = computed(() => {
   if (props.activeItemIndex === null) return t('summary')
 
-  let oneIndexed = props.activeItemIndex + 1;
-  oneIndexed = (oneIndexed < 10) ? '0' + oneIndexed : '' + oneIndexed;
-  let nItems = numberItems.value;
-  nItems =  (nItems < 10) ? '0' + nItems : '' + nItems;
-  return oneIndexed + ' / ' + nItems;
-});
+  const oneIndexed = o(props.activeItemIndex + 1)
+  const nItems = o(numberItems.value)
+  return oneIndexed + ' / ' + nItems
+})
 </script>
 
 <style scoped>
@@ -72,12 +82,15 @@ const displayString = computed(() => {
 .right {
 	display: flex;
 	font-size: 1.7rem;
-	margin-right: 8px;
 	justify-content: flex-end;
 	align-items: center;
 }
 .right i {
+	margin: 0 8px;
 	cursor: pointer;
+}
+.right span {
+	font-size: 1rem;
 }
 button {
   background-color: transparent;
