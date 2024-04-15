@@ -20,10 +20,12 @@
 				/>
 			</Suspense>
 		</div>
-		<div v-show="data.activeItemIndex === null">
-			<h3>{{ t('finished') }}</h3>
-			<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
-		</div>
+
+		<EndSequenceSummary
+			class="embedded-question-wrapper"
+			v-show="data.activeItemIndex === null"
+		/>
+
 		<SequenceFooter class="footer"
 			@previous="previous"
 			@next="next"
@@ -40,10 +42,7 @@ import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
-
-import { useStore } from 'vuex'
-const store = useStore()
-function t(slug) { return store.getters.t(slug) }
+import EndSequenceSummary from './EndSequenceSummary.vue'
 
 const props = defineProps(['id'])
 
