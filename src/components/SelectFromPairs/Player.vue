@@ -3,7 +3,7 @@
 		<p v-if="questionDef.instructions">{{ questionDef.instructions }}</p>
 		<div class="audio-control">
 			<AudioPlayerButton
-				v-show="questionDef.audioId"
+				v-if="questionDef.audioId"
 				:id="questionDef.audioId"
 			/>
 		</div>

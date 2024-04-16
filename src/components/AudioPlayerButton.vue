@@ -1,17 +1,17 @@
 <template>
-    <button
-        v-show="!!props.audioId"
-        @click="toggleAudioPlayback"
-      >
+    <button @click="toggleAudioPlayback">
         <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-      </button>
+    </button>
 </template>
 
 <script setup>
-import { ref,watch } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
-    id: { type: String, required: true }
+    id: {
+        type: String,
+        required: true
+    }
 })
 
 const questionDef = await Agent.state(props.id)
@@ -24,8 +24,6 @@ watch(() => props.id, setLocalAudio)
 setLocalAudio()
 
 async function setLocalAudio() {
-    if (!props.id) return
-
     const audioUrl = await Agent.download(props.id).url()
     audio = new Audio(audioUrl)
     audio.addEventListener('ended', () => {
@@ -34,14 +32,8 @@ async function setLocalAudio() {
 }
 
 async function toggleAudioPlayback() {
-    if (audioPlaying.value) {
-        audio.pause()
-    } else {
-        // getting here but without audio defined...
-        audio.play()
-    }
+    audioPlaying.value ? audio.pause() : audio.play()
     audioPlaying.value = !audioPlaying.value
 }
-
 
 </script>

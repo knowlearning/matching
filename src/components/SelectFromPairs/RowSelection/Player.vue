@@ -2,9 +2,8 @@
   <div class="row-player">
     <div class="left-area">
       <AudioPlayerButton
-        v-show="props.audioId"
+        v-if="props.audioId"
         :id="props.audioId"
-        v-if=" props.audioId"
       />
       <div> {{ getLabelForRowNumber() }}) </div>
     </div>
