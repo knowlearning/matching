@@ -1,12 +1,11 @@
 <template>
   <div class="row-player">
     <div class="left-area">
-      <button
-        v-show="!!props.audioId"
-        @click="toggleAudioPlayback"
-      >
-        <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-      </button>
+      <AudioPlayerButton
+        v-show="props.audioId"
+        :id="props.audioId"
+        v-if=" props.audioId"
+      />
       <div> {{ getLabelForRowNumber() }}) </div>
     </div>
     <div
@@ -42,6 +41,7 @@
 import { ref } from 'vue'
 import { validate as isUUID } from 'uuid'
 import KlImage from '../../kl-image.vue'
+import AudioPlayerButton from '../../AudioPlayerButton.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -68,11 +68,7 @@ const props = defineProps({
   }
 })
 
-let audio = null
-let audioPlaying = ref(false)
-setLocalAudio()
 let userSelected = ref(null)
-
 
 function getLabelForRowNumber() {
   const lang = store.getters.language()
@@ -82,26 +78,6 @@ function getLabelForRowNumber() {
   return choices[props.rowIndex]
 }
 
-async function setLocalAudio() {
-  const audioId = props.audioId
-  if (!audioId) return
-
-  const audioUrl = await Agent.download(audioId).url()
-  audio = new Audio(audioUrl) // ready for audio.play()
-  audio.addEventListener('ended', () => {
-    audioPlaying.value = false
-  })
-}
-
-async function toggleAudioPlayback() {
-  if (audioPlaying.value) {
-    audio.pause()
-    audioPlaying.value = false
-  } else {
-    audio.play()
-    audioPlaying.value = true
-  }
-}
 function handleChange(i) {
   userSelected.value = (userSelected.value === i ? null : i)
   const correctIndex = props.choices.findIndex(el => el.correct)

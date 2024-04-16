@@ -2,9 +2,10 @@
 	<div>
 		<p v-if="questionDef.instructions">{{ questionDef.instructions }}</p>
 		<div class="audio-control">
-			<button v-show="!!questionDef.audioId" @click="toggleAudioPlayback">
-				<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-			</button>
+			<AudioPlayerButton
+				v-show="questionDef.audioId"
+				:id="questionDef.audioId"
+			/>
 		</div>
 		<Row
 			class="row"
@@ -23,8 +24,9 @@
 import { reactive, ref } from 'vue'
 import { validate as isUUID } from 'uuid'
 import Row from './RowSelection/Player.vue'
-
+import AudioPlayerButton from '../AudioPlayerButton.vue'
 import { useStore } from 'vuex'
+
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
@@ -34,33 +36,6 @@ const props = defineProps({
 
 const questionDef = await Agent.state(props.id)
 const rowsCorrect = reactive(questionDef.rows.map(r => false)) // init to array of false
-
-let audio = null
-let audioPlaying = ref(false)
-setLocalAudio()
-
-async function setLocalAudio() {
-	const audioId = questionDef.audioId
-	if (!audioId) return
-
-	const audioUrl = await Agent.download(audioId).url()
-	audio = new Audio(audioUrl)
-	audio.addEventListener('ended', () => {
-		audioPlaying.value = false
-	})
-}
-
-async function toggleAudioPlayback() {
-	if (!audio) return
-
-	if (audioPlaying.value) {
-		audio.pause()
-		audioPlaying.value = false
-	} else {
-		audio.play()
-		audioPlaying.value = true
-	}
-}
 
 function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
