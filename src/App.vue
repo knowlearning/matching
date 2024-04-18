@@ -1,3 +1,78 @@
+<template>
+  <div class="main-wrapper">
+    <Modal
+      v-if="store.getters.previewContent() && data.active"
+      @close="store.dispatch('previewContent', null)"
+    >
+      <template v-slot:body>
+        <Suspense>
+          <PlayOrCustomizeByTypeSwitcher
+            :key="`preview-${data.active}`"
+            :id="data.active"
+            mode="player"
+          />
+        </Suspense>
+      </template>
+    </Modal>
+
+    <div class="left-col">
+      {{ store.getters.previewContent() }}
+      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
+      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
+        <div
+          :class="store.getters.language() ==='en' ? 'active' : ''"
+          @click="store.dispatch('language', 'en')"
+        >English (อังกฤษ)</div>
+        <div
+          :class="store.getters.language() ==='th' ? 'active' : ''"
+          @click="store.dispatch('language', 'th')"
+        >ไทย (Thai)</div>
+      </div>
+      <!-- TODO::: END TEMP AREA TO REMOVE -->
+
+      
+      <div v-if="data.content">
+        <div
+          v-for="itemId in data.content"
+          :key="itemId"
+          :class="{
+            'item-choice' : true,
+            'active' : itemId === data.active
+          }"
+          @click="data.active = data.active === itemId ? null : itemId"
+        >
+          <Suspense>
+            <ItemName :id="itemId"
+              draggable="true"
+              style="cursor: grab;"
+              @dragstart="$event.dataTransfer.setData('text', itemId)"  
+            />
+          </Suspense>
+          <span
+            class="remove-symbol"
+            @click.stop="removeContent(itemId)"
+          >&#x2715;</span>
+        </div>
+      </div>
+      <div v-else>Loading Content...</div>
+    </div>
+
+    <div class="right-col" v-if="data.active">
+      <Suspense>
+        <PlayOrCustomizeByTypeSwitcher
+          :key="`customize-${data.active}`"
+          :id="data.active"
+          mode="player"
+        />
+      </Suspense>
+    </div>
+    <div class="right-col" v-else>
+      <Welcome @addNew="addNew" @copy="copyExisting" />
+    </div>
+
+  </div>
+</template>
+
 <script setup>
   import { reactive, computed } from 'vue'
   import Modal from './components/Modal.vue'
@@ -82,80 +157,7 @@ mode: 'player', // or 'customizer'
   }
 </script>
 
-<template>
-  <div class="main-wrapper">
-    <Modal
-      v-if="store.getters.previewContent() && data.active"
-      @close="store.dispatch('previewContent', null)"
-    >
-      <template v-slot:body>
-        <Suspense>
-          <PlayOrCustomizeByTypeSwitcher
-            :key="`preview-${data.active}`"
-            :id="data.active"
-            mode="player"
-          />
-        </Suspense>
-      </template>
-    </Modal>
 
-    <div class="left-col">
-      {{ store.getters.previewContent() }}
-      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
-      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
-        <div
-          :class="store.getters.language() ==='en' ? 'active' : ''"
-          @click="store.dispatch('language', 'en')"
-        >English (อังกฤษ)</div>
-        <div
-          :class="store.getters.language() ==='th' ? 'active' : ''"
-          @click="store.dispatch('language', 'th')"
-        >ไทย (Thai)</div>
-      </div>
-      <!-- TODO::: END TEMP AREA TO REMOVE -->
-
-      
-      <div v-if="data.content">
-        <div
-          v-for="itemId in data.content"
-          :key="itemId"
-          :class="{
-            'item-choice' : true,
-            'active' : itemId === data.active
-          }"
-          @click="data.active = itemId"
-        >
-          <Suspense>
-            <ItemName :id="itemId"
-              draggable="true"
-              style="cursor: grab;"
-              @dragstart="$event.dataTransfer.setData('text', itemId)"  
-            />
-          </Suspense>
-          <span
-            class="remove-symbol"
-            @click.stop="removeContent(itemId)"
-          >&#x2715;</span>
-        </div>
-      </div>
-      <div v-else>Loading Content...</div>
-    </div>
-
-    <div class="right-col" v-if="data.active">
-      <Suspense>
-        <PlayOrCustomizeByTypeSwitcher
-          :key="`customize-${data.active}`"
-          :id="data.active"
-          mode="customizer"
-        />
-      </Suspense>
-    </div>
-    <div class="right-col" v-else>
-      <Welcome @addNew="addNew" @copy="copyExisting" />
-    </div>
-
-  </div>
-</template>
 
 <style scoped>
 .main-wrapper {
