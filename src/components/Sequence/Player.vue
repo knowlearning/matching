@@ -59,14 +59,18 @@ const props = defineProps(['id'])
 
 const sequenceDef = await Agent.state(props.id)
 
-const data = reactive({
-  activeItemIndex: 0,
-  // both arrays below conventionally match index of items to the info
-  // if a third comes, unify to an array of objects with isCorrect and time etc
-  isCorrectArray: sequenceDef.items.map(el => null),
-  timeOnTasks: sequenceDef.items.map(el => 0),
-  totalTime: 0
-})
+const data = reactive(await Agent.state(`sequence-${props.id}`))
+
+if (data.activeItemIndex === undefined) { // use active item index as bellwether for state intialization
+	Object.assign(data, {
+	  activeItemIndex: 0,
+	  // both arrays below conventionally match index of items to the info
+	  // if a third comes, unify to an array of objects with isCorrect and time etc
+	  isCorrectArray: sequenceDef.items.map(el => null),
+	  timeOnTasks: sequenceDef.items.map(el => 0),
+	  totalTime: 0
+	})
+}
 
 const intervalId = setInterval(updateTimeTracking, 1000)
 
