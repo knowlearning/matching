@@ -14,7 +14,7 @@
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
   const data = reactive({
-    mode: 'player', // or 'customizer'
+mode: 'player', // or 'customizer'
     content: null,
     active: null,
     tags: null
@@ -65,7 +65,6 @@
     const newItemId = await Agent.create({ active_type, active })
     data.content.push(newItemId)
     data.active = newItemId
-    data.mode = 'customizer'
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true }
   }
   async function removeContent(id) {
@@ -98,19 +97,7 @@
       </div>
       <!-- TODO::: END TEMP AREA TO REMOVE -->
 
-      <div class="toggle-mode-wrapper">
-        <div
-          :class="data.mode==='player' ? 'active' : ''"
-          @click="data.mode = 'player'"
-        >{{ t('player' )}}</div>
-        <div
-          :class="data.mode==='customizer' ? 'active' : ''"
-          @click="data.mode = 'customizer'"
-        >{{ t('customizer' )}}</div>
-      </div>
-
-      <button class="new" @click="addNew">+ {{ t('add-new' )}}</button>
-      <button class="new" @click="copyExisting()">+ {{ t('copy-existing') }}</button>
+      
       <div v-if="data.content">
         <div
           v-for="itemId in data.content"
@@ -136,16 +123,19 @@
       </div>
       <div v-else>Loading Content...</div>
     </div>
-
+    <div>
+      <button class="new" @click="addNew">+ {{ t('add-new' )}}</button>
+      <button class="new" @click="copyExisting()">+ {{ t('copy-existing') }}</button>
     <div class="right-col" v-if="data.active && data.mode">
       <Suspense>
         <PlayOrCustomizeByTypeSwitcher
           :key="`${data.active}-${data.mode}`"
           :id="data.active"
-          :mode="data.mode"
+          mode="customizer"
         />
       </Suspense>
     </div>
+  </div>
   </div>
 </template>
 
@@ -166,17 +156,6 @@
   border-right: 1px solid slategray;
 }
 
-.left-col .toggle-mode-wrapper {
-  display: flex;
-  justify-content: space-around;
-}
-.left-col .toggle-mode-wrapper div {
-  cursor: pointer;
-  font-weight: lighter;
-}
-.left-col .toggle-mode-wrapper div.active {
-  font-weight: bolder;
-}
 .left-col button.new {
   background: green;
   color: white;
