@@ -1,5 +1,11 @@
 <template>
   <div class="customizer">
+    <button
+      class="preview-button"
+      @click="store.dispatch('previewContent', props.id)"
+    >
+      <i class="fas fa-eye" /> 
+    </button>
     <div>{{ t('item-id') }}: {{ id }} </div>
     <label for="item-name">{{ t('item-name') }}:</label>
     <textarea

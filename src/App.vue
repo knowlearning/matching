@@ -1,5 +1,7 @@
 <script setup>
   import { reactive, computed } from 'vue'
+  import Modal from './components/Modal.vue'
+  import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
   import ItemName from './components/ItemName.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
@@ -82,8 +84,23 @@ mode: 'player', // or 'customizer'
 
 <template>
   <div class="main-wrapper">
-    <div class="left-col">
+    <Modal
+      v-if="store.getters.previewContent() && data.active"
+      @close="store.dispatch('previewContent', null)"
+    >
+      <template v-slot:body>
+        <Suspense>
+          <PlayOrCustomizeByTypeSwitcher
+            :key="`preview-${data.active}`"
+            :id="data.active"
+            mode="player"
+          />
+        </Suspense>
+      </template>
+    </Modal>
 
+    <div class="left-col">
+      {{ store.getters.previewContent() }}
       <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
       <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
         <div
@@ -123,19 +140,20 @@ mode: 'player', // or 'customizer'
       </div>
       <div v-else>Loading Content...</div>
     </div>
-    <div>
-      <button class="new" @click="addNew">+ {{ t('add-new' )}}</button>
-      <button class="new" @click="copyExisting()">+ {{ t('copy-existing') }}</button>
-    <div class="right-col" v-if="data.active && data.mode">
+
+    <div class="right-col" v-if="data.active">
       <Suspense>
         <PlayOrCustomizeByTypeSwitcher
-          :key="`${data.active}-${data.mode}`"
+          :key="`customize-${data.active}`"
           :id="data.active"
           mode="customizer"
         />
       </Suspense>
     </div>
-  </div>
+    <div class="right-col" v-else>
+      <Welcome @addNew="addNew" @copy="copyExisting" />
+    </div>
+
   </div>
 </template>
 
@@ -154,16 +172,6 @@ mode: 'player', // or 'customizer'
 .left-col {
   text-align: left;
   border-right: 1px solid slategray;
-}
-
-.left-col button.new {
-  background: green;
-  color: white;
-  opacity: 0.7;
-}
-.left-col button.new:hover {
-  opacity: 1;
-  transition: 100ms;
 }
 .left-col .item-choice {
   font-family: monospace;

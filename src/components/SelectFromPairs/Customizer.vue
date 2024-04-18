@@ -1,15 +1,9 @@
 <template>
 	<div class="select-from-pairs-customizer">
-		<Modal 
-			:showModal="showPreview" 
-			@close="showPreview = false"
-		> 
-		<PlayOrCustomizeByTypeSwitcher
-		:id="props.id"
-		mode="player"
-		/>
-		</Modal>  
-		<button @click="showPreview = !showPreview">
+		<button
+			class="preview-button"
+			@click="store.dispatch('previewContent', props.id)"
+		>
 			<i class="fas fa-eye" /> 
 		</button>
 		<h3>{{ t('select-from-pairs-customizer') }}</h3>
@@ -45,21 +39,17 @@ import Row from './RowSelection/Customizer.vue'
 import AudioBar from '../AudioBar.vue'
 import newRowSchema from './newRowSchema.js'
 import { useStore } from 'vuex'
-import Modal from '../Modal.vue'
-import PlayOrCustomizeByTypeSwitcher from '../PlayOrCustomizeByTypeSwitcher.vue'
 
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 const copy = x => JSON.parse(JSON.stringify(x))
-const showPreview = ref(false)
+
 const props = defineProps({
 	id: { type: String, required: true }
 })
 
 const state = await Agent.state(props.id)
 const data = reactive({ content: state })
-
-
 
 function updateRow(i,payload) {
 	data.content.rows.push()
@@ -75,7 +65,6 @@ function removeRow(i) {
 	rowCopy.splice(i,1)
 	data.content.rows = rowCopy
 }
-
 </script>
 
 <style scoped>

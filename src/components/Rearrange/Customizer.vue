@@ -1,5 +1,11 @@
 <template>
 <div class="rearrange-customizer" v-if="data.content">
+	<button
+		class="preview-button"
+		@click="store.dispatch('previewContent', props.id)"
+	>
+		<i class="fas fa-eye" /> 
+	</button>
 	<h3>{{ t('rearrange-column-customizer') }}</h3>
 	<h4>{{ t('item-id') }}: {{ id }}</h4>
 	<label for="item-name">{{ t('item-name') }}:</label>

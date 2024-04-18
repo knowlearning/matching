@@ -1,5 +1,11 @@
 <template>
 	<div class="sequence-customizer">
+		<button
+			class="preview-button"
+			@click="store.dispatch('previewContent', props.id)"
+		>
+			<i class="fas fa-eye" /> 
+		</button>
 		<h3>{{ t('sequence-customizer') }}</h3>
 		<h4>{{ t('item-id') }}: {{ id }} </h4>
 		<label for="item-name">{{ t('sequence-name') }}:</label>

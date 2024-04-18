@@ -1,36 +1,79 @@
 <template>
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <button class="close" @click="$emit('close')">&times;</button>
-        <slot></slot>
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+
+          <div class="modal-header">
+            <slot name="header"></slot>
+          </div>
+
+          <div class="modal-body">
+            <slot name="body"></slot>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              <button class="modal-default-button" @click="$emit('close')">
+                X
+              </button>
+            </slot>
+          </div>
+        </div>
       </div>
     </div>
-  </template>
+  </transition>
+</template>
   
-  <script>
-  export default {
-    name: 'Modal',
-    props: ['showModal']
-  };
-  </script>
+<script>
+export default {
+  name: 'Modal',
+}
+</script>
 
-  <style>
-  .modal {
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 90%; /* Full width */
-    height: 90%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content/Box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-  }
+<style scoped>
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+.modal-container {
+  width: 300px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+.modal-body {
+  margin: 20px 0;
+}
+.modal-default-button {
+  float: right;
+}
+
+.modal-enter { opacity: 0; }
+.modal-leave-active { opacity: 0; }
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
 </style>
