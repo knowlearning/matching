@@ -62,7 +62,7 @@
         <PlayOrCustomizeByTypeSwitcher
           :key="`customize-${data.active}`"
           :id="data.active"
-          mode="player"
+          mode="customizer"
         />
       </Suspense>
     </div>
