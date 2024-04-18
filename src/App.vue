@@ -16,7 +16,6 @@
     </Modal>
 
     <div class="left-col">
-      {{ store.getters.previewContent() }}
       <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
       <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
         <div
@@ -30,31 +29,14 @@
       </div>
       <!-- TODO::: END TEMP AREA TO REMOVE -->
 
-      
-      <div v-if="data.content">
-        <div
-          v-for="itemId in data.content"
-          :key="itemId"
-          :class="{
-            'item-choice' : true,
-            'active' : itemId === data.active
-          }"
-          @click="data.active = data.active === itemId ? null : itemId"
-        >
-          <Suspense>
-            <ItemName :id="itemId"
-              draggable="true"
-              style="cursor: grab;"
-              @dragstart="$event.dataTransfer.setData('text', itemId)"  
-            />
-          </Suspense>
-          <span
-            class="remove-symbol"
-            @click.stop="removeContent(itemId)"
-          >&#x2715;</span>
-        </div>
-      </div>
-      <div v-else>Loading Content...</div>
+      <ContentBar v-if="data.content"
+        :items="data.content"
+        :active="data.active"
+        @removeItem="removeItem"
+        @active="data.active = (data.active === $event ? null : $event)"
+      />
+      <div v-else>Loading...</div>
+
     </div>
 
     <div class="right-col" v-if="data.active">
@@ -76,6 +58,7 @@
 <script setup>
   import { reactive, computed } from 'vue'
   import Modal from './components/Modal.vue'
+  import ContentBar from './components/ContentBar.vue'
   import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
   import ItemName from './components/ItemName.vue'
@@ -106,7 +89,6 @@ mode: 'player', // or 'customizer'
     )).map(obj => obj.target)
   }
   fetchMyContent()
-
 
   Agent
     .state('tags')
@@ -144,7 +126,7 @@ mode: 'player', // or 'customizer'
     data.active = newItemId
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true }
   }
-  async function removeContent(id) {
+  async function removeItem(id) {
     const { isConfirmed } = await areYouSureSwal(t)
     if (!isConfirmed) return
 
@@ -156,8 +138,6 @@ mode: 'player', // or 'customizer'
     event.dataTransfer.setData('text', id)
   }
 </script>
-
-
 
 <style scoped>
 .main-wrapper {
@@ -175,31 +155,6 @@ mode: 'player', // or 'customizer'
   text-align: left;
   border-right: 1px solid slategray;
 }
-.left-col .item-choice {
-  font-family: monospace;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.left-col .item-choice:hover {
-  background: lightyellow;
-}
-.left-col .item-choice.active {
-  background: yellow;
-}
-.left-col .item-choice .remove-symbol {
-  font-size: 1rem;
-  font-weight: bolder;
-  padding-right: 4px;
-  color: red;
-  cursor: pointer ;
-  opacity: 0.2;
-}
-.left-col .item-choice .remove-symbol:hover {
-  opacity: 1;
-}
-
 .right-col {
     width: 100%;
     flex-grow: 1;
