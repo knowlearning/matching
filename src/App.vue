@@ -63,15 +63,12 @@
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
   const store = useStore()
-  function t(slug) {
-    return store.getters.t(slug)
-  }
+  cosnt t = slug => store.getters.t(slug)
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
   const data = reactive({
-mode: 'player', // or 'customizer'
     content: null,
     active: null,
     tags: null
@@ -99,16 +96,13 @@ mode: 'player', // or 'customizer'
   async function addNew() {      
     const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
     if (!active_type || !isConfirmed) return
-
     // get demo question for active language
     const lang = store.getters.language()
     const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
-
     createContent(
       active_type,
       copy(itemToCopy)
     )
-
   }
   async function copyExisting() {
     const { value: idToCopy } = await copyItemSwal(t) // validates id and type 
@@ -130,9 +124,6 @@ mode: 'player', // or 'customizer'
     if (data.active === id) data.active = null
     data.content = data.content.filter(content => content !== id)
     data.tags[MY_CONTENT_TAG][id] = { value: null }
-  }
-  function handleDragStart(event, id) {
-    event.dataTransfer.setData('text', id)
   }
   function toggleLanguage(e) {
     if (e.shiftKey && e.offsetX < 10 && e.offsetY < 10) {
