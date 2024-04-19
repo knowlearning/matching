@@ -22,7 +22,7 @@
             'fa-folder-open' : typesToShow.includes(type)
           }"
         />
-          <span>{{ type.split('=')[1].toUpperCase() }}</span>
+          <span>{{ t(type.split('=')[1]) }}</span>
         </h4>
       </div>
 

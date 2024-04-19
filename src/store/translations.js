@@ -175,4 +175,24 @@ export default {
     'en' : 'Create',
     'th' : 'สร้าง'
   },
+  'rearrange-question' : {
+    'en' : 'Order Items Question',
+    'th' : 'คำถามเรื่องรายการสั่งซื้อ'
+  },
+  'matching' : {
+    'en' : 'MATCHING',
+    'th' : 'การจับคู่'
+  },
+  'rearrange-items' : {
+    'en' : 'ORDER ITEMS',
+    'th' : 'รายการสั่งซื้อ'
+  },
+  'select-from-pairs' : {
+    'en' : 'SELECT FROM PAIRS',
+    'th' : 'เลือกจากคู่'
+  },
+  'sequence' : {
+    'en' : 'SEQUENCE',
+    'th' : 'ลำดับ'
+  },
 }
