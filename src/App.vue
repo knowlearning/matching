@@ -13,6 +13,7 @@
           />
         </Suspense>
       </template>
+      <template v-slot:footer><div></div></template>
     </Modal>
 
     <div class="left-col">
