@@ -62,7 +62,9 @@ const sequenceDef = await Agent.state(props.id)
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 
-if (data.activeItemIndex === undefined) { // use active item index as bellwether for state intialization
+// use active totalTime as bellwether, also reset if items added or removed (weak check, problematic length not changed but enclosed items did)
+const runStateNeedsInitialization = (!data.totalTime || data.isCorrectArray?.length !== sequenceDef.items.length)
+if (runStateNeedsInitialization) { 
 	Object.assign(data, {
 	  activeItemIndex: 0,
 	  // both arrays below conventionally match index of items to the info
