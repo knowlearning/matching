@@ -1,6 +1,6 @@
 <template>
   <div>
-    MD: {{ metadata }}
+    <pre>{{ metadata }}</pre>
     <div
       v-for="itemId in props.items"
       :key="itemId"
@@ -43,9 +43,9 @@ const props = defineProps({
 let metadata = reactive({}) // { [id]: { name, type }, ... }
 
 async function fetchItemMetadata(id) {
-  const { active_type } = await Agent.metadata(id)
+  const { active_type, owner } = await Agent.metadata(id)
   const { name } = await Agent.state(id)
-  return { name, type: active_type }
+  return { name, owner, type: active_type }
 }
 
 async function fetchNeededMetadataSet() {

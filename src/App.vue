@@ -23,7 +23,7 @@
           src="./assets/pila.png"
           @click="toggleLanguage"
         >
-        <h2>Pila Create</h2>
+        <h2>Pila {{ t('create') }}</h2>
       </div>
       <Suspense>
         <ContentBar v-if="data.content"
