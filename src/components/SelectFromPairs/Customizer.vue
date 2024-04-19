@@ -1,5 +1,11 @@
 <template>
 	<div class="select-from-pairs-customizer">
+		<button
+			class="preview-button"
+			@click="store.dispatch('previewContent', props.id)"
+		>
+			<i class="fas fa-eye" /> 
+		</button>
 		<h3>{{ t('select-from-pairs-customizer') }}</h3>
 		<h4>{{ t('item-id') }}: {{ id }} </h4>
 		<label for="item-name">{{ t('item-name') }}:</label>
@@ -59,7 +65,6 @@ function removeRow(i) {
 	rowCopy.splice(i,1)
 	data.content.rows = rowCopy
 }
-
 </script>
 
 <style scoped>

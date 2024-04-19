@@ -40,13 +40,12 @@ import { inputSwal, unsupportedTypeSwal } from '../../../helpers/swallows.js'
 import KlImage from '../../kl-image.vue'
 import AudioBar from '../../AudioBar.vue'
 import PickFileButton from '../../PickFileButton.vue'
-
 import { useStore } from 'vuex'
+
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
 const copy = x => JSON.parse(JSON.stringify(x))
-
 const emits = defineEmits(['updateRow'])
 
 const props = defineProps({

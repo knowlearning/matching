@@ -14,6 +14,7 @@
 		>
 			<Suspense>
 				<vueEmbedComponent
+					style="position: absolute; top: 0; left: 0;"
 					:id="item.id"
 					@close="handleItemSubmit(i, $event)"
 					:namespace="`sequence-${id}-item-${i}`"
@@ -112,14 +113,12 @@ function handleClose() {
 	align-items: center;
 }
 .sequence-player .embedded-question-wrapper {
-	flex: 1;
+	position: relative;
+	flex-grow: 1;
 	width: 100%;
   background-color: #f2f2f2;
 }
-.sequence-player .embedded-question-wrapper iframe {
-	width: 600px;
-	height: 600px;
-}
+
 .header, .footer {
   background-color: #333;
   color: #fff;

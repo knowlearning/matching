@@ -1,5 +1,65 @@
+<template>
+  <div class="main-wrapper">
+    <Modal
+      v-if="store.getters.previewContent() && data.active"
+      @close="store.dispatch('previewContent', null)"
+    >
+      <template v-slot:body>
+        <Suspense>
+          <PlayOrCustomizeByTypeSwitcher
+            :key="`preview-${data.active}`"
+            :id="data.active"
+            mode="player"
+          />
+        </Suspense>
+      </template>
+    </Modal>
+
+    <div class="left-col">
+      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
+      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
+        <div
+          :class="store.getters.language() ==='en' ? 'active' : ''"
+          @click="store.dispatch('language', 'en')"
+        >English (อังกฤษ)</div>
+        <div
+          :class="store.getters.language() ==='th' ? 'active' : ''"
+          @click="store.dispatch('language', 'th')"
+        >ไทย (Thai)</div>
+      </div>
+      <!-- TODO::: END TEMP AREA TO REMOVE -->
+
+      <ContentBar v-if="data.content"
+        :items="data.content"
+        :active="data.active"
+        @removeItem="removeItem"
+        @active="data.active = (data.active === $event ? null : $event)"
+      />
+      <div v-else>Loading...</div>
+
+    </div>
+
+    <div class="right-col" v-if="data.active">
+      <Suspense>
+        <PlayOrCustomizeByTypeSwitcher
+          :key="`customize-${data.active}`"
+          :id="data.active"
+          mode="customizer"
+        />
+      </Suspense>
+    </div>
+    <div class="right-col" v-else>
+      <Welcome @addNew="addNew" @copy="copyExisting" />
+    </div>
+
+  </div>
+</template>
+
 <script setup>
   import { reactive, computed } from 'vue'
+  import Modal from './components/Modal.vue'
+  import ContentBar from './components/ContentBar.vue'
+  import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
   import ItemName from './components/ItemName.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
@@ -14,7 +74,7 @@
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
   const data = reactive({
-    mode: 'player', // or 'customizer'
+mode: 'player', // or 'customizer'
     content: null,
     active: null,
     tags: null
@@ -29,7 +89,6 @@
     )).map(obj => obj.target)
   }
   fetchMyContent()
-
 
   Agent
     .state('tags')
@@ -65,10 +124,9 @@
     const newItemId = await Agent.create({ active_type, active })
     data.content.push(newItemId)
     data.active = newItemId
-    data.mode = 'customizer'
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true }
   }
-  async function removeContent(id) {
+  async function removeItem(id) {
     const { isConfirmed } = await areYouSureSwal(t)
     if (!isConfirmed) return
 
@@ -80,74 +138,6 @@
     event.dataTransfer.setData('text', id)
   }
 </script>
-
-<template>
-  <div class="main-wrapper">
-    <div class="left-col">
-
-      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
-      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
-        <div
-          :class="store.getters.language() ==='en' ? 'active' : ''"
-          @click="store.dispatch('language', 'en')"
-        >English (อังกฤษ)</div>
-        <div
-          :class="store.getters.language() ==='th' ? 'active' : ''"
-          @click="store.dispatch('language', 'th')"
-        >ไทย (Thai)</div>
-      </div>
-      <!-- TODO::: END TEMP AREA TO REMOVE -->
-
-      <div class="toggle-mode-wrapper">
-        <div
-          :class="data.mode==='player' ? 'active' : ''"
-          @click="data.mode = 'player'"
-        >{{ t('player' )}}</div>
-        <div
-          :class="data.mode==='customizer' ? 'active' : ''"
-          @click="data.mode = 'customizer'"
-        >{{ t('customizer' )}}</div>
-      </div>
-
-      <button class="new" @click="addNew">+ {{ t('add-new' )}}</button>
-      <button class="new" @click="copyExisting()">+ {{ t('copy-existing') }}</button>
-      <div v-if="data.content">
-        <div
-          v-for="itemId in data.content"
-          :key="itemId"
-          :class="{
-            'item-choice' : true,
-            'active' : itemId === data.active
-          }"
-          @click="data.active = itemId"
-        >
-          <Suspense>
-            <ItemName :id="itemId"
-              draggable="true"
-              style="cursor: grab;"
-              @dragstart="$event.dataTransfer.setData('text', itemId)"  
-            />
-          </Suspense>
-          <span
-            class="remove-symbol"
-            @click.stop="removeContent(itemId)"
-          >&#x2715;</span>
-        </div>
-      </div>
-      <div v-else>Loading Content...</div>
-    </div>
-
-    <div class="right-col" v-if="data.active && data.mode">
-      <Suspense>
-        <PlayOrCustomizeByTypeSwitcher
-          :key="`${data.active}-${data.mode}`"
-          :id="data.active"
-          :mode="data.mode"
-        />
-      </Suspense>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .main-wrapper {
@@ -165,52 +155,6 @@
   text-align: left;
   border-right: 1px solid slategray;
 }
-
-.left-col .toggle-mode-wrapper {
-  display: flex;
-  justify-content: space-around;
-}
-.left-col .toggle-mode-wrapper div {
-  cursor: pointer;
-  font-weight: lighter;
-}
-.left-col .toggle-mode-wrapper div.active {
-  font-weight: bolder;
-}
-.left-col button.new {
-  background: green;
-  color: white;
-  opacity: 0.7;
-}
-.left-col button.new:hover {
-  opacity: 1;
-  transition: 100ms;
-}
-.left-col .item-choice {
-  font-family: monospace;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.left-col .item-choice:hover {
-  background: lightyellow;
-}
-.left-col .item-choice.active {
-  background: yellow;
-}
-.left-col .item-choice .remove-symbol {
-  font-size: 1rem;
-  font-weight: bolder;
-  padding-right: 4px;
-  color: red;
-  cursor: pointer ;
-  opacity: 0.2;
-}
-.left-col .item-choice .remove-symbol:hover {
-  opacity: 1;
-}
-
 .right-col {
     width: 100%;
     flex-grow: 1;
