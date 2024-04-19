@@ -17,18 +17,14 @@
     </Modal>
 
     <div class="left-col">
-      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
-      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
-        <div
-          :class="store.getters.language() ==='en' ? 'active' : ''"
-          @click="store.dispatch('language', 'en')"
-        >English (อังกฤษ)</div>
-        <div
-          :class="store.getters.language() ==='th' ? 'active' : ''"
-          @click="store.dispatch('language', 'th')"
-        >ไทย (Thai)</div>
+      <div class="logo-line">
+        <img
+          id="logo"
+          src="./assets/pila.png"
+          @click="toggleLanguage"
+        >
+        <h2>Pila Create</h2>
       </div>
-      <!-- TODO::: END TEMP AREA TO REMOVE -->
 
       <ContentBar v-if="data.content"
         :items="data.content"
@@ -138,6 +134,13 @@ mode: 'player', // or 'customizer'
   function handleDragStart(event, id) {
     event.dataTransfer.setData('text', id)
   }
+  function toggleLanguage(e) {
+    if (e.shiftKey && e.offsetX < 10 && e.offsetY < 10) {
+      const lang = store.getters.language()
+      const newLang = (lang === 'en' ? 'th' : 'en')
+      store.dispatch('language', newLang)
+    }
+  }
 </script>
 
 <style scoped>
@@ -155,6 +158,19 @@ mode: 'player', // or 'customizer'
 .left-col {
   text-align: left;
   border-right: 1px solid slategray;
+}
+.left-col .logo-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0;
+}
+.left-col .logo-line h2 {
+  margin: 0 0 0 12px;
+}
+.left-col .logo-line #logo {
+  width: 30px;
+  height: 30px;
 }
 .right-col {
     width: 100%;
