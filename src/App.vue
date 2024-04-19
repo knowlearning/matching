@@ -25,14 +25,15 @@
         >
         <h2>Pila Create</h2>
       </div>
-
-      <ContentBar v-if="data.content"
-        :items="data.content"
-        :active="data.active"
-        @removeItem="removeItem"
-        @active="data.active = (data.active === $event ? null : $event)"
-      />
-      <div v-else>Loading...</div>
+      <Suspense>
+        <ContentBar v-if="data.content"
+          :items="data.content"
+          :active="data.active"
+          @removeItem="removeItem"
+          @active="data.active = (data.active === $event ? null : $event)"
+        />
+      </Suspense>
+      <div v-if="!data.content">Loading...</div>
 
     </div>
 
@@ -63,7 +64,7 @@
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
   const store = useStore()
-  cosnt t = slug => store.getters.t(slug)
+  const t = slug => store.getters.t(slug)
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
