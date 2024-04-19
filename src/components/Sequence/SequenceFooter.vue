@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import {ref, computed } from 'vue'
+import { computed } from 'vue'
 import ProgressPill from './ProgressPill.vue'
 import DisplayTime from './DisplayTime.vue'
 
