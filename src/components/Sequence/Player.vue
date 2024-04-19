@@ -3,7 +3,7 @@
 		<SequenceHeader class="header"
 			:sequenceName="sequenceDef.name"
 			:activeItemIndex="data.activeItemIndex"
-			:isCorrectArray="data.isCorrectArray"
+			:isCorrectArray="isCorrectArray"
 			@select="data.activeItemIndex = $event"
 		/>
 		<div
@@ -26,8 +26,8 @@
 			class="embedded-question-wrapper"
 			v-show="data.activeItemIndex === null"
 			:sequenceDef="sequenceDef"
-			:isCorrectArray="data.isCorrectArray"
-			:timeOnTasks="data.timeOnTasks"
+			:isCorrectArray="isCorrectArray"
+			:timeOnTasks="timeOnTasks"
 			@close="handleClose"
 			@select="data.activeItemIndex = $event"
 		/>
@@ -37,9 +37,9 @@
 			@next="next"
 			@goToSummary="data.activeItemIndex = null"
 			:activeItemIndex="data.activeItemIndex"
-			:isCorrectArray="data.isCorrectArray"
+			:isCorrectArray="isCorrectArray"
 			:time="data.totalTime"
-		/>	
+		/>
 	</div>
 </template>
 
@@ -54,26 +54,57 @@ import { itemFeedbackSwal } from '../../helpers/swallows.js'
 
 import { useStore } from 'vuex'
 const store = useStore()
-function t(slug) { return store.getters.t(slug) }
+const t = slug =>store.getters.t(slug)
 
-const props = defineProps(['id'])
+const props = defineProps({
+	id : {
+		type: String,
+		required: true
+	}
+})
 
 const sequenceDef = await Agent.state(props.id)
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 
-// use active totalTime as bellwether, also reset if items added or removed (weak check, problematic length not changed but enclosed items did)
-const runStateNeedsInitialization = (!data.totalTime || data.isCorrectArray?.length !== sequenceDef.items.length)
-if (runStateNeedsInitialization) { 
+if (!data.itemInfo) { // bellwether for first init
 	Object.assign(data, {
 	  activeItemIndex: 0,
-	  // both arrays below conventionally match index of items to the info
-	  // if a third comes, unify to an array of objects with isCorrect and time etc
-	  isCorrectArray: sequenceDef.items.map(el => null),
-	  timeOnTasks: sequenceDef.items.map(el => 0),
+	  itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
 	  totalTime: 0
 	})
+} else { // if reattaching add any needed new keys
+	data.activeItemIndex = 0
+ 	Object.entries(initialItemInfo())
+ 		.filter(([key, info]) => !data.itemInfo[key])
+ 		.forEach(([key, info]) => data.itemInfo[key] = info )
 }
+
+function initialItemInfo() {
+	return sequenceDef.items
+		.reduce((acc, cur, i) => {
+			return { ...acc, [`${i}/${cur.id}`] : { time: 0, correct: null } }
+		}, {})	
+}
+
+function keyIsActive(key) {
+	const [ i, id ] = key.split('/')
+	return id && id === sequenceDef.items[i]?.id
+}
+const activeItemInfo = computed(() => {
+	return Object.entries(data.itemInfo)
+		.reduce((acc, cur) => {
+			const [ key, info ] = cur
+			const [ i, id ] = key.split('/')
+			const isActive = (id && id === sequenceDef.items[i]?.id)
+			if (isActive) acc[i] = info
+			return acc
+		}, [])
+})
+
+const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correct) )
+const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
+
 
 const intervalId = setInterval(updateTimeTracking, 1000)
 
@@ -82,27 +113,31 @@ onBeforeUnmount(() => clearInterval(intervalId) )
 function updateTimeTracking() {
 	const i = data.activeItemIndex
 	data.totalTime ++
-	if (Number.isInteger(i)) data.timeOnTasks[i] ++
-
+	if (Number.isInteger(i)) {
+		const key = `${i}/${sequenceDef.items[i].id}`
+		data.itemInfo[key].time ++
+	}
 }
 function next() {
 	const i = data.activeItemIndex  // expect to be null
 	if (i === null) data.activeItemIndex = 0
-	else data.activeItemIndex = (i === data.isCorrectArray.length - 1) ? null : i + 1
+	else data.activeItemIndex = (i === sequenceDef.items.length - 1) ? null : i + 1
 }
 function previous() {
 	const i = data.activeItemIndex
-	if (i === null) data.activeItemIndex = data.isCorrectArray.length - 1
+	if (i === null) data.activeItemIndex = sequenceDef.items.length - 1
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
 async function handleItemSubmit(i, { success }) {
 	await itemFeedbackSwal(t, success)
-	data.isCorrectArray[i] = success
+	const key = `${i}/${sequenceDef.items[i].id}`
+	data.itemInfo[key].correct = success
 	if (success) next()
 }
 function handleClose() {
 	Agent.close()
 }
+
 </script>
 
 <style>
