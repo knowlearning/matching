@@ -148,6 +148,7 @@
   height: 100%;
 }
 .left-col {
+  margin: 0 12px;
   text-align: left;
   border-right: 1px solid slategray;
 }

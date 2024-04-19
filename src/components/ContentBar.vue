@@ -1,26 +1,43 @@
 <template>
   <div>
-    <pre>{{ metadata }}</pre>
-    <div
-      v-for="itemId in props.items"
-      :key="itemId"
-      :class="{
-        'item-choice' : true,
-        'active' : itemId === props.active
-      }"
-      @click="$emit('active', itemId)"
-    >
-      <Suspense>
-        <ItemName :id="itemId"
-          draggable="true"
-          style="cursor: grab;"
-          @dragstart="$event.dataTransfer.setData('text', itemId)"  
+    <div v-for="type in types" :key="`type-${type}`">
+      <div
+        class="select-type-row"
+        @click="toggleShowType(type)"
+      >
+        <h4>
+          <i :class="{
+            'fas' : true,
+            'fa-folder-plus' : !typesToShow.includes(type),
+            'fa-folder-open' : typesToShow.includes(type)
+          }"
         />
-      </Suspense>
-      <span
-        class="remove-symbol"
-        @click.stop="$emit('removeItem', itemId)"
-      >&#x2715;</span>
+          <span>{{ t(type.split('=')[1]) }}</span>
+        </h4>
+      </div>
+
+      <div
+        v-if="typesToShow.includes(type)"
+        v-for="item in itemsForType(type)"
+        :key="`item-${itemId}`"
+        :class="{
+          'item-choice' : true,
+          'active' : item === props.active
+        }"
+        @click="$emit('active', item)"
+      >
+        <Suspense>
+          <ItemName :id="item"
+            draggable="true"
+            style="cursor: grab;"
+            @dragstart="$event.dataTransfer.setData('text', item)"  
+          />
+        </Suspense>
+        <span
+          class="remove-symbol"
+          @click.stop="$emit('removeItem', item)"
+        >&#x2715;</span>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +45,14 @@
 
 <script setup>
 import ItemName from './ItemName.vue'
-import { reactive, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
+import questionTypes from '../helpers/questionTypes.js'
+import { useStore } from 'vuex'
+const store = useStore()
+const t = slug => store.getters.t(slug)
+
+const types = Object.keys(questionTypes)
+
 const props = defineProps({
   items: {
     type: Array,
@@ -39,6 +63,8 @@ const props = defineProps({
   required: true
   }
 })
+
+let typesToShow = ref([])
 
 let metadata = reactive({}) // { [id]: { name, type }, ... }
 
@@ -65,10 +91,30 @@ watch(
   { immediate: true, deep: true }
 )
 
+function itemsForType(type) {
+  return props.items.filter(id => metadata?.[id]?.type === type)
+}
+function toggleShowType(type) {
+  const wasActive = typesToShow.value.includes(type)
+  if (wasActive) typesToShow.value = typesToShow.value.filter(t => t !== type)
+  else typesToShow.value.push(type)
+}
+
 </script>
 
 
 <style scoped>
+.select-type-row {
+  user-select: none;
+  cursor: pointer;
+  margin: 16px 0 0 0;
+}
+.select-type-row h4 {
+  margin: 0;
+}
+.select-type-row i {
+  margin-right: 8px;
+}
 .item-choice {
   font-family: monospace;
   cursor: pointer;
