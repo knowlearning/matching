@@ -29,6 +29,8 @@
         <ContentBar v-if="data.content"
           :items="data.content"
           :active="data.active"
+          @addNew="addNew"
+          @copy="copyExisting"
           @removeItem="removeItem"
           @active="data.active = (data.active === $event ? null : $event)"
         />

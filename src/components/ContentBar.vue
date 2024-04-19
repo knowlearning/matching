@@ -1,5 +1,15 @@
 <template>
   <div>
+
+    <div class="button-area">
+      <button @click="$emit('addNew')">
+        <i class="fas fa-plus" />
+      </button>
+      <button @click="$emit('copy')">
+        <i class="fas fa-copy" />
+      </button>
+    </div>
+
     <div v-for="type in types" :key="`type-${type}`">
       <div
         class="select-type-row"
@@ -104,6 +114,11 @@ function toggleShowType(type) {
 
 
 <style scoped>
+.button-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .select-type-row {
   user-select: none;
   cursor: pointer;

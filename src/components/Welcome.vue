@@ -4,8 +4,8 @@
 		<button @click="$emit('addNew')">
 			<i class="fas fa-plus" />
 		</button>
-	    <button @click="$emit('copy')">
-	    	<i class="fas fa-copy" />
+		<button @click="$emit('copy')">
+			<i class="fas fa-copy" />
 		</button>
 	</div>
 </template>
