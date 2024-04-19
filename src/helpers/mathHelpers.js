@@ -73,9 +73,25 @@ export function d(pos1, pos2) {
   return Math.sqrt(dx*dx + dy*dy)
 }
 
+function findHighestSvg(element) {
+  let currentElement = element.closest('svg')
+  let highestSvg = currentElement
+
+  while (currentElement) {
+    const parentSvg = currentElement?.parentElement.closest('svg')
+
+    if (!parentSvg) break
+
+    highestSvg = parentSvg
+    currentElement = parentSvg
+  }
+
+  return highestSvg
+}
+
 export function getSvgCoordinatesFromEvent(e) {
   // Get the target SVG element
-  var svgElement = e.target.ownerSVGElement || e.target
+  var svgElement = findHighestSvg(e.target)
 
   // Create an SVGPoint representing the pointer coordinates
   var point = svgElement.createSVGPoint();
