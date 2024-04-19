@@ -1,46 +1,120 @@
 <template>
-	<div>
-        <div
-          v-for="itemId in props.items"
-          :key="itemId"
-          :class="{
-            'item-choice' : true,
-            'active' : itemId === props.active
+  <div>
+    <div v-for="type in types" :key="`type-${type}`">
+      <div
+        class="select-type-row"
+        @click="toggleShowType(type)"
+      >
+        <h4>
+          <i :class="{
+            'fas' : true,
+            'fa-folder-plus' : !typesToShow.includes(type),
+            'fa-folder-open' : typesToShow.includes(type)
           }"
-          @click="$emit('active', itemId)"
-        >
-          <Suspense>
-            <ItemName :id="itemId"
-              draggable="true"
-              style="cursor: grab;"
-              @dragstart="$event.dataTransfer.setData('text', itemId)"  
-            />
-          </Suspense>
-          <span
-            class="remove-symbol"
-            @click.stop="$emit('removeContent', itemId)"
-          >&#x2715;</span>
-        </div>
+        />
+          <span>{{ type.split('=')[1].toUpperCase() }}</span>
+        </h4>
       </div>
+
+      <div
+        v-if="typesToShow.includes(type)"
+        v-for="item in itemsForType(type)"
+        :key="`item-${itemId}`"
+        :class="{
+          'item-choice' : true,
+          'active' : item === props.active
+        }"
+        @click="$emit('active', item)"
+      >
+        <Suspense>
+          <ItemName :id="item"
+            draggable="true"
+            style="cursor: grab;"
+            @dragstart="$event.dataTransfer.setData('text', item)"  
+          />
+        </Suspense>
+        <span
+          class="remove-symbol"
+          @click.stop="$emit('removeItem', item)"
+        >&#x2715;</span>
+      </div>
+    </div>
+  </div>
 </template>
+
 
 <script setup>
 import ItemName from './ItemName.vue'
+import { ref, reactive, watch } from 'vue'
+import questionTypes from '../helpers/questionTypes.js'
+import { useStore } from 'vuex'
+const store = useStore()
+const t = slug => store.getters.t(slug)
+
+const types = Object.keys(questionTypes)
 
 const props = defineProps({
-	items: {
-		type: Array,
-		required: true
-	},
-	active: {
-		type: [ String, null ],
-		required: true
-	}
+  items: {
+    type: Array,
+    required: true
+  },
+  active: {
+    type: [ String, null ],
+  required: true
+  }
 })
+
+let typesToShow = ref([])
+
+let metadata = reactive({}) // { [id]: { name, type }, ... }
+
+async function fetchItemMetadata(id) {
+  const { active_type, owner } = await Agent.metadata(id)
+  const { name } = await Agent.state(id)
+  return { name, owner, type: active_type }
+}
+
+async function fetchNeededMetadataSet() {
+  const neededIds = props.items.filter(id => !Object.keys(metadata).includes(id))
+  const removedIds = Object.keys(metadata).filter(id => !props.items.includes(id))
+  // remove metadata
+  removedIds.forEach(id => delete metadata[id])
+  // add metadata
+  const promisesArray = neededIds.map(fetchItemMetadata)
+  const res = await Promise.all(promisesArray)
+  res.forEach((r,i) => metadata[neededIds[i]] = r)
+}
+
+watch(
+  () => props.items,
+  fetchNeededMetadataSet,
+  { immediate: true, deep: true }
+)
+
+function itemsForType(type) {
+  return props.items.filter(id => metadata?.[id]?.type === type)
+}
+function toggleShowType(type) {
+  const wasActive = typesToShow.value.includes(type)
+  if (wasActive) typesToShow.value = typesToShow.value.filter(t => t !== type)
+  else typesToShow.value.push(type)
+}
 
 </script>
 
+
 <style scoped>
+.select-type-row {
+  user-select: none;
+  cursor: pointer;
+  margin: 16px 0 0 0;
+}
+.select-type-row h4 {
+  margin: 0;
+}
+.select-type-row i {
+  margin-right: 8px;
+}
 .item-choice {
   font-family: monospace;
   cursor: pointer;
@@ -49,10 +123,10 @@ const props = defineProps({
   align-items: center;
 }
 .item-choice:hover {
-  background: lightyellow;
+  background: rgba(255,255,0,0.1);
 }
 .item-choice.active {
-  background: yellow;
+  background: rgba(255,255,0,0.33);
 }
 .item-choice .remove-symbol {
   font-size: 1rem;
@@ -65,5 +139,4 @@ const props = defineProps({
 .item-choice .remove-symbol:hover {
   opacity: 1;
 }
-
 </style>

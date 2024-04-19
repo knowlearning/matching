@@ -17,26 +17,23 @@
     </Modal>
 
     <div class="left-col">
-      <!-- TEMP FOR DISPLAY TODO::: REMOVE -->
-      <div class="toggle-mode-wrapper" style="margin-bottom: 30px;">
-        <div
-          :class="store.getters.language() ==='en' ? 'active' : ''"
-          @click="store.dispatch('language', 'en')"
-        >English (อังกฤษ)</div>
-        <div
-          :class="store.getters.language() ==='th' ? 'active' : ''"
-          @click="store.dispatch('language', 'th')"
-        >ไทย (Thai)</div>
+      <div class="logo-line">
+        <img
+          id="logo"
+          src="./assets/pila.png"
+          @click="toggleLanguage"
+        >
+        <h2>Pila {{ t('create') }}</h2>
       </div>
-      <!-- TODO::: END TEMP AREA TO REMOVE -->
-
-      <ContentBar v-if="data.content"
-        :items="data.content"
-        :active="data.active"
-        @removeItem="removeItem"
-        @active="data.active = (data.active === $event ? null : $event)"
-      />
-      <div v-else>Loading...</div>
+      <Suspense>
+        <ContentBar v-if="data.content"
+          :items="data.content"
+          :active="data.active"
+          @removeItem="removeItem"
+          @active="data.active = (data.active === $event ? null : $event)"
+        />
+      </Suspense>
+      <div v-if="!data.content">Loading...</div>
 
     </div>
 
@@ -67,15 +64,12 @@
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
   const store = useStore()
-  function t(slug) {
-    return store.getters.t(slug)
-  }
+  const t = slug => store.getters.t(slug)
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
   const data = reactive({
-mode: 'player', // or 'customizer'
     content: null,
     active: null,
     tags: null
@@ -103,16 +97,13 @@ mode: 'player', // or 'customizer'
   async function addNew() {      
     const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
     if (!active_type || !isConfirmed) return
-
     // get demo question for active language
     const lang = store.getters.language()
     const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
-
     createContent(
       active_type,
       copy(itemToCopy)
     )
-
   }
   async function copyExisting() {
     const { value: idToCopy } = await copyItemSwal(t) // validates id and type 
@@ -135,8 +126,12 @@ mode: 'player', // or 'customizer'
     data.content = data.content.filter(content => content !== id)
     data.tags[MY_CONTENT_TAG][id] = { value: null }
   }
-  function handleDragStart(event, id) {
-    event.dataTransfer.setData('text', id)
+  function toggleLanguage(e) {
+    if (e.shiftKey && e.offsetX < 10 && e.offsetY < 10) {
+      const lang = store.getters.language()
+      const newLang = (lang === 'en' ? 'th' : 'en')
+      store.dispatch('language', newLang)
+    }
   }
 </script>
 
@@ -153,8 +148,22 @@ mode: 'player', // or 'customizer'
   height: 100%;
 }
 .left-col {
+  margin: 0 12px;
   text-align: left;
   border-right: 1px solid slategray;
+}
+.left-col .logo-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0;
+}
+.left-col .logo-line h2 {
+  margin: 0 0 0 12px;
+}
+.left-col .logo-line #logo {
+  width: 30px;
+  height: 30px;
 }
 .right-col {
     width: 100%;

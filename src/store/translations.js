@@ -170,5 +170,9 @@ export default {
   'try-again' : {
     'en' : 'Try again',
     'th' : 'ลองอีกครั้ง'
-  }
+  },
+  'create' : {
+    'en' : 'Create',
+    'th' : 'สร้าง'
+  },
 }
