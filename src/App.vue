@@ -61,7 +61,6 @@
   import ContentBar from './components/ContentBar.vue'
   import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
-  import ItemName from './components/ItemName.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
