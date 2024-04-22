@@ -18,19 +18,23 @@
 
     <div class="left-col">
       <div class="logo-line">
-        <img
-          id="logo"
-          src="./assets/pila.png"
-          @click="toggleLanguage"
-        >
-        <h2>Pila {{ t('create') }}</h2>
+        <div class="logo-and-name">
+          <img id="logo" src="./assets/pila.png" @click="toggleLanguage" >
+          <h2>Pila {{ t('create') }}</h2>
+        </div>
+        <div class="button-area">
+          <button @click="addNew">
+            <i class="fas fa-plus" />
+          </button>
+          <button @click="copyExisting">
+            <i class="fas fa-copy" />
+          </button>
+        </div>
       </div>
       <Suspense>
         <ContentBar v-if="data.content"
           :items="data.content"
           :active="data.active"
-          @addNew="addNew"
-          @copy="copyExisting"
           @removeItem="removeItem"
           @active="data.active = (data.active === $event ? null : $event)"
         />
@@ -143,7 +147,7 @@
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 330px 1fr;
 }
 .left-col, .right-col {
   display: flex;
@@ -158,8 +162,12 @@
 .left-col .logo-line {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   margin: 4px 0;
+}
+.left-col .logo-and-name {
+  display: flex;
+  align-items: center;
 }
 .left-col .logo-line h2 {
   margin: 0 0 0 12px;
@@ -167,6 +175,12 @@
 .left-col .logo-line #logo {
   width: 30px;
   height: 30px;
+}
+.left-col .logo-line button {
+  font-size: 0.8rem;
+}
+.left-col .logo-line button:hover {
+  background: #eee;
 }
 .right-col {
     width: 100%;

@@ -1,16 +1,7 @@
 <template>
   <div class="content-bar">
-
-    <div class="button-area">
-      <button @click="$emit('addNew')">
-        <i class="fas fa-plus" />
-      </button>
-      <button @click="$emit('copy')">
-        <i class="fas fa-copy" />
-      </button>
-    </div>
-
     <div class="native-items-folders-wrapper">
+      <h3>{{ t('customize-items') }}</h3>
       <ExpandableFolderForType
         v-for="type,i in nativeQuestionTypes"
         :key="`folder-rows-${type}`"
@@ -25,6 +16,7 @@
     </div>
 
     <div class="foreign-item-folder-wrapper">
+      <h3>{{ t('foreign-items') }}</h3>
       <ExpandableFolderForType
         v-for="type,i in foreignQuestionTypes"
         :key="`folder-rows-${type}`"
@@ -110,13 +102,11 @@ function toggleShowType(type) {
   display: flex;
   height: 100%;
   flex-direction: column;
-  padding-bottom: 20px;
+  padding: 40px 0 20px 0;
 }
-
-.button-area {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.content-bar h3 {
+  border-bottom: 2px solid black;
+  margin: 0;
 }
 .foreign-item-folder-wrapper {
   margin-top: auto;

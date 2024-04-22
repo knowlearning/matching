@@ -198,5 +198,13 @@ export default {
   'karel-task&version' : {
     'en' : 'KAREL TASKS',
     'th' : 'Karel เต่า'
-  }
+  },
+  'customize-items' : {
+    'en' : 'CUSTOMISE ITEMS',
+    'th' : 'ปรับแต่งสินค้า'
+  },
+  'foreign-items' : {
+    'en' : 'FOREIGN ITEMS',
+    'th' : 'สินค้าต่างประเทศ'
+  },
 }
