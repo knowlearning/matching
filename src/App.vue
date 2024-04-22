@@ -206,7 +206,7 @@
   justify-content: flex-end;
   align-items: center;
   display: flex;
-  background: #eee;
+  background: rgb(43,46,211);
 }
 .right-col .header button {
   font-size: 0.7rem;
