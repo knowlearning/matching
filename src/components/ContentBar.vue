@@ -45,8 +45,9 @@
 <script setup>
 import ExpandableFolderForType from './ExpandableFolderForType.vue'
 import ItemName from './ItemName.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import questionTypes from '../helpers/questionTypes.js'
+
 import { useStore } from 'vuex'
 const store = useStore()
 const t = slug => store.getters.t(slug)
@@ -109,6 +110,7 @@ function toggleShowType(type) {
   display: flex;
   height: 100%;
   flex-direction: column;
+  padding-bottom: 20px;
 }
 
 .button-area {

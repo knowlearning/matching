@@ -196,7 +196,7 @@ export default {
     'th' : 'ลำดับ'
   },
   'karel-task&version' : {
-    'en' : 'Karel Tasks',
+    'en' : 'KAREL TASKS',
     'th' : 'Karel เต่า'
   }
 }
