@@ -47,7 +47,7 @@
     <div class="right-col">
       <div class="header">
         <button @click="logout">
-          <span>LOGOUT</span>
+          <span>{{ t('logout') }}</span>
           <i class="fas fa-sign-out-alt" />
         </button>
         <img class="user-avatar" :src="data.userAvatarPath" >
@@ -171,7 +171,7 @@
   height: 100%;
 }
 .left-col {
-  margin: 0 12px;
+  padding: 0 12px;
   text-align: left;
   border-right: 1px solid slategray;
 }
@@ -206,7 +206,10 @@
   justify-content: flex-end;
   align-items: center;
   display: flex;
-  border-bottom: 1px solid slategrey;
+  background: #eee;
+}
+.right-col .header button {
+  font-size: 0.7rem;
 }
 .right-col .header button i {
   padding-left: 10px;

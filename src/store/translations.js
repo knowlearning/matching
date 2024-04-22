@@ -207,4 +207,8 @@ export default {
     'en' : 'FOREIGN ITEMS',
     'th' : 'สินค้าต่างประเทศ'
   },
+  'logout' : {
+    'en' : 'LOGOUT',
+    'th' : 'ออก'
+  }
 }
