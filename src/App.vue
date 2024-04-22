@@ -37,9 +37,13 @@
         />
       </Suspense>
       <div v-if="!data.content">Loading...</div>
-
+      <div class="account">
+      <button @click="store.dispatch('logout')" class="button">
+        <i class="fas fa-user-circle"></i> 
+        Account
+      </button>
+      </div>
     </div>
-
     <div class="right-col" v-if="data.active">
       <Suspense>
         <PlayOrCustomizeByTypeSwitcher
@@ -180,5 +184,10 @@
 .right-col {
     width: 100%;
     flex-grow: 1;
+}
+.account {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 </style>

@@ -4,16 +4,21 @@
     <button 
       v-for="(type, index) in types"
       :key="index"
+      class="button"
       @click="emit('customize', type)"
+      style="margin: 10px; padding: 10px; width: 200px; height: 200px;"
     >
-      {{ type }} There will be the explanation of the type here
-      <br>
-      <i class="fas fa-plus"></i>
+    <span 
+    class="button-text"
+    style="justify-content: center;"
+    >
+    <span class="button-text">{{ getTypeDescription(type) }}</span>
+    </span>
     </button>
   </div>
 </div>
 </template>
-  
+
 <script setup>
 import { ref } from 'vue'
 import { useStore } from 'vuex'
@@ -24,54 +29,75 @@ const emit = defineEmits(['customize'])
 
 const types = ref(Object.keys(questionTypes))
 
-</script>
+const getTypeName = (type) => {
+  const parts = type.split(';type=');
+  return parts[parts.length - 1];
+}
+const getTypeDescription = (type) => {
+  const typeDescriptions = {
+    'application/json;type=matching': 'Matching ToQ',
+    'application/json;type=rearrange-items': 'Rearrange Items ToQ',
+    'application/json;type=select-from-pairs': 'Select From Pairs ToQ',
+    'application/json;type=sequence': 'Sequence'
+  };
+  return typeDescriptions[type] || 'Unknown Type';
+}
+
+</script> 
 
 <style scoped>
 .card-container {
   display: flex;
-  widows: 800%;
-  height: 100%;
-  margin-top: 5%;
-  margin-right: 5%;
-}
-.button {
-  background-color: #f1f1f1;
-  border: none;
-  color: black;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 16px;
-  padding: 10px 24px;
-}
-
-.card {
-  width: 100px;
-  height: 100px;
-  margin: 10px;
-  border: 1px solid black;
-  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  cursor: pointer;
+  margin-top: 20px;
 }
 
-/* Additional styling for button if needed */
-.card button {
-  background-color: #f1f1f1;
+.button {
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+  height: 200px;
   border: none;
-  color: black;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+.button:active {
+  transform: scale(0.95);
+}
+.button:focus {
+  outline: none;
+}
+.button:hover {
+  transform: scale(1.05);
+  background-color: #e0e0e0;
+}
+.button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.8) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.button:hover:before {
+  opacity: 1;
+}
+.button-text {
+  position: relative;
+  z-index: 1;
+  color: #333;
+  font-size: 20px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 16px;
-  padding: 10px 24px;
+  transition: color 0.3s ease;
+}
+.button:hover .button-text {
+  color: #fff;
 }
 </style>
