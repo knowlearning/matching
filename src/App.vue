@@ -1,5 +1,6 @@
 <template>
   <div class="main-wrapper">
+    
     <Modal
       v-if="previewContent"
       @close="store.dispatch('previewContent', null)"
@@ -43,17 +44,26 @@
 
     </div>
 
-    <div class="right-col" v-if="data.active">
-      <Suspense>
-        <PlayOrCustomizeByTypeSwitcher
-          :key="`customize-${data.active}`"
-          :id="data.active"
-          mode="customizer"
-        />
-      </Suspense>
-    </div>
-    <div class="right-col" v-else>
-      <Welcome @addNew="addNew" @copy="copyExisting" />
+    <div class="right-col">
+      <div class="header">
+        <button @click="logout">
+          <span>LOGOUT</span>
+          <i class="fas fa-sign-out-alt" />
+        </button>
+        <img class="user-avatar" :src="data.userAvatarPath" >
+      </div>
+      <div class="right-inner" v-if="data.active">
+        <Suspense>
+          <PlayOrCustomizeByTypeSwitcher
+            :key="`customize-${data.active}`"
+            :id="data.active"
+            mode="customizer"
+          />
+        </Suspense>
+      </div>
+      <div class="right-inner" v-else>
+        <Welcome @addNew="addNew" @copy="copyExisting" />
+      </div>
     </div>
 
   </div>
@@ -74,21 +84,24 @@
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
+  const userImagePath = reactive(null)
   const data = reactive({
     content: null,
     active: null,
-    tags: null
+    tags: null,
+    userAvatarPath: null
   })
 
-  async function fetchMyContent() {
-    const { auth: { user } } = await Agent.environment()
+  async function fetchMyContentAndUserInfo() {
+    const { auth: { user, info: { picture } } } = await Agent.environment()
+    data.userAvatarPath = picture
     data.content = (await Agent.query(
       'taggings-for-tag',
       [ user, MY_CONTENT_TAG ],
       'tags.knowlearning.systems'
     )).map(obj => obj.target)
   }
-  fetchMyContent()
+  fetchMyContentAndUserInfo()
 
   Agent
     .state('tags')
@@ -140,6 +153,9 @@
       store.dispatch('language', newLang)
     }
   }
+  function logout() {
+    Agent.logout()
+  }
 </script>
 
 <style scoped>
@@ -185,5 +201,19 @@
 .right-col {
     width: 100%;
     flex-grow: 1;
+}
+.right-col .header {
+  justify-content: flex-end;
+  align-items: center;
+  display: flex;
+  border-bottom: 1px solid slategrey;
+}
+.right-col .header button i {
+  padding-left: 10px;
+}
+.right-col .header img.user-avatar {
+  border-radius: 1000px;
+  width: 38px;
+  padding: 6px;
 }
 </style>
