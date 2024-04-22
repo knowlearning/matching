@@ -82,6 +82,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.8rem;
 }
 .item-choice:hover {
   background: rgba(255,255,0,0.1);
