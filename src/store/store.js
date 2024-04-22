@@ -26,6 +26,7 @@ const store = createStore({
   actions: {
     language: ({ commit }, value) => commit('language', value),
     previewContent: ({ commit }, value) => commit('previewContent', value)
+    customizeContent: ({ commit }, value) => commit('customizeContent', value)
   },
 
 })

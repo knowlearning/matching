@@ -17,18 +17,19 @@
     </Modal>
 
     <div class="left-col">
-      <div class="logo-line">
+      <div class="logo-line" @click="goToHomePage">
         <img
           id="logo"
           src="./assets/pila.png"
           @click="toggleLanguage"
+          style="cursor: pointer;"
         >
-        <h2>Pila {{ t('create') }}</h2>
+        <h2 style="cursor: pointer;">Pila {{ t('create') }}</h2>
       </div>
       <Suspense>
         <ContentBar v-if="data.content"
           :items="data.content"
-          :active="data.active"
+          :active="data"
           @addNew="addNew"
           @copy="copyExisting"
           @removeItem="removeItem"
@@ -67,6 +68,7 @@
   import { useStore } from 'vuex'
   const store = useStore()
   const t = slug => store.getters.t(slug)
+
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
@@ -134,6 +136,9 @@
       const newLang = (lang === 'en' ? 'th' : 'en')
       store.dispatch('language', newLang)
     }
+  }
+  function goToHomePage() {
+    window.location.href = '/'
   }
 </script>
 
