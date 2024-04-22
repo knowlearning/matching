@@ -4,6 +4,7 @@ import { validate as isUUID } from 'uuid'
 import './style.css'
 import store from './store/store.js'
 import App from './App.vue'
+import LoginPage from './components/LoginPage.vue'
 import NotFound from './components/NotFound.vue'
 import EmbeddedPlayer from './components/EmbeddedPlayer.vue'
 import questionTypes from './helpers/questionTypes.js'
@@ -13,7 +14,7 @@ window.Agent = Agent
 const initialLoad = async () => {
     const { auth: { user, provider } } = await Agent.environment()
     if (provider === 'anonymous') {
-    	Agent.login()
+        createApp(LoginPage).mount('#app')
     } else {
         const url = new URL(window.location.href)
         const { pathname } = url
