@@ -43,6 +43,9 @@ button {
   cursor: pointer;
   margin: 6px;
 }
+button:hover {
+  background: #eee;
+}
 /* TEMP PREVIEW BUTTON UNTIL CUSTOMIZER LAYOUT DECIDED */
 button.preview-button {
   position: absolute;
