@@ -12,14 +12,12 @@
 			v-show="i === data.activeItemIndex"
 			class="embedded-question-wrapper"
 		>
-			<Suspense>
-				<vueEmbedComponent
-					style="position: absolute; top: 0; left: 0;"
-					:id="item.id"
-					@close="handleItemSubmit(i, $event)"
-					:namespace="`sequence-${id}-item-${i}`"
-				/>
-			</Suspense>
+			<vueEmbedComponent
+				style="position: absolute; top: 0; left: 0;"
+				:id="item.id"
+				@close="handleItemSubmit(i, $event)"
+				:namespace="`sequence-${id}-item-${i}`"
+			/>
 		</div>
 
 		<EndSequenceSummary

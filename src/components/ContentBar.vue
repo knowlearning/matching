@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content-bar">
 
     <div class="button-area">
       <button @click="$emit('addNew')">
@@ -13,7 +13,7 @@
     <div class="native-items-folders-wrapper">
       <ExpandableFolderForType
         v-for="type,i in nativeQuestionTypes"
-        :key="`folder-rows-${type}-${i}`"
+        :key="`folder-rows-${type}`"
         :displayName="t(type.split('=')[1])"
         :active="props.active"
         :items="itemsForType(type)"
@@ -21,6 +21,20 @@
         @toggle="toggleShowType(type)"
         @remove="$emit('removeItem', $event)"
         @active="$emit('active', $event)"
+      />
+    </div>
+
+    <div class="foreign-item-folder-wrapper">
+      <ExpandableFolderForType
+        v-for="type,i in foreignQuestionTypes"
+        :key="`folder-rows-${type}`"
+        :displayName="t(type.split('=')[1])"
+        :active="props.active"
+        :items="itemsForType(type)"
+        :show="typesToShow.includes(type)"
+        @toggle="toggleShowType(type)"
+        @remove="$emit('removeItem', $event)"
+        @active="store.dispatch('previewContent', $event)"
       />
     </div>
 
@@ -38,6 +52,7 @@ const store = useStore()
 const t = slug => store.getters.t(slug)
 
 const nativeQuestionTypes = Object.keys(questionTypes)
+const foreignQuestionTypes   = [ 'application/json;type=karel-task&version=1.0.1' ]
 
 const props = defineProps({
   items: {
@@ -90,9 +105,18 @@ function toggleShowType(type) {
 
 
 <style scoped>
+.content-bar {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
 .button-area {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.foreign-item-folder-wrapper {
+  margin-top: auto;
 }
 </style>

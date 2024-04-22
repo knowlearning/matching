@@ -1,14 +1,14 @@
 <template>
   <div class="main-wrapper">
     <Modal
-      v-if="store.getters.previewContent() && data.active"
+      v-if="previewContent"
       @close="store.dispatch('previewContent', null)"
     >
       <template v-slot:body>
         <Suspense>
           <PlayOrCustomizeByTypeSwitcher
-            :key="`preview-${data.active}`"
-            :id="data.active"
+            :key="`preview-${previewContent}`"
+            :id="previewContent"
             mode="player"
           />
         </Suspense>
@@ -94,6 +94,8 @@
         data.tags[MY_CONTENT_TAG] = { value: true }
       }
     })
+
+  const previewContent = computed(() => store.getters.previewContent())
 
   async function addNew() {      
     const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
