@@ -1,14 +1,14 @@
 <template>
   <div class="main-wrapper">
     <Modal
-      v-if="store.getters.previewContent() && data.active"
+      v-if="previewContent"
       @close="store.dispatch('previewContent', null)"
     >
       <template v-slot:body>
         <Suspense>
           <PlayOrCustomizeByTypeSwitcher
-            :key="`preview-${data.active}`"
-            :id="data.active"
+            :key="`preview-${previewContent}`"
+            :id="previewContent"
             mode="player"
           />
         </Suspense>
@@ -18,19 +18,23 @@
 
     <div class="left-col">
       <div class="logo-line">
-        <img
-          id="logo"
-          src="./assets/pila.png"
-          @click="toggleLanguage"
-        >
-        <h2>Pila {{ t('create') }}</h2>
+        <div class="logo-and-name">
+          <img id="logo" src="./assets/pila.png" @click="toggleLanguage" >
+          <h2>Pila {{ t('create') }}</h2>
+        </div>
+        <div class="button-area">
+          <button @click="addNew">
+            <i class="fas fa-plus" />
+          </button>
+          <button @click="copyExisting">
+            <i class="fas fa-copy" />
+          </button>
+        </div>
       </div>
       <Suspense>
         <ContentBar v-if="data.content"
           :items="data.content"
           :active="data.active"
-          @addNew="addNew"
-          @copy="copyExisting"
           @removeItem="removeItem"
           @active="data.active = (data.active === $event ? null : $event)"
         />
@@ -61,7 +65,6 @@
   import ContentBar from './components/ContentBar.vue'
   import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
-  import ItemName from './components/ItemName.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
@@ -95,6 +98,8 @@
         data.tags[MY_CONTENT_TAG] = { value: true }
       }
     })
+
+  const previewContent = computed(() => store.getters.previewContent())
 
   async function addNew() {      
     const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
@@ -142,7 +147,7 @@
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 330px 1fr;
 }
 .left-col, .right-col {
   display: flex;
@@ -157,8 +162,12 @@
 .left-col .logo-line {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   margin: 4px 0;
+}
+.left-col .logo-and-name {
+  display: flex;
+  align-items: center;
 }
 .left-col .logo-line h2 {
   margin: 0 0 0 12px;
@@ -166,6 +175,12 @@
 .left-col .logo-line #logo {
   width: 30px;
   height: 30px;
+}
+.left-col .logo-line button {
+  font-size: 0.8rem;
+}
+.left-col .logo-line button:hover {
+  background: #eee;
 }
 .right-col {
     width: 100%;
