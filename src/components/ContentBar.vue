@@ -105,10 +105,11 @@ function toggleShowType(type) {
   padding: 40px 0 20px 0;
 }
 .content-bar h3 {
-  border-bottom: 2px solid black;
+  border-bottom: 1px solid slategrey;
   margin: 0;
 }
 .foreign-item-folder-wrapper {
   margin-top: auto;
+  height: 160px;
 }
 </style>
