@@ -46,11 +46,18 @@
 
     <div class="right-col">
       <div class="header">
-        <button @click="logout">
+        <v-btn
+          @click="logout"
+          size="small"
+          append-icon="fa-solid fa-sign-out-alt"
+        >
           <span>{{ t('logout') }}</span>
-          <i class="fas fa-sign-out-alt" />
-        </button>
-        <img class="user-avatar" :src="data.userAvatarPath" >
+        </v-btn>
+        <v-avatar
+          class="mx-2"
+          size="small"
+          :image="data.userAvatarPath"
+        />
       </div>
       <div class="right-inner" v-if="data.active">
         <Suspense>
@@ -207,16 +214,5 @@
   align-items: center;
   display: flex;
   background: rgb(43,46,211);
-}
-.right-col .header button {
-  font-size: 0.7rem;
-}
-.right-col .header button i {
-  padding-left: 10px;
-}
-.right-col .header img.user-avatar {
-  border-radius: 1000px;
-  width: 38px;
-  padding: 6px;
 }
 </style>
