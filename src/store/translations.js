@@ -195,4 +195,8 @@ export default {
     'en' : 'SEQUENCE',
     'th' : 'ลำดับ'
   },
+  'karel-task&version' : {
+    'en' : 'Karel Tasks',
+    'th' : 'Karel เต่า'
+  }
 }
