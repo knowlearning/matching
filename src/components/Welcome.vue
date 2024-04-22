@@ -1,14 +1,15 @@
 <template>
-	<div class="welcome">
-	  <div class="card-container">
-		<button 
-    v-for="(type, index) in types" 
-    :key="index"
-    @click="goToCustomizer(type)">
-		{{ type }} There will be the explanation of the type here
-    <br>
-    <i class="fas fa-plus"></i>
-  </button>
+  <div class="welcome">
+    <div class="card-container">
+    <button 
+      v-for="(type, index) in types"
+      :key="index"
+      @click="emit('customize', type)"
+    >
+      {{ type }} There will be the explanation of the type here
+      <br>
+      <i class="fas fa-plus"></i>
+    </button>
   </div>
 </div>
 </template>
@@ -19,21 +20,9 @@ import { useStore } from 'vuex'
 import questionTypes from '../helpers/questionTypes.js'
 
 const store = useStore();
+const emit = defineEmits(['customize'])
+
 const types = ref(Object.keys(questionTypes))
-const data = ref({})
-const copy = x => JSON.parse(JSON.stringify(x))
-
-async function goToCustomizer (active_type) {
-  const lang = store.getters.language()
-  const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
-  const active = copy(itemToCopy)
-  const newItemId = await Agent.create({ active_type, active })
-  data.active = newItemId
-  
-  console.log('AddNewItemId', newItemId)
-  store.dispatch('customizeContent', newItemId);
-}
-
 
 </script>
 

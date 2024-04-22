@@ -6,7 +6,6 @@ const store = createStore({
   state: {
     translations,
     language: matchNavigatorLanguage(),
-    customizeContent: null, // current content being customized
     previewContent: null, // null or id to preview, used for modal
   },
    getters: {
@@ -21,13 +20,11 @@ const store = createStore({
   },
   mutations: {
     language: (state, value) => state.language = value,
-    previewContent: (state, value) => state.previewContent = value,
-    customizeContent: (state, value) => state.customizeContent = value,
+    previewContent: (state, value) => state.previewContent = value
   },
   actions: {
     language: ({ commit }, value) => commit('language', value),
-    previewContent: ({ commit }, value) => commit('previewContent', value),
-    customizeContent: ({ commit }, value) => commit('customizeContent', value)
+    previewContent: ({ commit }, value) => commit('previewContent', value)
   },
 
 })

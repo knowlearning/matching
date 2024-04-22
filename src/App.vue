@@ -30,7 +30,7 @@
         <ContentBar v-if="data.content"
           :items="data.content"
           :active="data"
-          @addNew="addNew"
+          @addNew="addNew()"
           @copy="copyExisting"
           @removeItem="removeItem"
           @active="data.active = (data.active === $event ? null : $event)"
@@ -50,7 +50,7 @@
       </Suspense>
     </div>
     <div class="right-col" v-else>
-      <Welcome @addNew="addNew" @copy="copyExisting" />
+      <Welcome @customize="type => addNew(type)" />
     </div>
 
   </div>
@@ -98,9 +98,14 @@
       }
     })
 
-  async function addNew() {      
-    const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
-    if (!active_type || !isConfirmed) return
+  async function addNew(active_type) {
+    if (!active_type) {
+      const { value, isConfirmed } = await chooseTypeSwal(t)
+      if (isConfirmed) active_type = value
+    }
+
+    if (!active_type) return
+
     // get demo question for active language
     const lang = store.getters.language()
     const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
