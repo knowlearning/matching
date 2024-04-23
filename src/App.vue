@@ -18,7 +18,7 @@
     </Modal>
 
     <div class="left-col">
-      <div class="logo-line">
+      <div class="logo-line" @click="data.active = null">
         <div class="logo-and-name">
           <img id="logo" src="./assets/pila.png" @click="toggleLanguage" >
           <h2>Pila {{ t('create') }}</h2>
@@ -198,6 +198,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 4px 0;
+  cursor: pointer;
 }
 .left-col .logo-and-name {
   display: flex;
