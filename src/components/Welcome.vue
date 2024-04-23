@@ -2,7 +2,7 @@
   <div class="welcome">
     <div class="card-container">
     <button 
-      v-for="(type, index) in types"
+      v-for="(type, index) in Object.keys(questionTypes)"
       :key="index"
       class="button"
       @click="emit('addNew', type)"
@@ -12,7 +12,7 @@
     class="button-text"
     style="justify-content: center;"
     >
-    <span class="button-text">{{ getTypeDescription(type) }}</span>
+    <span class="button-text">{{ questionTypes[type].description }}</span>
     </span>
     </button>
   </div>
@@ -20,28 +20,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useStore } from 'vuex'
 import questionTypes from '../helpers/questionTypes.js'
 
-const store = useStore();
 const emit = defineEmits(['addNew'])
-
-const types = ref(Object.keys(questionTypes))
-
-const getTypeName = (type) => {
-  const parts = type.split(';type=');
-  return parts[parts.length - 1];
-}
-const getTypeDescription = (type) => {
-  const typeDescriptions = {
-    'application/json;type=matching': 'Matching ToQ',
-    'application/json;type=rearrange-items': 'Rearrange Items ToQ',
-    'application/json;type=select-from-pairs': 'Select From Pairs ToQ',
-    'application/json;type=sequence': 'Sequence'
-  };
-  return typeDescriptions[type] || 'Unknown Type';
-}
 
 </script> 
 

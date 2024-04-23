@@ -65,6 +65,11 @@ async function fetchItemMetadata(id) {
   return { name, owner, type: active_type }
 }
 
+watch(
+  () => props.items,
+  fetchNeededMetadataSet,
+  { immediate: true, deep: true }
+)
 async function fetchNeededMetadataSet() {
   const neededIds = props.items.filter(id => !Object.keys(metadata).includes(id))
   const removedIds = Object.keys(metadata).filter(id => !props.items.includes(id))
@@ -77,10 +82,13 @@ async function fetchNeededMetadataSet() {
 }
 
 watch(
-  () => props.items,
-  fetchNeededMetadataSet,
-  { immediate: true, deep: true }
+  () => props.active,
+  openFolderByContentId
 )
+async function openFolderByContentId(id) {
+  const { active_type: type } = await Agent.metadata(id)
+  if (!typesToShow.value.includes(type)) typesToShow.value.push(type)
+}
 
 function itemsForType(type) {
   return props.items.filter(id => metadata?.[id]?.type === type)

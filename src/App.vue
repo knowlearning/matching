@@ -134,7 +134,8 @@
     if (!active_type) return
     // get demo question for active language
     const lang = store.getters.language()
-    const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
+    const itemToCopy = questionTypes[active_type].newItemSchemas[lang]
+      || questionTypes[active_type].newItemSchemas['default']
     createContent(
       active_type,
       copy(itemToCopy)
@@ -150,9 +151,10 @@
   }
   async function createContent(active_type, active) {
     const newItemId = await Agent.create({ active_type, active })
-    data.content.push(newItemId)
-    data.active = newItemId
-    data.tags[MY_CONTENT_TAG][newItemId] = { value: true }
+    data.tags[MY_CONTENT_TAG][newItemId] = { value: true } // tag as 'my-content'
+    data.content.push(newItemId) // optimistic update locally loaded
+    data.active = newItemId // make new item active
+    // ContentBar watches data.active and ensures it opens if not already open
   }
   async function removeItem(id) {
     const { isConfirmed } = await areYouSureSwal(t)
