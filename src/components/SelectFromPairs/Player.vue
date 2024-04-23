@@ -16,7 +16,12 @@
 			:wideItemArea="wideItemArea()"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
-		<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
+		<v-btn
+			@click="handleSubmit"
+			color="green"
+		>
+			<span>{{ t('submit') }}</span>
+		</v-btn>
 	</div>
 </template>
 

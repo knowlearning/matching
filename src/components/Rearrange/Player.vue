@@ -33,9 +33,9 @@
         </draggable>
       </div>
     </div>
-    <button class="submit" @click="handleSubmit">
+    <v-btn color="green" @click="handleSubmit">
         {{ t('submit') }}
-    </button>
+    </v-btn>
 </div>
 </template>
 

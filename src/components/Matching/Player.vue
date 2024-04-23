@@ -9,7 +9,7 @@
       @updateConnections="data.studentConnections = $event"
     />
     <v-btn
-      class="submit"
+      color="green"
       @click="handleSubmit"
     >
       {{ t('submit') }}
