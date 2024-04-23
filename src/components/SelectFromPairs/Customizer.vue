@@ -1,41 +1,46 @@
 <template>
 	<div class="select-from-pairs-customizer">
-		<button
-			class="preview-button"
-			@click="store.dispatch('previewContent', props.id)"
-		>
-			<i class="fas fa-eye" /> 
-		</button>
-		<h3>{{ t('select-from-pairs-customizer') }}</h3>
-		<h4>{{ t('item-id') }}: {{ id }} </h4>
-		<label for="item-name">{{ t('item-name') }}:</label>
-		<input id="item-name" v-model="data.content.name" />
-		<label for="instructions">{{ t('instructions-optional') }}:</label>
-		<textarea id="instructions" v-model="data.content.instructions" />
+		<AbsolutePreviewAndItemId :id="props.id" />
 
-		<AudioBar
-			:id="data.content.audioId"
-			@change="data.content.audioId = $event"
-		/>
-
-		<div
-			class="row-wrapper"
-			v-for="r,i in data.content.rows"
-			:key="`row-${i}`"
-		>
-			<Row
-				v-bind="r"
-				@updateRow="data.content.rows[i] = $event"
+		<div class="left-col">
+			<NameAndInstructions :content="data.content" />
+			<v-btn
+				@click="addRow"
+				color="green"
+				class="mb-6"
+				size="small"
+				append-icon="fa-solid fa-plus"
+			>
+				<span>Add Row</span>
+			</v-btn>
+			<AudioBar
+				:id="data.content.audioId"
+				@change="data.content.audioId = $event"
 			/>
-			<button @click="removeRow(i)" style="color: red;">x</button>
 		</div>
-		<button @click="addRow" style="color: green;">+</button>
+
+		<div class="right-col">
+			<div
+				class="row-wrapper"
+				v-for="r,i in data.content.rows"
+				:key="`row-${i}`"
+			>
+				<RowCustomizer
+					v-bind="r"
+					@updateRow="data.content.rows[i] = $event"
+					@removeRow="removeRow(i)"
+				/>
+			</div>
+
+		</div>
 	</div>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
-import Row from './RowSelection/Customizer.vue'
+import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
+import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+import RowCustomizer from './RowSelection/Customizer.vue'
 import AudioBar from '../AudioBar.vue'
 import newRowSchema from './newRowSchema.js'
 import { useStore } from 'vuex'
@@ -69,17 +74,21 @@ function removeRow(i) {
 
 <style scoped>
 .select-from-pairs-customizer {
+	position: relative;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	height: 100%;
+	justify-content: space-around;
 }
-h3, h4, input, textarea {
-	margin: 0 0 10px 0;
+.left-col,
+.right-col {
+	padding: 8px;
 }
-input, textarea {
-	display: block;
-	text-align: center;
-	width: 400px;
+.left-col {
+	margin-top: 52px;
 }
+.right-col .row-wrapper {
+	margin: 6px 0;
+}
+
+
 </style>

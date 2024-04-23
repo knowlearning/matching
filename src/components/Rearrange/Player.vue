@@ -1,6 +1,12 @@
 <template>
 <div class="player">
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <div
+        v-if="item?.instructions"
+        class="instructions"
+    >
+        <span class="instructions-prefix">{{ t('instructions') }}:</span>
+        {{ item.instructions }}
+    </div>
     <div class="image-container">
         <div v-if="data.content?.audioId" class="audio-play-area">
             <i 
@@ -33,9 +39,9 @@
         </draggable>
       </div>
     </div>
-    <button class="submit" @click="handleSubmit">
+    <v-btn color="green" @click="handleSubmit">
         {{ t('submit') }}
-    </button>
+    </v-btn>
 </div>
 </template>
 
@@ -131,20 +137,6 @@ function shuffleImages() {
 </script>
 
 <style scoped>
-label {
-  font-weight: bolder;
-}
-textarea {
-  width: 300px;
-  margin-bottom: 12px;
-}
-textarea#item-name {
-  text-align: center;
-  height: 16px;
-}
-textarea#instructions {
-  height: 150px;
-}
 .image-row {
     display: flex;
     align-items: center;
@@ -165,6 +157,5 @@ textarea#instructions {
     flex-direction: column;
     align-items: center;
 }
-
 
 </style>

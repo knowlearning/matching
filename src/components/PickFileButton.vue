@@ -1,11 +1,10 @@
 <template>
-	<button @click="uploadFile">
-		<i :class="{
-				fas: true,
-				[fasIcon]: true
-			}"
-		/>
-	</button>
+	<v-btn
+		@click="uploadFile"
+		:size="props.size"
+		class="ma-2"
+		:icon="`fa-solid ${props.fasIcon}`"
+	/>
 </template>
 
 
@@ -28,7 +27,12 @@ const props = defineProps({
 	fasIcon: {
 		type: String,
 		required: false,
-		default: 'fas-upload'
+		default: 'fa-upload'
+	},
+	size: {
+		type: String,
+		required: false,
+		default: 'small'
 	}
 })
 

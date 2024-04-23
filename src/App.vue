@@ -24,12 +24,17 @@
           <h2>Pila {{ t('create') }}</h2>
         </div>
         <div class="button-area">
-          <button @click="addNew">
-            <i class="fas fa-plus" />
-          </button>
-          <button @click="copyExisting">
-            <i class="fas fa-copy" />
-          </button>
+          <v-btn
+            @click="addNew"
+            icon="fa-solid fa-plus"
+            size="small"
+            class="mr-2 "
+          />
+          <v-btn
+            @click="copyExisting"
+            icon="fa-solid fa-copy"
+            size="small"
+          />
         </div>
       </div>
       <Suspense>
@@ -212,7 +217,11 @@
 .right-col .header {
   justify-content: flex-end;
   align-items: center;
+  height: 52px;
   display: flex;
   background: rgb(43,46,211);
+}
+.right-col .right-inner {
+  height: 100%;
 }
 </style>

@@ -1,6 +1,12 @@
 <template>
   <div class="player">
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <div
+      v-if="item?.instructions"
+      class="instructions"
+    >
+      <span class="instructions-prefix">{{ t('instructions') }}:</span>
+      {{ item.instructions }}
+    </div>
     <MatchSvg
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
@@ -8,7 +14,12 @@
       :textIsPlayable="item.textIsPlayable"
       @updateConnections="data.studentConnections = $event"
     />
-    <button class="submit" @click="handleSubmit"> {{ t('submit') }} </button>
+    <v-btn
+      color="green"
+      @click="handleSubmit"
+    >
+      {{ t('submit') }}
+    </v-btn>
   </div>
 </template>
 

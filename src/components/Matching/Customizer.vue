@@ -1,59 +1,63 @@
 <template>
   <div class="customizer">
-    <button
-      class="preview-button"
-      @click="store.dispatch('previewContent', props.id)"
-    >
-      <i class="fas fa-eye" /> 
-    </button>
-    <div>{{ t('item-id') }}: {{ id }} </div>
-    <label for="item-name">{{ t('item-name') }}:</label>
-    <textarea
-      id="item-name"
-      v-model="data.content.name"
-    />
-    <label for="instruction">{{ t('instructions-optional') }}:</label>
-    <textarea
-      id="instructions"
-      v-model="data.content.instructions"
-    />
-    <div class="add-buttons-wrapper">
-      <PickFileButton
-        fas-icon="fa-file-audio"
-        acceptType="audio/*"
-        @newFile="handleFileAdd('audio', $event)"
+    <AbsolutePreviewAndItemId :id="props.id" />
+
+    <NameAndInstructions :content="data.content" />
+
+    <div class="local-customizer-area">
+      <div class="add-buttons-wrapper">
+        <PickFileButton
+          fas-icon="fa-file-audio"
+          acceptType="audio/*"
+          @newFile="handleFileAdd('audio', $event)"
+        />
+        <PickFileButton
+          fas-icon="fa-file-image"
+          acceptType="image/*"
+          @newFile="handleFileAdd('image', $event)"
+        />
+
+
+        <v-btn @click="addChoice">
+          <span>{{ t('add-by-text-or-by-id') }}</span>
+        </v-btn>
+
+
+        <v-btn
+          @click="data.content.textIsPlayable = !data.content.textIsPlayable"
+          size="small"
+          class="ma-2"
+          :icon="data.content.textIsPlayable ? 'fas fa-volume-up' : 'fas fa-volume-mute' "
+        />
+
+      </div>
+      <MatchSvg
+        :toChoices="data.content.toChoices"
+        :fromChoices="data.content.fromChoices"
+        :connections="data.content.answerConnections"
+        :editMode="data.editChoices"
+        :textIsPlayable="data.content.textIsPlayable"
+        @updateConnections="data.content.answerConnections = copy($event)"
+        @removeChoice="handleRemoveChoice"
+        @editChoice="handleEditChoice"
+        @move="handleMove"
       />
-      <PickFileButton
-        fas-icon="fa-file-image"
-        acceptType="image/*"
-        @newFile="handleFileAdd('image', $event)"
+      <v-btn
+        @click="data.editChoices = !data.editChoices"
+        size="small"
+        icon="fas fa-pen"
       />
-      <button @click="addChoice">{{ t('add-by-text-or-by-id') }}</button>
-      <button @click="data.content.textIsPlayable = !data.content.textIsPlayable">
-        <i v-if="data.content.textIsPlayable" class="fas fa-volume-up" />
-        <i v-else class="fas fa-volume-mute" />
-      </button>
+
     </div>
-    <MatchSvg
-      :toChoices="data.content.toChoices"
-      :fromChoices="data.content.fromChoices"
-      :connections="data.content.answerConnections"
-      :editMode="data.editChoices"
-      :textIsPlayable="data.content.textIsPlayable"
-      @updateConnections="data.content.answerConnections = copy($event)"
-      @removeChoice="handleRemoveChoice"
-      @editChoice="handleEditChoice"
-      @move="handleMove"
-    />
-    <button @click="data.editChoices = !data.editChoices">
-      <i class="fas fa-pen" />
-    </button>
+
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive} from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
+import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
+import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import MatchSvg from './MatchSvg/index.vue'
 import PickFileButton from '../PickFileButton.vue'
 import { inputSwal,
@@ -215,25 +219,11 @@ async function handleFileAdd(fileType, id) {
 
 <style scoped>
 .customizer {
+  position: relative;
+  height: 100%;
   margin: 0 auto;
-  display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 600px;
-}
-label {
-  font-weight: bolder;
-}
-textarea {
-  width: 300px;
-  margin-bottom: 12px;
-}
-textarea#item-name {
-  text-align: center;
-  height: 16px;
-}
-textarea#instructions {
-  height: 45px;
 }
 .audio-button {
   background: green;
