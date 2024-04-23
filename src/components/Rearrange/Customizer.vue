@@ -95,6 +95,7 @@ function onDragEnd(event) {
 <style scoped>
 .rearrange-customizer {
 	display: flex;
+	justify-content: space-around;
 	position: relative;
 	height: 100%;
 }
