@@ -10,6 +10,7 @@
 		<NameAndInstructions
 			:content="data.content"
 			hideInstructions
+			style="width: 420px;"
 		/>
 
 		<div class="item-list-wrapper">

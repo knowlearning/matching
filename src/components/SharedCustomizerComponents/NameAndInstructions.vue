@@ -36,6 +36,5 @@
 <style scoped>
 .vuetify-text-input {
   margin: 8px auto;
-  width: 400px;
 }
 </style>

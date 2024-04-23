@@ -4,7 +4,10 @@
 		<AbsolutePreviewAndItemId :id="props.id" />
 
 		<div class="left-col">
-			<NameAndInstructions :content="data.content" />
+			<NameAndInstructions
+				:content="data.content"
+				style="width: 420px;"
+			/>
 			<div class="audio-area">
 				<AudioBar
 					:id="data.content.audioId"

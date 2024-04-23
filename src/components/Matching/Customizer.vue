@@ -2,7 +2,10 @@
   <div class="customizer">
     <AbsolutePreviewAndItemId :id="props.id" />
 
-    <NameAndInstructions :content="data.content" />
+    <NameAndInstructions
+      :content="data.content"
+      style="width: 420px; margin: 8px auto;"
+    />
 
     <div class="local-customizer-area">
       <div class="add-buttons-wrapper">

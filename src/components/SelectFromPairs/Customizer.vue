@@ -3,7 +3,10 @@
 		<AbsolutePreviewAndItemId :id="props.id" />
 
 		<div class="left-col">
-			<NameAndInstructions :content="data.content" />
+			<NameAndInstructions
+				:content="data.content"
+				style="width: 300px;"
+			/>
 			<v-btn
 				@click="addRow"
 				color="green"

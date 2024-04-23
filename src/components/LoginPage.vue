@@ -1,12 +1,17 @@
 <template>
 	<div class="login-page">
-		LOGINNNNN
-		<button @click="login">
-			Loggg  Button Innn...nnnnn..
-		</button>
+		<v-btn @click="login">
+			LOGIN
+		</v-btn>
 	</div>
 </template>
 
 <script setup>
 	function login() { Agent.login() }
 </script>
+
+<style scoped>
+.login-page {
+	padding: 40px;
+}
+</style>
