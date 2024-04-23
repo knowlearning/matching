@@ -6,18 +6,21 @@
 			@newFile="emits('change', $event)"
 		/>
 
-		<button
+		<v-btn
 			@click="toggleAudioPlayback"
+			size="small"
+			class="ma-2"
 			:disabled="!props.id"
-		>
-			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-		</button>
-		<button
+			:icon="audioPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-volume-up'"
+		/>
+		<v-btn
 			@click="deleteAudio"
+			size="small"
+			class="ma-2"
+			:color="props.id ? 'red' : ''"
 			:disabled="!props.id"
-		>
-			<i class="fas fa-trash"></i>
-		</button>
+			icon="fa-solid fa-trash"
+		/>
 	</div>
 
 </template>
