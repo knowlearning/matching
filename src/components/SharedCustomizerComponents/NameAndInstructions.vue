@@ -5,7 +5,7 @@
 			:label="t('item-name')"
 			class="vuetify-text-input"
 		/>
-		<v-textarea
+		<v-textarea v-if="!props.hideInstructions"
 			v-model="props.content.instructions"
 			:label="t('instructions-optional')"
 			rows="3"
@@ -23,6 +23,11 @@
 		content: {
 			type: Object,
 			required: true
+		},
+		hideInstructions: {
+			type: Boolean,
+			required: false,
+			default: false
 		}
 	})
 

@@ -1,18 +1,14 @@
 <template>
 	<div class="sequence-customizer">
-		<button
-			class="preview-button"
-			@click="store.dispatch('previewContent', props.id)"
-		>
-			<i class="fas fa-eye" /> 
-		</button>
-		<h3>{{ t('sequence-customizer') }}</h3>
-		<h4>{{ t('item-id') }}: {{ id }} </h4>
-		<label for="item-name">{{ t('sequence-name') }}:</label>
-		<textarea
-			id="item-name"
-			v-model="data.content.name"
+		<AbsolutePreviewAndItemId
+			:id="props.id"
 		/>
+
+		<NameAndInstructions
+			:content="data.content"
+			hideInstructions
+		/>
+
 		<div
 			class="item-list-wrapper"
 			@dragover.prevent
@@ -40,9 +36,11 @@
 	</div>
 </template>
 
-
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
+import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
+import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+
 import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
 import { unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
@@ -62,6 +60,7 @@ const data = reactive({
 async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
 	const { active_type } = await Agent.metadata(attemptedId)
+	console.log('active typEEE', active_type)
 	if (!active_type || !sequenceImportableTypes.includes(active_type)) {
 		await unsupportedTypeSwal(attemptedId, active_type)
 	} else {
@@ -97,6 +96,8 @@ function moveItemDown(i) {
 <style scoped>
 .sequence-customizer {
 	display: flex;
+	position: relative;
+	height: 100%;
 	flex-direction: column;
 	align-items: center;
 }

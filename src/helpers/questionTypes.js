@@ -16,7 +16,6 @@ import defaultSequence from './demo-questions/defaultSequence.js'
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
-
 const questionTypes = {
 	'application/json;type=matching' : {
 		description: 'matching-question',
