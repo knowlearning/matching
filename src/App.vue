@@ -25,7 +25,7 @@
         </div>
         <div class="button-area">
           <v-btn
-            @click="addNew"
+            @click="addNew()"
             icon="fa-solid fa-plus"
             size="small"
             class="mr-2 "
