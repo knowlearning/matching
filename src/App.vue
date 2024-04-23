@@ -48,7 +48,6 @@
       <div v-if="!data.content">Loading...</div>
 
     </div>
-
     <div class="right-col">
       <div class="header">
         <v-btn
@@ -74,7 +73,7 @@
         </Suspense>
       </div>
       <div class="right-inner" v-else>
-        <Welcome @addNew="addNew" @copy="copyExisting" />
+        <Welcome @addNew="addNew" />
       </div>
     </div>
 
@@ -92,6 +91,7 @@
   import { useStore } from 'vuex'
   const store = useStore()
   const t = slug => store.getters.t(slug)
+
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
@@ -123,12 +123,15 @@
         data.tags[MY_CONTENT_TAG] = { value: true }
       }
     })
-
+    
   const previewContent = computed(() => store.getters.previewContent())
 
-  async function addNew() {      
-    const { value: active_type, isConfirmed } = await chooseTypeSwal(t)
-    if (!active_type || !isConfirmed) return
+  async function addNew(active_type) {
+    if (!active_type) {
+      const { value, isConfirmed } = await chooseTypeSwal(t)
+      if (isConfirmed) active_type = value
+    }
+    if (!active_type) return
     // get demo question for active language
     const lang = store.getters.language()
     const itemToCopy = questionTypes[active_type].newItemSchemas[lang] || questionTypes[active_type].newItemSchemas['default']
@@ -137,6 +140,7 @@
       copy(itemToCopy)
     )
   }
+  
   async function copyExisting() {
     const { value: idToCopy } = await copyItemSwal(t) // validates id and type 
     if (!idToCopy) return
@@ -213,15 +217,5 @@
 .right-col {
     width: 100%;
     flex-grow: 1;
-}
-.right-col .header {
-  justify-content: flex-end;
-  align-items: center;
-  height: 52px;
-  display: flex;
-  background: rgb(43,46,211);
-}
-.right-col .right-inner {
-  height: 100%;
 }
 </style>

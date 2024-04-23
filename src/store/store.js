@@ -20,8 +20,7 @@ const store = createStore({
   },
   mutations: {
     language: (state, value) => state.language = value,
-    previewContent: (state, value) => state.previewContent = value,
-
+    previewContent: (state, value) => state.previewContent = value
   },
   actions: {
     language: ({ commit }, value) => commit('language', value),
