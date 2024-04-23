@@ -1,22 +1,31 @@
 <template>
   <div class="customizer">
-    <button
-      class="preview-button"
+
+    <!-- Preview Button, absolute to top left -->
+    <v-btn
       @click="store.dispatch('previewContent', props.id)"
+      append-icon="fa-solid fa-eye"
+      class="customizer-preview-btn"
     >
-      <i class="fas fa-eye" /> 
-    </button>
-    <div>{{ t('item-id') }}: {{ id }} </div>
-    <label for="item-name">{{ t('item-name') }}:</label>
-    <textarea
-      id="item-name"
+      <span>{{ t('preview') }}</span>
+    </v-btn>
+
+    <!-- Item Id, absolute to bottom left -->
+    <div class="customizer-item-id-bottom">{{ t('item-id') }}: {{ id }} </div>
+
+    <v-text-field
       v-model="data.content.name"
+      :label="t('item-name')"
+      class="input-width"
     />
-    <label for="instruction">{{ t('instructions-optional') }}:</label>
-    <textarea
-      id="instructions"
+
+    <v-textarea
       v-model="data.content.instructions"
+      :label="t('instructions-optional')"
+      class="input-width"
     />
+
+
     <div class="add-buttons-wrapper">
       <PickFileButton
         fas-icon="fa-file-audio"
@@ -215,26 +224,18 @@ async function handleFileAdd(fileType, id) {
 
 <style scoped>
 .customizer {
+  position: relative;
+  height: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 600px;
 }
-label {
-  font-weight: bolder;
+.input-width {
+  width: 400px;
+  max-height: 100px;
 }
-textarea {
-  width: 300px;
-  margin-bottom: 12px;
-}
-textarea#item-name {
-  text-align: center;
-  height: 16px;
-}
-textarea#instructions {
-  height: 45px;
-}
+
 .audio-button {
   background: green;
   color: orange;

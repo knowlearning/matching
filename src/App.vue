@@ -26,13 +26,14 @@
         <div class="button-area">
           <v-btn
             @click="addNew"
-            append-icon="fa-solid fa-plus"
-            size="xsmall"
+            icon="fa-solid fa-plus"
+            size="small"
+            class="mr-2 "
           />
           <v-btn
             @click="copyExisting"
-            append-icon="fa-solid fa-copy"
-            size="xsmall"
+            icon="fa-solid fa-copy"
+            size="small"
           />
         </div>
       </div>
@@ -218,5 +219,8 @@
   align-items: center;
   display: flex;
   background: rgb(43,46,211);
+}
+.right-col .right-inner {
+  height: 100%;
 }
 </style>

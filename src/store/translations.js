@@ -210,5 +210,9 @@ export default {
   'logout' : {
     'en' : 'LOGOUT',
     'th' : 'ออก'
+  },
+  'preview' : {
+    'en' : 'PREVIEW',
+    'th' : 'ตัวอย่าง'
   }
 }
