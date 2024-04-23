@@ -14,7 +14,6 @@
         @active="$emit('active', $event)"
       />
     </div>
-
     <div class="foreign-item-folder-wrapper">
       <h3>{{ t('foreign-items') }}</h3>
       <ExpandableFolderForType
@@ -29,15 +28,13 @@
         @active="store.dispatch('previewContent', $event)"
       />
     </div>
-
   </div>
 </template>
-
 
 <script setup>
 import ExpandableFolderForType from './ExpandableFolderForType.vue'
 import ItemName from './ItemName.vue'
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import questionTypes from '../helpers/questionTypes.js'
 
 import { useStore } from 'vuex'

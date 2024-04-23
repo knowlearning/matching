@@ -2,6 +2,9 @@
 	<div class="sequence-customizer">
 		<AbsolutePreviewAndItemId
 			:id="props.id"
+			@dragover.prevent
+			@drag.prevent
+			@drop.prevent="handleDrop"
 		/>
 
 		<NameAndInstructions
@@ -9,12 +12,7 @@
 			hideInstructions
 		/>
 
-		<div
-			class="item-list-wrapper"
-			@dragover.prevent
-			@drag.prevent
-			@drop.prevent="handleDrop"
-		>
+		<div class="item-list-wrapper">
 			<h4>{{ t('drag-on-items-to-add') }}</h4>
 			<div
 				v-for="({ id:item }, i) in data.content.items"
@@ -73,7 +71,6 @@ const data = reactive({
 async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
 	const { active_type } = await Agent.metadata(attemptedId)
-	console.log('active typEEE', active_type)
 	if (!active_type || !sequenceImportableTypes.includes(active_type)) {
 		await unsupportedTypeSwal(attemptedId, active_type)
 	} else {
