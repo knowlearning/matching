@@ -225,6 +225,7 @@ async function handleFileAdd(fileType, id) {
   position: relative;
   height: 100%;
   margin: 0 auto;
+  padding-top: 56px;
   flex-direction: column;
   align-items: center;
 }

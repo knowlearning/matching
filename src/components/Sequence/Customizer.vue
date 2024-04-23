@@ -111,6 +111,7 @@ function moveItemDown(i) {
 	height: 100%;
 	flex-direction: column;
 	align-items: center;
+	padding-top: 56px;
 }
 .sequence-customizer > h3 {
 	margin-bottom: 0;

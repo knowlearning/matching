@@ -45,9 +45,11 @@ function copyText() {
 
 <style scoped>
 .absolute-preview-and-item-id {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
 }
 button.preview-btn {
   position: absolute;
