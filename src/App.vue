@@ -17,7 +17,7 @@
     </Modal>
 
     <div class="left-col">
-      <div class="logo-line" @click="goToHomePage">
+      <div class="logo-line" @click="data.active = null">
         <img
           id="logo"
           src="./assets/pila.png"
@@ -29,20 +29,15 @@
       <Suspense>
         <ContentBar v-if="data.content"
           :items="data.content"
-          :active="data"
-          @addNew="addNew()"
+          :active="data.active"
+          @addNew="addNew"
           @copy="copyExisting"
           @removeItem="removeItem"
           @active="data.active = (data.active === $event ? null : $event)"
         />
       </Suspense>
       <div v-if="!data.content">Loading...</div>
-      <div class="account">
-      <button @click="store.dispatch('logout')" class="button">
-        <i class="fas fa-user-circle"></i> 
-        Account
-      </button>
-      </div>
+
     </div>
     <div class="right-col" v-if="data.active">
       <Suspense>
@@ -54,7 +49,7 @@
       </Suspense>
     </div>
     <div class="right-col" v-else>
-      <Welcome @customize="type => addNew(type)" />
+      <Welcome @addNew="addNew" />
     </div>
 
   </div>
@@ -145,9 +140,6 @@
       const newLang = (lang === 'en' ? 'th' : 'en')
       store.dispatch('language', newLang)
     }
-  }
-  function goToHomePage() {
-    window.location.href = '/'
   }
 </script>
 

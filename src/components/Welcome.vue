@@ -5,7 +5,7 @@
       v-for="(type, index) in types"
       :key="index"
       class="button"
-      @click="emit('customize', type)"
+      @click="emit('addNew', type)"
       style="margin: 10px; padding: 10px; width: 200px; height: 200px;"
     >
     <span 
@@ -25,7 +25,7 @@ import { useStore } from 'vuex'
 import questionTypes from '../helpers/questionTypes.js'
 
 const store = useStore();
-const emit = defineEmits(['customize'])
+const emit = defineEmits(['addNew'])
 
 const types = ref(Object.keys(questionTypes))
 
