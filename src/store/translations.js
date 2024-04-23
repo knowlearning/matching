@@ -214,5 +214,9 @@ export default {
   'preview' : {
     'en' : 'PREVIEW',
     'th' : 'ตัวอย่าง'
+  },
+  'copied' : {
+    'en' : 'Copied',
+    'th' : 'คัดลอก'
   }
 }

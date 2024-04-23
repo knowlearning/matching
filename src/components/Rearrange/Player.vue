@@ -131,20 +131,6 @@ function shuffleImages() {
 </script>
 
 <style scoped>
-label {
-  font-weight: bolder;
-}
-textarea {
-  width: 300px;
-  margin-bottom: 12px;
-}
-textarea#item-name {
-  text-align: center;
-  height: 16px;
-}
-textarea#instructions {
-  height: 150px;
-}
 .image-row {
     display: flex;
     align-items: center;
@@ -165,6 +151,5 @@ textarea#instructions {
     flex-direction: column;
     align-items: center;
 }
-
 
 </style>

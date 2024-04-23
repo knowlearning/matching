@@ -1,11 +1,10 @@
 <template>
-	<button @click="uploadFile">
-		<i :class="{
-				fas: true,
-				[fasIcon]: true
-			}"
-		/>
-	</button>
+	<v-btn
+		@click="uploadFile"
+		size="small"
+		class="ma-2"
+		:icon="`fa-solid ${fasIcon}`"
+	/>
 </template>
 
 

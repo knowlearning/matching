@@ -217,6 +217,7 @@
 .right-col .header {
   justify-content: flex-end;
   align-items: center;
+  height: 52px;
   display: flex;
   background: rgb(43,46,211);
 }

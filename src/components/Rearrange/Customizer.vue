@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import AudioBar from '../AudioBar.vue'
 import PickFileButton from '../PickFileButton.vue'
@@ -116,27 +116,11 @@ align-items: center;
 h3, h4 {
 	margin: 6px 0 0 0;
 }
-label {
-  font-weight: bolder;
-}
-textarea {
-  width: 300px;
-  margin-bottom: 12px;
-}
-textarea#item-name {
-  text-align: center;
-  height: 16px;
-}
-textarea#instructions {
-  height: 40px;
-}
-
 .image-row {
 display: flex;
 align-items: center;
 margin-bottom: 10px;
 }
-
 .image-and-buttons {
 background: antiquewhite;
 padding: 20px;
@@ -156,12 +140,8 @@ position: relative;
 .image-and-buttons > button:hover {
 	color: red;
 }
-
 .choice {
-width: 200px;
+	width: 200px;
 }
 
-button {
-margin-left: 10px;
-}
 </style>

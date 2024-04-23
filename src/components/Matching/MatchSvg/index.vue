@@ -74,12 +74,12 @@
       />
 
     </svg>
-	  <button class="remove"
+	  <v-btn class="remove ma-1"
+	  	size="small"
+	  	icon="fa-solid fa-trash"
 			:disabled="selectedConnectionIndex === null"
 			@click="removeConnectionByIndex(selectedConnectionIndex)"
-		>
-			<i class="fas fa-trash" />
-		</button>
+		/>
 	</div>
 </template>
 

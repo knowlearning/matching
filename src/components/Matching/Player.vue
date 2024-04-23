@@ -8,7 +8,12 @@
       :textIsPlayable="item.textIsPlayable"
       @updateConnections="data.studentConnections = $event"
     />
-    <button class="submit" @click="handleSubmit"> {{ t('submit') }} </button>
+    <v-btn
+      class="submit"
+      @click="handleSubmit"
+    >
+      {{ t('submit') }}
+    </v-btn>
   </div>
 </template>
 

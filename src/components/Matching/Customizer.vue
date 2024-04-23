@@ -1,71 +1,63 @@
 <template>
   <div class="customizer">
+    <AbsolutePreviewAndItemId :id="props.id" />
 
-    <!-- Preview Button, absolute to top left -->
-    <v-btn
-      @click="store.dispatch('previewContent', props.id)"
-      append-icon="fa-solid fa-eye"
-      class="customizer-preview-btn"
-    >
-      <span>{{ t('preview') }}</span>
-    </v-btn>
+    <NameAndInstructions :content="data.content" />
 
-    <!-- Item Id, absolute to bottom left -->
-    <div
-      @click="copyText(id)"
-      class="customizer-item-id-bottom"
-    >{{ id }}</div>
-
-    <v-text-field
-      v-model="data.content.name"
-      :label="t('item-name')"
-      class="input-width"
-    />
-
-    <v-textarea
-      v-model="data.content.instructions"
-      :label="t('instructions-optional')"
-      class="input-width"
-    />
+    <div class="local-customizer-area">
+      <div class="add-buttons-wrapper">
+        <PickFileButton
+          fas-icon="fa-file-audio"
+          acceptType="audio/*"
+          @newFile="handleFileAdd('audio', $event)"
+        />
+        <PickFileButton
+          fas-icon="fa-file-image"
+          acceptType="image/*"
+          @newFile="handleFileAdd('image', $event)"
+        />
 
 
-    <div class="add-buttons-wrapper">
-      <PickFileButton
-        fas-icon="fa-file-audio"
-        acceptType="audio/*"
-        @newFile="handleFileAdd('audio', $event)"
+        <v-btn @click="addChoice">
+          <span>{{ t('add-by-text-or-by-id') }}</span>
+        </v-btn>
+
+
+        <v-btn
+          @click="data.content.textIsPlayable = !data.content.textIsPlayable"
+          size="small"
+          class="ma-2"
+          :icon="data.content.textIsPlayable ? 'fas fa-volume-up' : 'fas fa-volume-mute' "
+        />
+
+      </div>
+      <MatchSvg
+        :toChoices="data.content.toChoices"
+        :fromChoices="data.content.fromChoices"
+        :connections="data.content.answerConnections"
+        :editMode="data.editChoices"
+        :textIsPlayable="data.content.textIsPlayable"
+        @updateConnections="data.content.answerConnections = copy($event)"
+        @removeChoice="handleRemoveChoice"
+        @editChoice="handleEditChoice"
+        @move="handleMove"
       />
-      <PickFileButton
-        fas-icon="fa-file-image"
-        acceptType="image/*"
-        @newFile="handleFileAdd('image', $event)"
+      <v-btn
+        @click="data.editChoices = !data.editChoices"
+        size="small"
+        icon="fas fa-pen"
       />
-      <button @click="addChoice">{{ t('add-by-text-or-by-id') }}</button>
-      <button @click="data.content.textIsPlayable = !data.content.textIsPlayable">
-        <i v-if="data.content.textIsPlayable" class="fas fa-volume-up" />
-        <i v-else class="fas fa-volume-mute" />
-      </button>
+
     </div>
-    <MatchSvg
-      :toChoices="data.content.toChoices"
-      :fromChoices="data.content.fromChoices"
-      :connections="data.content.answerConnections"
-      :editMode="data.editChoices"
-      :textIsPlayable="data.content.textIsPlayable"
-      @updateConnections="data.content.answerConnections = copy($event)"
-      @removeChoice="handleRemoveChoice"
-      @editChoice="handleEditChoice"
-      @move="handleMove"
-    />
-    <button @click="data.editChoices = !data.editChoices">
-      <i class="fas fa-pen" />
-    </button>
+
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive} from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
+import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
+import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import MatchSvg from './MatchSvg/index.vue'
 import PickFileButton from '../PickFileButton.vue'
 import { inputSwal,
@@ -223,16 +215,6 @@ async function handleFileAdd(fileType, id) {
     })
   }
 }
-
-function copyText(text) {
-  const textarea = document.createElement("textarea")
-  textarea.value = text
-  textarea.style.position = "fixed" // delete?
-  document.body.appendChild(textarea)
-  textarea.select()
-  document.execCommand("copy")
-  document.body.removeChild(textarea)
-}
 </script>
 
 <style scoped>
@@ -240,15 +222,9 @@ function copyText(text) {
   position: relative;
   height: 100%;
   margin: 0 auto;
-  display: flex;
   flex-direction: column;
   align-items: center;
 }
-.input-width {
-  width: 400px;
-  max-height: 100px;
-}
-
 .audio-button {
   background: green;
   color: orange;
