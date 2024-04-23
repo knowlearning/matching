@@ -67,6 +67,10 @@ export default {
     'en': 'Instructions (optional)',
     'th': 'คำสั่ง (ตัวเลือก)',
   },
+  'instructions' : {
+    'en' : 'Instructions',
+    'th' : 'คำสั่ง'
+  },
   'submit': {
     'en': 'Submit',
     'th': 'ส่ง',

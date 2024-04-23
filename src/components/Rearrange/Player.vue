@@ -1,6 +1,12 @@
 <template>
 <div class="player">
-    <h3 v-if="item?.instructions">{{ item.instructions }}</h3>
+    <div
+        v-if="item?.instructions"
+        class="instructions"
+    >
+        <span class="instructions-prefix">{{ t('instructions') }}:</span>
+        {{ item.instructions }}
+    </div>
     <div class="image-container">
         <div v-if="data.content?.audioId" class="audio-play-area">
             <i 

@@ -1,6 +1,10 @@
 <template>
   <div class="row-editor">
-    <AudioBar :id="props.audioId" @change="handleAudioChange" />
+    <AudioBar
+      :id="props.audioId"
+      @change="handleAudioChange"
+      vertical
+    />
     <div class="item-area">
       <div
         v-for="choice,i in props.choices"
@@ -17,19 +21,27 @@
         </div>
 
         <div>
-          <button
+          <v-btn
             @click.stop="changeChoice(i)"
-          >
-            <i class="fas fa-edit" />
-          </button>
+            icon="fa-solid fa-edit"
+            size="x-small"
+          />
           <PickFileButton
             fasIcon="fa-upload"
+            :size="'x-small'"
             acceptType="image/*"
             @newFile="handleNewImage(i, $event)"
           />
         </div>
       </div>
     </div>
+    <v-btn
+      @click="$emit('removeRow')"
+      size="x-small"
+      class="ml-2"
+      color="red"
+      icon="fa-solid fa-remove"
+    />
   </div>
 </template>
 

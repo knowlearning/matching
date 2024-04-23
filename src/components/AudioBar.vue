@@ -1,5 +1,5 @@
 <template>
-	<div class="audio-bar">
+	<div class="audio-bar" :style="vertical ? `flex-direction: column;` : ''">
 		<PickFileButton
 			fas-icon="fa-file-audio"
 			acceptType="audio/*"
@@ -35,6 +35,11 @@ const props = defineProps({
 	id: {
 		required: true,
 		type: [ String, null ]
+	},
+	vertical: {
+		type: Boolean,
+		required: false,
+		default: false
 	}
 })
 let audio = null
@@ -71,3 +76,11 @@ function deleteAudio() {
 }
 
 </script>
+
+<style scoped>
+.audio-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>
