@@ -28,19 +28,23 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
-button.customizer-preview-button {
+
+button.customizer-preview-btn {
   position: absolute;
   top: 12px;
   left: 12px;
 }
 div.customizer-item-id-bottom {
   position: absolute;
+  cursor: pointer;
   right: 12px;
   bottom: 4px;
   font-weight: bold;
   font-size: 0.8rem;
   font-style: italic;
-
+}
+div.customizer-item-id-bottom:hover {
+  color: darkblue;
 }
 button.submit {
   color: white;

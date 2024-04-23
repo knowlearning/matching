@@ -11,7 +11,10 @@
     </v-btn>
 
     <!-- Item Id, absolute to bottom left -->
-    <div class="customizer-item-id-bottom">{{ t('item-id') }}: {{ id }} </div>
+    <div
+      @click="copyText(id)"
+      class="customizer-item-id-bottom"
+    >{{ id }}</div>
 
     <v-text-field
       v-model="data.content.name"
@@ -219,6 +222,16 @@ async function handleFileAdd(fileType, id) {
       nodeId: uuid()
     })
   }
+}
+
+function copyText(text) {
+  const textarea = document.createElement("textarea")
+  textarea.value = text
+  textarea.style.position = "fixed" // delete?
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  document.body.removeChild(textarea)
 }
 </script>
 
