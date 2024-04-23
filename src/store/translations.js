@@ -67,6 +67,10 @@ export default {
     'en': 'Instructions (optional)',
     'th': 'คำสั่ง (ตัวเลือก)',
   },
+  'instructions' : {
+    'en' : 'Instructions',
+    'th' : 'คำสั่ง'
+  },
   'submit': {
     'en': 'Submit',
     'th': 'ส่ง',
@@ -195,4 +199,28 @@ export default {
     'en' : 'SEQUENCE',
     'th' : 'ลำดับ'
   },
+  'karel-task&version' : {
+    'en' : 'KAREL TASKS',
+    'th' : 'Karel เต่า'
+  },
+  'customize-items' : {
+    'en' : 'CUSTOMISE ITEMS',
+    'th' : 'ปรับแต่งสินค้า'
+  },
+  'foreign-items' : {
+    'en' : 'FOREIGN ITEMS',
+    'th' : 'สินค้าต่างประเทศ'
+  },
+  'logout' : {
+    'en' : 'LOGOUT',
+    'th' : 'ออก'
+  },
+  'preview' : {
+    'en' : 'PREVIEW',
+    'th' : 'ตัวอย่าง'
+  },
+  'copied' : {
+    'en' : 'Copied',
+    'th' : 'คัดลอก'
+  }
 }

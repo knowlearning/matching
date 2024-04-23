@@ -1,48 +1,58 @@
 <template>
 	<div class="sequence-customizer">
-		<button
-			class="preview-button"
-			@click="store.dispatch('previewContent', props.id)"
-		>
-			<i class="fas fa-eye" /> 
-		</button>
-		<h3>{{ t('sequence-customizer') }}</h3>
-		<h4>{{ t('item-id') }}: {{ id }} </h4>
-		<label for="item-name">{{ t('sequence-name') }}:</label>
-		<textarea
-			id="item-name"
-			v-model="data.content.name"
-		/>
-		<div
-			class="item-list-wrapper"
+		<AbsolutePreviewAndItemId
+			:id="props.id"
 			@dragover.prevent
 			@drag.prevent
 			@drop.prevent="handleDrop"
-		>
+		/>
+
+		<NameAndInstructions
+			:content="data.content"
+			hideInstructions
+			style="width: 420px;"
+		/>
+
+		<div class="item-list-wrapper">
 			<h4>{{ t('drag-on-items-to-add') }}</h4>
-			<div v-for="({ id:item }, i) in data.content.items" :key="item">
-				<button
-					class="small-inline-button"
+			<div
+				v-for="({ id:item }, i) in data.content.items"
+				:key="item"
+				class="item-row"
+			>
+				<v-btn
+					icon="fa-solid fa-arrow-up"
+					color="yellow"
+					size="x-small"
+					class="ma-1"
 					@click="moveItemUp(i)"
-				>&uarr;</button>
-				<button
-					class="small-inline-button"
+				/>
+				<v-btn
+					icon="fa-solid fa-arrow-down"
+					color="yellow"
+					size="x-small"
+					class="ma-1 mr-4"
 					@click="moveItemDown(i)"
-				>&darr;</button>
-				<button
-					class="small-inline-button remove"
-					@click="removeItem(i)"
-				>x</button>
+				/>
 				<span>{{ i + 1 }}. </span>
 				<ItemName :id="item" />
+				<v-btn
+					icon="fa-solid fa-remove"
+					color="red"
+					size="x-small"
+					class="ml-auto"
+					@click="removeItem(i)"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
-
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
+import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
+import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+
 import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
 import { unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
@@ -97,6 +107,8 @@ function moveItemDown(i) {
 <style scoped>
 .sequence-customizer {
 	display: flex;
+	position: relative;
+	height: 100%;
 	flex-direction: column;
 	align-items: center;
 }
@@ -122,28 +134,9 @@ function moveItemDown(i) {
 	text-align: center;
 	width: 100%;
 }
-button.small-inline-button {
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	border: 2px solid black;
-	margin: 4px;
-	padding: 5px;
-	height: 26px;
-	width: 26px;
-	background:yellow;
-	font-size: 1.1rem;
+.item-row {
+	display: flex;
+    width: 100%;
+    align-items: center;
 }
-button.small-inline-button:hover {
-	background: grey;
-}
-button.small-inline-button.remove {
-	background: lightcoral;
-	font-size: 1rem;
-	margin-right: 10px;
-}
-button.small-inline-button.remove:hover {
-	background: red;
-}
-
 </style>

@@ -4,32 +4,59 @@ import { validate as isUUID } from 'uuid'
 import './style.css'
 import store from './store/store.js'
 import App from './App.vue'
+import LoginPage from './components/LoginPage.vue'
 import NotFound from './components/NotFound.vue'
 import EmbeddedPlayer from './components/EmbeddedPlayer.vue'
 import questionTypes from './helpers/questionTypes.js'
 
+import 'vuetify/styles'
+import '@fortawesome/fontawesome-free/css/all.css'
+import { createVuetify } from 'vuetify'
+import { aliases, fa } from 'vuetify/iconsets/fa'
+
+//  TODO: trim down imports
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
 window.Agent = Agent
+
+
+const vuetify = createVuetify({
+  components,
+  directives,
+  icons: {
+    defaultSet: 'fa',
+    aliases,
+    sets: { fa }
+  }
+})
 
 const initialLoad = async () => {
     const { auth: { user, provider } } = await Agent.environment()
     if (provider === 'anonymous') {
-    	Agent.login()
+        createApp(LoginPage)
+          .use(vuetify)
+          .mount('#app')
     } else {
         const url = new URL(window.location.href)
         const { pathname } = url
         const route = pathname.slice(1)
         if (route === '') {
-        	createApp(App)
+            createApp(App)
                 .use(store)
+                .use(vuetify)
                 .mount('#app')
         } else if (await routeIsUUIDOfValidType(route)) {
             // cannot use PlayOrCustomizeByTypeSwitcher directly
             // because we need to wrap in a suspense element
-        	createApp(EmbeddedPlayer, { id: route })
+            createApp(EmbeddedPlayer, { id: route })
                 .use(store)
+                .use(vuetify)
                 .mount('#app')
         } else {
-        	createApp(NotFound).mount('#app')
+            createApp(NotFound)
+                .use(vuetify)
+                .mount('#app')
         }
     }
 }

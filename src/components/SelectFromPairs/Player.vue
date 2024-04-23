@@ -1,6 +1,12 @@
 <template>
-	<div>
-		<p v-if="questionDef.instructions">{{ questionDef.instructions }}</p>
+	<div class="player">
+		<div
+			v-if="questionDef?.instructions"
+			class="instructions"
+		>
+			<span class="instructions-prefix">{{ t('instructions') }}:</span>
+			{{ questionDef.instructions }}
+		</div>
 		<div class="audio-control">
 			<AudioPlayerButton
 				v-if="questionDef.audioId"
@@ -16,7 +22,12 @@
 			:wideItemArea="wideItemArea()"
 			@entryIsCorrect="rowsCorrect[i] = $event"
 		/>
-		<button class="submit" @click="handleSubmit">{{ t('submit') }}</button>
+		<v-btn
+			@click="handleSubmit"
+			color="green"
+		>
+			<span>{{ t('submit') }}</span>
+		</v-btn>
 	</div>
 </template>
 

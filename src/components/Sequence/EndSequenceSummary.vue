@@ -34,15 +34,9 @@
 			</tbody>
 		</table>
 
-
-
-
-		<button
-			class="submit"
-			@click="$emit('close')"
-		>
+		<v-btn @click="$emit('close')" color="green">
 			{{ t('close') }}
-		</button>
+		</v-btn>
 	</div>
 </template>
 

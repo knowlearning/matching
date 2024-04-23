@@ -1,67 +1,48 @@
 <template>
-  <div>
-
-    <div class="button-area">
-      <button @click="$emit('addNew')">
-        <i class="fas fa-plus" />
-      </button>
-      <button @click="$emit('copy')">
-        <i class="fas fa-copy" />
-      </button>
+  <div class="content-bar">
+    <div class="native-items-folders-wrapper">
+      <h3>{{ t('customize-items') }}</h3>
+      <ExpandableFolderForType
+        v-for="type,i in nativeQuestionTypes"
+        :key="`folder-rows-${type}`"
+        :displayName="t(type.split('=')[1])"
+        :active="props.active"
+        :items="itemsForType(type)"
+        :show="typesToShow.includes(type)"
+        @toggle="toggleShowType(type)"
+        @remove="$emit('removeItem', $event)"
+        @active="$emit('active', $event)"
+      />
     </div>
-
-    <div v-for="type in types" :key="`type-${type}`">
-      <div
-        class="select-type-row"
-        @click="toggleShowType(type)"
-      >
-        <h4>
-          <i :class="{
-            'fas' : true,
-            'fa-folder-plus' : !typesToShow.includes(type),
-            'fa-folder-open' : typesToShow.includes(type)
-          }"
-        />
-          <span>{{ t(type.split('=')[1]) }}</span>
-        </h4>
-      </div>
-
-      <div
-        v-if="typesToShow.includes(type)"
-        v-for="item in itemsForType(type)"
-        :key="`item-${itemId}`"
-        :class="{
-          'item-choice' : true,
-          'active' : item === props.active
-        }"
-        @click="$emit('active', item)"
-      >
-        <Suspense>
-          <ItemName :id="item"
-            draggable="true"
-            style="cursor: grab;"
-            @dragstart="$event.dataTransfer.setData('text', item)"  
-          />
-        </Suspense>
-        <span
-          class="remove-symbol"
-          @click.stop="$emit('removeItem', item)"
-        >&#x2715;</span>
-      </div>
+    <div class="foreign-item-folder-wrapper">
+      <h3>{{ t('foreign-items') }}</h3>
+      <ExpandableFolderForType
+        v-for="type,i in foreignQuestionTypes"
+        :key="`folder-rows-${type}`"
+        :displayName="t(type.split('=')[1])"
+        :active="props.active"
+        :items="itemsForType(type)"
+        :show="typesToShow.includes(type)"
+        @toggle="toggleShowType(type)"
+        @remove="$emit('removeItem', $event)"
+        @active="store.dispatch('previewContent', $event)"
+      />
     </div>
   </div>
 </template>
 
-
 <script setup>
+import ExpandableFolderForType from './ExpandableFolderForType.vue'
 import ItemName from './ItemName.vue'
 import { ref, reactive, watch } from 'vue'
 import questionTypes from '../helpers/questionTypes.js'
+
 import { useStore } from 'vuex'
 const store = useStore()
 const t = slug => store.getters.t(slug)
 
-const types = Object.keys(questionTypes)
+const nativeQuestionTypes = Object.keys(questionTypes)
+const foreignQuestionTypes   = [ 'application/json;type=karel-task&version=1.0.1' ]
 
 const props = defineProps({
   items: {
@@ -70,7 +51,7 @@ const props = defineProps({
   },
   active: {
     type: [ String, null ],
-  required: true
+    required: true
   }
 })
 
@@ -114,44 +95,18 @@ function toggleShowType(type) {
 
 
 <style scoped>
-.button-area {
+.content-bar {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  flex-direction: column;
+  padding: 40px 0 20px 0;
 }
-.select-type-row {
-  user-select: none;
-  cursor: pointer;
-  margin: 16px 0 0 0;
-}
-.select-type-row h4 {
+.content-bar h3 {
+  border-bottom: 1px solid slategrey;
   margin: 0;
 }
-.select-type-row i {
-  margin-right: 8px;
-}
-.item-choice {
-  font-family: monospace;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.item-choice:hover {
-  background: rgba(255,255,0,0.1);
-}
-.item-choice.active {
-  background: rgba(255,255,0,0.33);
-}
-.item-choice .remove-symbol {
-  font-size: 1rem;
-  font-weight: bolder;
-  padding-right: 4px;
-  color: red;
-  cursor: pointer ;
-  opacity: 0.2;
-}
-.item-choice .remove-symbol:hover {
-  opacity: 1;
+.foreign-item-folder-wrapper {
+  margin-top: auto;
+  height: 160px;
 }
 </style>

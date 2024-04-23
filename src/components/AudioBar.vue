@@ -1,23 +1,26 @@
 <template>
-	<div class="audio-bar">
+	<div class="audio-bar" :style="vertical ? `flex-direction: column;` : ''">
 		<PickFileButton
 			fas-icon="fa-file-audio"
 			acceptType="audio/*"
 			@newFile="emits('change', $event)"
 		/>
 
-		<button
+		<v-btn
 			@click="toggleAudioPlayback"
+			size="small"
+			class="ma-2"
 			:disabled="!props.id"
-		>
-			<i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-		</button>
-		<button
+			:icon="audioPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-volume-up'"
+		/>
+		<v-btn
 			@click="deleteAudio"
+			size="small"
+			class="ma-2"
+			:color="props.id ? 'red' : ''"
 			:disabled="!props.id"
-		>
-			<i class="fas fa-trash"></i>
-		</button>
+			icon="fa-solid fa-trash"
+		/>
 	</div>
 
 </template>
@@ -32,6 +35,11 @@ const props = defineProps({
 	id: {
 		required: true,
 		type: [ String, null ]
+	},
+	vertical: {
+		type: Boolean,
+		required: false,
+		default: false
 	}
 })
 let audio = null
@@ -68,3 +76,11 @@ function deleteAudio() {
 }
 
 </script>
+
+<style scoped>
+.audio-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>

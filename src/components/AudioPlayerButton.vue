@@ -1,7 +1,10 @@
 <template>
-    <button @click="toggleAudioPlayback">
-        <i :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" />
-    </button>
+    <v-btn
+        @click="toggleAudioPlayback"
+        size="small"
+        class="ma-2"
+        :icon="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'"
+    />
 </template>
 
 <script setup>
