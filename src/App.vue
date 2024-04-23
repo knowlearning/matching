@@ -215,7 +215,17 @@
   background: #eee;
 }
 .right-col {
-    width: 100%;
-    flex-grow: 1;
+  width: 100%;
+  flex-grow: 1;
+}
+.right-col .header {
+  justify-content: flex-end;
+  align-items: center;
+  height: 52px;
+  display: flex;
+  background: rgb(43,46,211);
+}
+.right-col .right-inner {
+  height: 100%;
 }
 </style>
