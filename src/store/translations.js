@@ -234,5 +234,33 @@ export default {
   'login-page-text-pt-2' : {
     'en' : 'If your preferred login Service is not listed, feel free to request assistance at edu.pila@oecd.org',
     'th' : 'หากบริการเข้าสู่ระบบที่คุณต้องการไม่ได้รับการระบุ โปรดติดต่อขอความช่วยเหลือได้ที่ edu.pila@oecd.org'
-  }
+  },
+  'welcome-to-the-pila-customiser' : {
+    'en' : 'Welcome to the PILA Customiser',
+    'th' : 'ยินดีต้อนรับสู่ PILA Item Customiser'
+  },
+  'matching-description' : {
+    'en' : 'Learners match choices from two columns to answer a question. Choices can be images, text, or playable audio.',
+    'th' : 'ผู้เรียนจะจับคำตอบจากสองคอลัมน์เพื่อตอบคำถาม ตัวเลือกสามารถเป็นรูปภาพ ข้อความ หรือไฟล์เสียงที่สามารถเล่นได้'
+  },
+  'rearrange-items-description' : {
+    'en' : 'Learners are presented with items (images or text) that are \'out of order\' and move them into the correct order.',
+    'th' : 'ผู้เรียนจะได้รับรายการของสิ่งของ (รูปภาพหรือข้อความ) ที่ \'ไม่เรียงลำดับ\' และจะย้ายมันให้เรียงลำดับให้ถูกต้อง'
+  },
+  'select-from-pairs-description' : {
+    'en' : 'Students select from one of two choices, for example A or B, to answer a question. Choices can be text, image, or audio.',
+    'th' : 'นักเรียนจะเลือกจากหนึ่งในสองตัวเลือก เช่น A หรือ B เพื่อตอบคำถาม ตัวเลือกสามารถเป็นข้อความ รูปภาพ หรือเสียงได้'
+  },
+  'sequence-description' : {
+    'en' : 'Students play through a series of questions, one after the other, and receive feedback and a report of success along the way!',
+    'th' : 'นักเรียนจะเล่นผ่านชุดของคำถามต่อเนื่องกัน ต่อหนึ่งคำถามต่อหนึ่ง และได้รับข้อคิดเห็นและรายงานความสำเร็จขณะทาง!'
+  },
+  'see-example' : {
+    'en' : 'see example',
+    'th' : 'ดูตัวอย่าง'
+  },
+  'create-new' : {
+    'en' : 'create new',
+    'th' : 'สร้างใหม่'
+  },
 }
