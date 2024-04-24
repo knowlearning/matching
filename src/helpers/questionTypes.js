@@ -26,7 +26,8 @@ const questionTypes = {
 		newItemSchemas: {
 			default: copy(mjAndKobeMatching),
 			th: copy(mjAndKobeMatching)
-		}
+		},
+		sample: '0c014c40-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	// 'application/json;type=textEntry' : {
 	// 	    description: 'Text Entry Question',
@@ -54,7 +55,8 @@ const questionTypes = {
 		newItemSchemas: {
 			default: copy(butterflyOrdering),
 			th: copy(butterflyOrdering)
-		}
+		},
+		sample: '01fd0ef0-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=select-from-pairs' : {
 		description: 'select-from-pairs-question',
@@ -65,7 +67,8 @@ const questionTypes = {
 		newItemSchemas: {
 			default: copy(monumentPairs),
 			th: copy(monumentPairs)
-		}
+		},
+		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=sequence' : {
 		description: 'sequence-builder',
@@ -76,7 +79,8 @@ const questionTypes = {
 		newItemSchemas: {
 			default: copy(defaultSequence),
 			th: copy(defaultSequence)
-		}
+		},
+		sample: '92719c10-026b-11ef-8b1d-b914e5d38307'
 	},
 }
 
