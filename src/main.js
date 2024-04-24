@@ -35,6 +35,7 @@ const initialLoad = async () => {
     const { auth: { user, provider } } = await Agent.environment()
     if (provider === 'anonymous') {
         createApp(LoginPage)
+          .use(store)
           .use(vuetify)
           .mount('#app')
     } else {
