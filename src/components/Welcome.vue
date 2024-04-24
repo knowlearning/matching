@@ -23,7 +23,10 @@
               {{ t(type.split('=')[1] + '-description') }}
             </v-card-text>
             <v-card-actions class="justify-space-around">
-              <v-btn prepend-icon="fa-solid fa-eye">
+              <v-btn
+                @click="previewType(type)"
+                prepend-icon="fa-solid fa-eye"
+              >
                 {{ t('see-example') }}
               </v-btn>
               <v-btn
@@ -46,6 +49,11 @@ import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 const emit = defineEmits(['addNew'])
+
+function previewType(type) {
+  const idToPreview = questionTypes[type].sample
+  store.dispatch('previewContent', idToPreview)
+}
 
 </script> 
 
