@@ -18,7 +18,7 @@ const copy = x => JSON.parse(JSON.stringify(x))
 
 const questionTypes = {
 	'application/json;type=matching' : {
-		description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took ',
+		description: 'matching-question',
 		components: {
 			player: MatchingPlayer,
 			customizer: MatchingCustomizer
@@ -47,7 +47,7 @@ const questionTypes = {
 	// 	     }
 	// },
 	'application/json;type=rearrange-items' : {
-		description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took ',
+		description: 'rearrange-question',
 		components: {
 			player: RearrangePlayer,
 			customizer: RearrangeCustomizer
@@ -59,7 +59,7 @@ const questionTypes = {
 		sample: '01fd0ef0-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=select-from-pairs' : {
-		description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took ',
+		description: 'select-from-pairs-question',
 		components: {
 			player: SelectFromPairsPlayer,
 			customizer: SelectFromPairsCustomizer
@@ -71,7 +71,7 @@ const questionTypes = {
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=sequence' : {
-		description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took ',
+		description: 'sequence-builder',
 		components: {
 			player: SequencePlayer,
 			customizer: SequenceCustomizer
