@@ -45,7 +45,7 @@
 <script setup>
 
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { reactive, computed, onBeforeUnmount } from 'vue'
+import { reactive, computed, onBeforeUnmount, defineEmits } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
@@ -54,6 +54,8 @@ import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import { useStore } from 'vuex'
 const store = useStore()
 const t = slug =>store.getters.t(slug)
+
+const emits = defineEmits(['close'])
 
 const props = defineProps({
 	id : {
@@ -135,6 +137,7 @@ async function handleItemSubmit(i, { success }) {
 }
 function handleClose() {
 	Agent.close()
+	emits('close')
 }
 
 </script>

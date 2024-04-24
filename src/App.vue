@@ -11,6 +11,7 @@
             :key="`preview-${previewContent}`"
             :id="previewContent"
             mode="player"
+            @close="store.dispatch('previewContent', null)"
           />
         </Suspense>
       </template>

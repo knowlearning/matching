@@ -3,7 +3,7 @@
 		<div class="left">
 			<i
 				@click="$emit('close')"
-				class="exit fas fa-x"
+				class="exit fas fa-arrow-left"
 			/>	
 			<span>{{ sequenceName }}</span>
 		</div>
@@ -85,7 +85,6 @@ i {
 	transition: font-size 150ms;
 }
 i.exit {
-	color: orangered;
 	margin-right: 12px;
 }
 i.correct {
