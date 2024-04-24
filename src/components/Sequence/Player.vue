@@ -5,6 +5,7 @@
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
 			@select="data.activeItemIndex = $event"
+			@close="handleClose"
 		/>
 		<div
 			v-for="item,i in sequenceDef.items"

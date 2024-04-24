@@ -1,6 +1,12 @@
 <template>
 	<div class="sequence-header">
-		<div class="left"> {{ sequenceName }} </div>
+		<div class="left">
+			<i
+				@click="$emit('close')"
+				class="exit fas fa-x"
+			/>	
+			<span>{{ sequenceName }}</span>
+		</div>
 
 		<div class="middle">
 			<i
@@ -49,6 +55,7 @@ const numItems = computed(() => props.isCorrectArray.length)
 const numCorrect = computed(() =>  props.isCorrectArray.filter(x => x).length)
 const text = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numItems.value)}`)
 
+
 </script>
 
 
@@ -76,6 +83,10 @@ i {
 	cursor: pointer;
 	margin: 0 2px;
 	transition: font-size 150ms;
+}
+i.exit {
+	color: orangered;
+	margin-right: 12px;
 }
 i.correct {
 	color: limegreen;
