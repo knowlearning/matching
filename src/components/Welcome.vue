@@ -11,7 +11,10 @@
           v-for="type in Object.keys(questionTypes)"
           :key="`card-for-type-${type}`"
         >
-          <v-card style="margin: 8px auto; max-width: 400px;">
+          <v-card
+            elevation="6"
+            style="margin: 8px auto; max-width: 400px;"
+          >
             <template v-slot:title>
               <span class="font-weight-black">{{  t(type.split('=')[1]) }}</span>
             </template>

@@ -229,7 +229,7 @@ export default {
   },
   'login-page-text-pt-1' : {
     'en' : 'Welcome to the Authoring Tools Customizer powered by PILA!',
-    'th' : 'ยินดีต้อนรับสู่เครื่องมือปรับแต่งเขียนโดย PILA!'
+    'th' : 'ยินดีต้อนรับสู่การปรับแต่งไอเทมของ PILA'
   },
   'login-page-text-pt-2' : {
     'en' : 'If your preferred login Service is not listed, feel free to request assistance at edu.pila@oecd.org',
