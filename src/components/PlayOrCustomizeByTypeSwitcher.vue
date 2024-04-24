@@ -9,7 +9,6 @@
 
 <script setup>
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { defineEmits } from 'vue'
 import questionTypes from '../helpers/questionTypes.js'
 
 const emits = defineEmits(['close'])

@@ -45,7 +45,7 @@
 <script setup>
 
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { reactive, computed, onBeforeUnmount, defineEmits } from 'vue'
+import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'

@@ -15,7 +15,8 @@
 				@click="$emit('select',i)"
 				:class="{
 					'fas': true,
-					'fa-check-circle': true,
+					'fa-circle-check': isCorrect,
+					'fa-circle-minus': !isCorrect,
 					'correct': isCorrect,
 					'incorrect': isCorrect === false,
 					'active' : props.activeItemIndex === i
