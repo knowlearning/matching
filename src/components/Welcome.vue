@@ -1,22 +1,39 @@
 <template>
   <div class="welcome">
-    <div class="card-container">
-    <button 
-      v-for="(type, index) in Object.keys(questionTypes)"
-      :key="index"
-      class="button"
-      @click="emit('addNew', type)"
-      style="margin: 10px; padding: 10px; width: 200px; height: 200px;"
-    >
-    <span 
-    class="button-text"
-    style="justify-content: center;"
-    >
-    <span class="button-text">{{ questionTypes[type].description }}</span>
-    </span>
-    </button>
+    <h2>Welcome to the PILA Customiser</h2>
+
+    <v-container>
+      <v-row>
+        <v-col
+
+          cols="12"
+          sm="12" md="6" lg="6" 
+          v-for="type in Object.keys(questionTypes)"
+          :key="`card-for-type-${type}`"
+        >
+          <v-card style="margin: 8px 20px; max-width: 400px;">
+            <template v-slot:title>
+              <span class="font-weight-black">{{ type.split('=')[1] }}</span>
+            </template>
+
+            <v-card-text class="bg-surface-light pt-4">
+              {{ questionTypes[type].description}}
+            </v-card-text>
+            <v-card-actions class="justify-space-around">
+              <v-btn prepend-icon="fa-solid fa-eye">
+                see example
+              </v-btn>
+              <v-btn
+                @click="emit('addNew', type)"
+                prepend-icon="fa-solid fa-plus">
+                create new
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -27,13 +44,20 @@ const emit = defineEmits(['addNew'])
 </script> 
 
 <style scoped>
-.card-container {
+.welcome h2 {
+  margin-top: 30px;
+}
+
+.cards-container {
+  background: yellow;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   justify-content: center;
   margin-top: 20px;
 }
-
+.card { margin: 20px; }
+/*
 .button {
   margin: 10px;
   padding: 10px;
@@ -80,5 +104,5 @@ const emit = defineEmits(['addNew'])
 }
 .button:hover .button-text {
   color: #fff;
-}
+}*/
 </style>
