@@ -222,5 +222,17 @@ export default {
   'copied' : {
     'en' : 'Copied',
     'th' : 'คัดลอก'
+  },
+  'login-with-google' : {
+    'en' : 'LOGIN WITH GOOGLE',
+    'th' : 'เข้าสู่ระบบด้วย Google'
+  },
+  'login-page-text-pt-1' : {
+    'en' : 'Welcome to the Authoring Tools Customizer powered by PILA!',
+    'th' : 'ยินดีต้อนรับสู่เครื่องมือปรับแต่งเขียนโดย PILA!'
+  },
+  'login-page-text-pt-2' : {
+    'en' : 'If your preferred login Service is not listed, feel free to request assistance at edu.pila@oecd.org',
+    'th' : 'หากบริการเข้าสู่ระบบที่คุณต้องการไม่ได้รับการระบุ โปรดติดต่อขอความช่วยเหลือได้ที่ edu.pila@oecd.org'
   }
 }
