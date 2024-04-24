@@ -45,6 +45,7 @@ const emit = defineEmits(['addNew'])
   transition: transform 0.3s ease, background-color 0.3s ease;
   overflow: hidden;
   position: relative;
+  background-color: #3457D5; /* Değiştirilen kısım */
 }
 .button:active {
   transform: scale(0.95);
@@ -54,7 +55,7 @@ const emit = defineEmits(['addNew'])
 }
 .button:hover {
   transform: scale(1.05);
-  background-color: #e0e0e0;
+  background-color: #5673E0; /* Hoş bir geçiş yapması için biraz daha açık bir ton */
 }
 .button:before {
   content: '';
@@ -73,12 +74,10 @@ const emit = defineEmits(['addNew'])
 .button-text {
   position: relative;
   z-index: 1;
-  color: #333;
+  color: #fff; /* Yazı rengi beyaz olarak ayarlandı, daha belirgin olması için */
   font-size: 20px;
   text-align: center;
   transition: color 0.3s ease;
 }
-.button:hover .button-text {
-  color: #fff;
-}
 </style>
+

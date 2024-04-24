@@ -159,7 +159,7 @@ async function handleNewImage(i, id) {
   border-radius: 8px; 
   box-shadow: 0 0 10px rgba(33, 150, 243, 0.7); 
   transition: background-color 0.5s ease;
-  background-color: blue;
+  background-color: #3457D5;
 }
 .item-area .choice:first-child {
   border-right: 2px solid lightgrey;  
