@@ -71,8 +71,8 @@ const data = reactive({
 
 async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
-	const { active_type } = await Agent.metadata(attemptedId)
-	if (!active_type || !sequenceImportableTypes.includes(active_type)) {
+	const { active_type, domain } = await Agent.metadata(attemptedId)
+	if (domain !== 'embed.knowlearning.systems' && !sequenceImportableTypes.includes(active_type)) {
 		await unsupportedTypeSwal(attemptedId, active_type)
 	} else {
 		data.content.items.push({ id: attemptedId })		
