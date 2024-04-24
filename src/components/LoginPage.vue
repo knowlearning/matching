@@ -8,6 +8,7 @@
 				<div class="left-col-inner">
 					<div class="button-wrapper">
 						<v-btn
+							prepend-icon="fab fa-google"
 							@click="login"
 						>
 								<span>{{ t('login-with-google') }}</span>
