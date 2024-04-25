@@ -4,6 +4,7 @@
 			:sequenceName="sequenceDef.name"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
+			:showCorrectness="sequenceDef.showCorrectness"
 			@select="data.activeItemIndex = $event"
 		/>
 		<div
@@ -127,10 +128,10 @@ function previous() {
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
 async function handleItemSubmit(i, { success }) {
-	await itemFeedbackSwal(t, success)
+	if ( sequenceDef.showCorrectness ) await itemFeedbackSwal(t, success)
 	const key = `${i}/${sequenceDef.items[i].id}`
 	data.itemInfo[key].correct = success
-	if (success) next()
+	if (success || !sequenceDef.showCorrectness) next()
 }
 function handleClose() {
 	Agent.close()

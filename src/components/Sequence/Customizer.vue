@@ -12,9 +12,18 @@
 			hideInstructions
 			style="width: 420px;"
 		/>
-
+		
 		<div class="item-list-wrapper">
 			<h4>{{ t('drag-on-items-to-add') }}</h4>
+			<v-btn @click="data.content.showCorrectness = !data.content.showCorrectness" color="primary" size="x-small" class="ml-auto">
+				<v-icon>
+					<i :class="{
+						'fa-regular': true,
+						'fa-eye': data.content.showCorrectness,
+						'fa-eye-slash': !data.content.showCorrectness
+					}"/>
+				</v-icon>
+			</v-btn>
 			<div
 				v-for="({ id:item }, i) in data.content.items"
 				:key="item"
@@ -63,6 +72,7 @@ function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps(['id'])
 
+
 const state = await Agent.state(props.id)
 
 const data = reactive({
@@ -102,6 +112,7 @@ function moveItemDown(i) {
 	itemsCopy.splice(i+1,0,item) // same index bc next el shifted
 	data.content.items = itemsCopy
 }
+
 </script>
 
 <style scoped>

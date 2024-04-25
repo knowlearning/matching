@@ -10,13 +10,13 @@
 				:class="{
 					'fas': true,
 					'fa-check-circle': true,
-					'correct': isCorrect,
-					'incorrect': isCorrect === false,
+					'correct': props.showCorrectness && isCorrect,
+					'incorrect': props.showCorrectness && !isCorrect === false,
 					'active' : props.activeItemIndex === i
 				}"
 			/>
 		</div>
-		<div class="right">{{ text }}</div>		
+		<div class="right" v-show="props.showCorrectness">{{ text }}</div>		
 	</div>
 </template>
 
@@ -42,6 +42,11 @@ const props = defineProps({
   isCorrectArray: {
   	type: Array,
   	required: true
+  },
+  showCorrectness: {
+  	type: Boolean,
+  	required: false,
+  	default: true
   }
 })
 
