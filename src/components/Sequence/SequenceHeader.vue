@@ -11,7 +11,7 @@
 					'fas': true,
 					'fa-check-circle': true,
 					'correct': props.showCorrectness && isCorrect,
-					'incorrect': props.showCorrectness && !isCorrect === false,
+					'incorrect': props.showCorrectness && !isCorrect,
 					'active' : props.activeItemIndex === i
 				}"
 			/>
