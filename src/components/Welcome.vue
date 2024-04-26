@@ -21,7 +21,7 @@
 
             <v-card-text
               class="bg-surface-light pt-4"
-              style=" height: 80px; overflow-y: auto;"
+              style=" height: 100px; overflow-y: auto;"
             >
               {{ t(type.split('=')[1] + '-description') }}
             </v-card-text>

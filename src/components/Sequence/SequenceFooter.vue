@@ -64,6 +64,7 @@ const displayString = computed(() => {
 	grid-template-columns: 1fr 1fr 1fr;
 	height: 48px; /* so the font grow won't expand it */
 	font-size: 1.1rem;
+	overflow: hidden;
 }
 .left.pill-wrapper {
 	display: flex;

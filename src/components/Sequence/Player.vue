@@ -10,10 +10,11 @@
 		<div
 			v-for="item,i in sequenceDef.items"
 			:key="`play-item-${i}`"
-			v-show="i === data.activeItemIndex"
 			class="embedded-question-wrapper"
+			v-show="i === data.activeItemIndex"
 		>
 			<vueEmbedComponent
+				v-if="i === data.activeItemIndex"
 				style="position: absolute; top: 0; left: 0;"
 				:id="item.id"
 				@close="handleItemSubmit(i, $event)"
