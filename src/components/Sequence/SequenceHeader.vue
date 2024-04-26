@@ -5,7 +5,7 @@
 				@click="$emit('close')"
 				class="exit fas fa-arrow-left"
 			/>	
-			<span>{{ sequenceName }}</span>
+			<PossibleUUIDStringToTranslate :possibleUUIDString="sequenceName" />
 		</div>
 
 		<div class="middle">
@@ -29,6 +29,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import PossibleUUIDStringToTranslate from '../PossibleUUIDStringToTranslate.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()

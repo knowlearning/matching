@@ -15,7 +15,7 @@
 						/>
 					</td>
 					<td>
-						<vueScopeComponent :id="item.id" :path="['name']" />
+						<ItemName :id="item.id" />
 					</td>
 					<td>
 						<DisplayTime :time="props.timeOnTasks[i]" />
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { vueScopeComponent } from '@knowlearning/agents/vue.js'
+import ItemName from '../ItemName.vue'
 import DisplayTime from './DisplayTime.vue'
 
 import { useStore } from 'vuex'
