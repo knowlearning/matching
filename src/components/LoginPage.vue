@@ -9,9 +9,17 @@
 					<div class="button-wrapper">
 						<v-btn
 							prepend-icon="fab fa-google"
-							@click="login"
+							@click="login('google')"
 						>
 								<span>{{ t('login-with-google') }}</span>
+						</v-btn>
+					</div>
+					<div class="button-wrapper">
+						<v-btn
+							prepend-icon="fab fa-microsoft"
+							@click="login('microsoft')"
+						>
+								<span>{{ t('login-with-microsoft') }}</span>
 						</v-btn>
 					</div>
 					<img src="../assets/mascotte.png" alt="Google">
@@ -31,7 +39,7 @@
 	import { useStore } from 'vuex'
 	const store = useStore()
 	function t(slug) { return store.getters.t(slug) }
-	function login() { Agent.login() }
+	function login(provider) { Agent.login(provider) }
 </script>
 
 <style scoped>
@@ -69,6 +77,7 @@
 	align-items: center;
 }
 .left-col .button-wrapper {
+	margin: 8px;
 	width: 220px;
 }
 .right-col { align-items: flex-start; }
