@@ -226,7 +226,7 @@ export default {
   'login-with-microsoft' : {
     'en' : 'LOGIN WITH MICROSOFT',
     'th' : 'เข้าสู่ระบบด้วย Microsoft'
-  }
+  },
   'login-page-text-pt-1' : {
     'en' : 'Welcome to the PILA Create App!',
     'th' : 'ยินดีต้อนรับสู่แอป PILA สร้าง!'
