@@ -77,8 +77,12 @@ Agent
 	})
 
 function removeImage(id) {
-	data.value.content.images = data.value.content.images
-		.filter(obj => obj.id !== id)
+	const imageDataCopy = JSON.parse(JSON.stringify(imageData));
+	const index = imageDataCopy.findIndex(image => image.id === id);
+	imageDataCopy.splice(index, 1);
+
+	data.value.content.images = imageDataCopy;
+	imageData = imageDataCopy;
 }
 
 function onDragEnd(event) {
