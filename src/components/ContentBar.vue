@@ -14,20 +14,6 @@
         @active="$emit('active', $event)"
       />
     </div>
-    <div class="foreign-item-folder-wrapper">
-      <h3>{{ t('foreign-items') }}</h3>
-      <ExpandableFolderForType
-        v-for="type,i in foreignQuestionTypes"
-        :key="`folder-rows-${type}`"
-        :displayName="t(type.split('=')[1])"
-        :active="props.active"
-        :items="itemsForType(type)"
-        :show="typesToShow.includes(type)"
-        @toggle="toggleShowType(type)"
-        @remove="$emit('removeItem', $event)"
-        @active="store.dispatch('previewContent', $event)"
-      />
-    </div>
   </div>
 </template>
 
@@ -42,7 +28,6 @@ const store = useStore()
 const t = slug => store.getters.t(slug)
 
 const nativeQuestionTypes = Object.keys(questionTypes)
-const foreignQuestionTypes   = [ 'application/json;type=karel-task&version=1.0.1' ]
 
 const props = defineProps({
   items: {
@@ -112,9 +97,5 @@ function toggleShowType(type) {
 .content-bar h3 {
   border-bottom: 1px solid slategrey;
   margin: 0;
-}
-.foreign-item-folder-wrapper {
-  margin-top: auto;
-  height: 160px;
 }
 </style>

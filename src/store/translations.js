@@ -207,10 +207,6 @@ export default {
     'en' : 'CUSTOMISE ITEMS',
     'th' : 'ปรับแต่งสินค้า'
   },
-  'foreign-items' : {
-    'en' : 'FOREIGN ITEMS',
-    'th' : 'สินค้าต่างประเทศ'
-  },
   'logout' : {
     'en' : 'LOGOUT',
     'th' : 'ออก'
