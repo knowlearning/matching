@@ -223,9 +223,13 @@ export default {
     'en' : 'LOGIN WITH GOOGLE',
     'th' : 'เข้าสู่ระบบด้วย Google'
   },
+  'login-with-microsoft' : {
+    'en' : 'LOGIN WITH MICROSOFT',
+    'th' : 'เข้าสู่ระบบด้วย Microsoft'
+  }
   'login-page-text-pt-1' : {
-    'en' : 'Welcome to the Authoring Tools Customizer powered by PILA!',
-    'th' : 'ยินดีต้อนรับสู่การปรับแต่งไอเทมของ PILA'
+    'en' : 'Welcome to the PILA Create App!',
+    'th' : 'ยินดีต้อนรับสู่แอป PILA สร้าง!'
   },
   'login-page-text-pt-2' : {
     'en' : 'If your preferred login Service is not listed, feel free to request assistance at edu.pila@oecd.org',
