@@ -3,7 +3,9 @@
 		@click="uploadFile"
 		:size="props.size"
 		class="ma-2"
-		:icon="`fa-solid ${props.fasIcon}`"
+		:icon="props.text ? undefined : `fa-solid ${props.fasIcon}`"
+		:prepend-icon="props.text ? `fa-solid ${props.fasIcon}` : undefined"
+		:text="props.text"
 	/>
 </template>
 
@@ -33,6 +35,10 @@ const props = defineProps({
 		type: String,
 		required: false,
 		default: 'small'
+	},
+	text: {
+		type: String,
+		required: false
 	}
 })
 

@@ -45,6 +45,23 @@
 				/>
 			</div>
 		</div>
+		<div class="preview-image-section">
+			<KlImage
+				v-if="data.content?.image"
+				:id="data.content?.image"
+				:size="{ width: 'auto', height: '256px' }"
+			/>
+			<br>
+			<PickFileButton
+				fas-icon="fa-file-image"
+				acceptType="image/*"
+				@newFile="id => {
+					if (id) data.content.image = id
+					else delete data.content.image
+				}"
+				:text="t('upload-preview-image')"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -56,6 +73,8 @@ import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructio
 import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
 import { unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
+import KlImage from '../kl-image.vue'
+import PickFileButton from '../PickFileButton.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -139,5 +158,10 @@ function moveItemDown(i) {
 	display: flex;
     width: 100%;
     align-items: center;
+}
+.preview-image-section
+{
+	margin: 16px;
+	text-align: center;
 }
 </style>
