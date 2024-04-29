@@ -34,6 +34,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { validate as isUUID } from 'uuid'
+import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import Row from './RowSelection/Player.vue'
 import AudioPlayerButton from '../AudioPlayerButton.vue'
 import { useStore } from 'vuex'
@@ -48,10 +49,13 @@ const props = defineProps({
 const questionDef = await Agent.state(props.id)
 const rowsCorrect = reactive(questionDef.rows.map(r => false)) // init to array of false
 
-function handleSubmit() {
+async function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
-  if (Agent.embedded) Agent.close({ success: isCorrect })
-  else window.alert( isCorrect ? t('correct') : t('incorrect') )
+  if (Agent.embedded) {
+    Agent.close({ success: isCorrect })
+  } else {
+    await itemFeedbackSwal(t, isCorrect)
+  }
 }
 
 function wideItemArea() {
