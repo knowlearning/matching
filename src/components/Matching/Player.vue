@@ -27,8 +27,11 @@
   import { reactive } from 'vue'
   import MatchSvg from './MatchSvg/index.vue'
   import { sameConnection } from '../../helpers/mathHelpers.js'
+  import { itemFeedbackSwal } from '../../helpers/swallows.js'
   import { useStore } from 'vuex'
   
+
+
   const store = useStore()
   function t(slug) { return store.getters.t(slug) }
 
@@ -40,9 +43,12 @@
     studentConnections: [], // each connection is [ nodeId, nodeId ]
   })
 
-  function handleSubmit() {
-    if (Agent.embedded) Agent.close({ success: isCorrect() })
-    else window.alert( isCorrect() ? t('correct') : t('incorrect') )
+  async function handleSubmit() {
+    if (Agent.embedded) {
+      Agent.close({ success: isCorrect() })
+    } else {
+      await itemFeedbackSwal(t, isCorrect())
+    }
   }
 
   function isCorrect() {

@@ -48,6 +48,8 @@
 <script setup>
 import { ref } from 'vue'
 import draggable from 'vuedraggable'
+import { itemFeedbackSwal } from '../../helpers/swallows.js'
+
 import KlImage from '../kl-image.vue'
 
 import { useStore } from 'vuex'
@@ -114,14 +116,15 @@ if (Array.isArray(event.detail)) {
     console.error('Unexpected format for event detail:', event.detail);
 }}
 
-function handleSubmit() {
+async function handleSubmit() {
   const correctOrder = item.images.map(image => image.id)
   const submittedOrder = userOrderedImages.value.map(image => image.id)
   const isCorrect = JSON.stringify(correctOrder) === JSON.stringify(submittedOrder)
-
-  if (Agent.embedded) Agent.close({ success: isCorrect })
-  else alert( isCorrect ? t('correct') : t('incorrect') )
-
+  if (Agent.embedded) {
+    Agent.close({ success: isCorrect })
+  } else {
+    await itemFeedbackSwal(t, isCorrect)
+  }
 }
 
 function shuffleImages() {
