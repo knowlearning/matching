@@ -30,10 +30,12 @@
             @dragstart="$event.dataTransfer.setData('text', itemId)"  
           />
         </Suspense>
-        <span
+        <button
           class="remove-symbol"
           @click.stop="$emit('remove', itemId)"
-        >&#x2715;</span>
+        >
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
     </div>
 </template>
@@ -91,14 +93,16 @@ export default {
   background: rgba(255,255,0,0.33);
 }
 .item-choice .remove-symbol {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bolder;
   padding-right: 4px;
-  color: red;
-  cursor: pointer ;
-  opacity: 0.2;
+  color: #aaa;
+  opacity: 0.4;
+  cursor: pointer;
+
 }
 .item-choice .remove-symbol:hover {
-  opacity: 1;
+  opacity: 0.7;
+  color: red;
 }
 </style>
