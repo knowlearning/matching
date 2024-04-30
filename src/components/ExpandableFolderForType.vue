@@ -59,20 +59,10 @@ export default {
   },
   methods: {
     toggleShow() {
-      if (!this.show) {
-        this.$emit('closeOthers');
-      }
       this.$emit('toggle');
     }
-  },
-  watch: {
-    show(newValue) {
-      if (newValue) {
-        this.$emit('closeOthers');
-      }
-    }
   }
-}
+}      
 </script>
 
 <style scoped>
