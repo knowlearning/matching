@@ -96,11 +96,13 @@ export default {
   font-size: 0.9rem;
   font-weight: bolder;
   padding-right: 4px;
-  color: red;
-  cursor: pointer ;
-  opacity: 0.2;
+  color: #aaa;
+  opacity: 0.4;
+  cursor: pointer;
+
 }
 .item-choice .remove-symbol:hover {
-  opacity: 1;
+  opacity: 0.7;
+  color: red;
 }
 </style>
