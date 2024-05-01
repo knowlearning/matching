@@ -45,6 +45,7 @@ function copyText() {
 
 <style scoped>
 .absolute-preview-and-item-id {
+  pointer-events: none;
   position: absolute;
   top:0;
   left:0;
@@ -52,6 +53,7 @@ function copyText() {
   height: 100%;
 }
 button.preview-btn {
+  pointer-events: auto;
   position: absolute;
   top: 12px;
   left: 12px;
@@ -65,6 +67,7 @@ div.item-id-wrapper {
   font-style: italic;
 }
 .item-id {
+  pointer-events: auto;
   padding: 4px 10px;
   border-radius: 8px;  
 }

@@ -1,11 +1,6 @@
 <template>
 	<div class="sequence-customizer">
-		<AbsolutePreviewAndItemId
-			:id="props.id"
-			@dragover.prevent
-			@drag.prevent
-			@drop.prevent="handleDrop"
-		/>
+		<AbsolutePreviewAndItemId :id="props.id" />
 
 		<NameAndInstructions
 			:content="data.content"
@@ -13,7 +8,13 @@
 			style="width: 420px;"
 		/>
 
-		<div class="item-list-wrapper">
+		<div
+			class="item-list-wrapper"
+			@dragover.prevent
+			@drag.prevent
+			@drop.prevent="handleDrop"
+			@click.shift="handleHideShowImageArea"
+		>
 			<h4>{{ t('drag-on-items-to-add') }}</h4>
 			<div
 				v-for="({ id:item }, i) in data.content.items"
@@ -45,34 +46,24 @@
 				/>
 			</div>
 		</div>
-		<div class="preview-image-section">
-			<KlImage
-				v-if="data.content?.image"
-				:id="data.content?.image"
-				:size="{ width: 'auto', height: '256px' }"
-			/>
-			<br>
-			<PickFileButton
-				fas-icon="fa-file-image"
-				acceptType="image/*"
-				@newFile="id => {
-					if (id) data.content.image = id
-					else delete data.content.image
-				}"
-				:text="t('upload-preview-image')"
+		<div class="preview-image-section" v-if="showImageArea">
+			<SelectImage
+				:active="data.content.image"
+				@select="data.content.image = $event"
 			/>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 
 import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
 import { unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
+import SelectImage from './SelectImage.vue'
 import KlImage from '../kl-image.vue'
 import PickFileButton from '../PickFileButton.vue'
 
@@ -83,6 +74,8 @@ function t(slug) { return store.getters.t(slug) }
 const props = defineProps(['id'])
 
 const state = await Agent.state(props.id)
+
+let showImageArea = ref(false)
 
 const data = reactive({
 	content: state
@@ -121,6 +114,12 @@ function moveItemDown(i) {
 	itemsCopy.splice(i+1,0,item) // same index bc next el shifted
 	data.content.items = itemsCopy
 }
+function handleHideShowImageArea({ offsetX, offsetY }) {
+	if (offsetX < 20 && offsetY < 20) {
+		showImageArea.value = !showImageArea.value	
+	}
+}
+
 </script>
 
 <style scoped>
@@ -161,6 +160,10 @@ function moveItemDown(i) {
 }
 .preview-image-section
 {
+	min-width: 40px;
+	min-height: 40px;
+	background: antiquewhite;
+	border-radius: 12px;
 	margin: 16px;
 	text-align: center;
 }
