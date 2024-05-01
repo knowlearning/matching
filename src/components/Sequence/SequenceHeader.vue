@@ -5,7 +5,7 @@
 				@click="$emit('close')"
 				class="exit fas fa-arrow-left"
 			/>	
-			<PossibleUUIDStringToTranslate :possibleUUIDString="sequenceName" />
+			<NameOrTranslatedNameFromItemId :itemId="sequenceId" />
 		</div>
 
 		<div class="middle">
@@ -29,7 +29,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import PossibleUUIDStringToTranslate from '../PossibleUUIDStringToTranslate.vue'
+import NameOrTranslatedNameFromItemId from '../NameOrTranslatedNameFromItemId.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -42,10 +42,9 @@ const props = defineProps({
 		type: [ Number, null ],
 		required: true
 	},
-  sequenceName: {
+  sequenceId: {
     type: String,
     required: true,
-    default: 'Missing Sequence Name'
   },
   isCorrectArray: {
   	type: Array,

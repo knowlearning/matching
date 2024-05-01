@@ -1,7 +1,7 @@
 <template>
 	<div class="sequence-player">
 		<SequenceHeader class="header"
-			:sequenceName="sequenceDef.name"
+			:sequenceId="props.id"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
 			@select="data.activeItemIndex = $event"
