@@ -263,4 +263,8 @@ export default {
     'en' : 'create new',
     'th' : 'สร้างใหม่'
   },
+  'upload-preview-image' : {
+    'en' : 'Upload Preview Image',
+    'th' : 'อัปโหลดรูปภาพตัวอย่าง'
+  },
 }
