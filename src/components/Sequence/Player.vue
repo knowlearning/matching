@@ -18,7 +18,12 @@
 				style="position: absolute; top: 0; left: 0;"
 				:id="item.id"
 				@close="handleItemSubmit(i, $event)"
-				:namespace="`sequence-${id}-item-${i}`"
+				:namespace="{
+					prefix: `sequence-${id}-item-${i}`,
+					allow: [
+						'pila/competencies'
+					]
+				}"
 			/>
 		</div>
 
