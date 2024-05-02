@@ -24,20 +24,25 @@
             >
         </div>
         <div class="content">
-        <draggable v-model="userOrderedImages" @end="onDragEnd" item-key="id">
-            <template #item="{ element }">
-                <div class="image-row">
-                    <div class="image-and-buttons">
-                        <KlImage 
-                        :id="element.id" 
-                        alt="Placeholder Alt Text" 
-                        cssClass="placeholder-css-class" 
-                        class="choice" />
+            <draggable
+                :class="{ 'layout-horizontal' : props.layoutHorizontal }"
+                v-model="userOrderedImages"
+                @end="onDragEnd"
+                item-key="id"
+            >
+                <template #item="{ element }">
+                    <div class="image-row">
+                        <div class="image-and-buttons">
+                            <KlImage 
+                            :id="element.id" 
+                            alt="Placeholder Alt Text" 
+                            cssClass="placeholder-css-class" 
+                            class="choice" />
+                        </div>
                     </div>
-                </div>
-            </template>
-        </draggable>
-      </div>
+                </template>
+            </draggable>
+        </div>
     </div>
     <v-btn color="green" @click="handleSubmit">
         {{ t('submit') }}
@@ -56,7 +61,18 @@ import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
-const props = defineProps(['id'])
+const props = defineProps({
+    id: {
+        type: String,
+        required: true
+    },
+    layoutHorizontal: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
+})
+
 const item = await Agent.state(props.id)
 
 const userOrderedImages = ref(item.images)
@@ -160,5 +176,11 @@ function shuffleImages() {
     flex-direction: column;
     align-items: center;
 }
+.layout-horizontal {
+    display: flex;
+    flex-direction: row;
+}
+.layout-horizontal > * { margin: 0px 4px 16px 4px; }
+
 
 </style>
