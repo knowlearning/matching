@@ -90,18 +90,15 @@ function findHighestSvg(element) {
 }
 
 export function getSvgCoordinatesFromEvent(e) {
-  // Get the target SVG element
-  var svgElement = findHighestSvg(e.target)
+  const svgElement = findHighestSvg(e.target)
 
-  // Create an SVGPoint representing the pointer coordinates
-  var point = svgElement.createSVGPoint();
-  point.x = e.clientX;
-  point.y = e.clientY;
+  const point = svgElement.createSVGPoint()
 
-  // Apply the transformation from screen coordinates to SVG coordinates
+  point.x = (e.touches?.[0] || e.changedTouches?.[0] || e).clientX
+  point.y = (e.touches?.[0] || e.changedTouches?.[0] || e).clientY
+
   var svgPoint = point.matrixTransform(svgElement.getScreenCTM().inverse());
 
-  // Return the SVG coordinates
   return { x: svgPoint.x, y: svgPoint.y };
 }
 

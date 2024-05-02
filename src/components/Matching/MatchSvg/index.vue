@@ -8,9 +8,9 @@
       @mousemove.prevent="handleMove"
       @touchmove.prevent="handleMove"
       @mousedown="handleDown"
-      @touchdown="handleDown"
+      @touchstart="handleDown"
       @mouseup="handleUp"
-      @touchup="handleUp"
+      @touchend="handleUp"
       :style="{
         width: `${width}px`,
         height: `${height}px`,
