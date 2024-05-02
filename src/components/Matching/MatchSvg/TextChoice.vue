@@ -15,7 +15,7 @@
       class="text-choice"
       pointer-events="none"
     >
-      <div style="position: relative;">
+      <div style="position: fixed;">
           <span>{{ content }}</span>
           <i
             v-if="playable"
