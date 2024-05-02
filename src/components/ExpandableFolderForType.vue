@@ -21,14 +21,13 @@
           'item-choice' : true,
           'active' : itemId === active
         }"
-        @click="$emit('active', itemId)"
+        @click.stop="$emit('active', itemId)"
+        draggable="true"
+        style="cursor: grab;"
+        @dragstart="$event.dataTransfer.setData('text', itemId)"
       >
         <Suspense>
-          <ItemName :id="itemId"
-            draggable="true"
-            style="cursor: grab;"
-            @dragstart="$event.dataTransfer.setData('text', itemId)"  
-          />
+          <ItemName :id="itemId" />
         </Suspense>
         <button
           class="remove-symbol"

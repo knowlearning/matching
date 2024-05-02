@@ -43,7 +43,7 @@
           :items="data.content"
           :active="data.active"
           @removeItem="removeItem"
-          @active="data.active = (data.active === $event ? null : $event)"
+          @active="data.active = $event"
         />
       </Suspense>
       <div v-if="!data.content">Loading...</div>

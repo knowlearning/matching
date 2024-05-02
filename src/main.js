@@ -18,8 +18,11 @@ import { aliases, fa } from 'vuetify/iconsets/fa'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+import polyfillDragAndDrop from './dragDropTouch.js'
+
 window.Agent = Agent
 
+if (!Agent.embedded) polyfillDragAndDrop()
 
 const vuetify = createVuetify({
   components,
