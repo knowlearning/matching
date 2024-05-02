@@ -73,6 +73,7 @@ export function chooseTypeSwal(t) {
 	return Swal.fire({
 		title: t('select-question-type'),
 		input: 'select',
+		inputPlaceholder: t('select-question-type').toLowerCase(),
 		inputOptions: Object.entries(questionTypes)
 			.reduce(
 				(acc, [key, val]) => ({ ...acc, [key] : t(val.description) }),
