@@ -23,22 +23,42 @@
 
 		<div class="right-col">
 			<draggable
-				v-model="data.content.images"
+				class="draggable"
+				v-model="butterflyImages1"
 				group="images"
 				@end="onDragEnd"
 				item-key="imageUrl"
 			>
+
 				<template #item="{ element }">
-					<div class="image-row">
-						<div class="image-and-buttons">
-							<button @click="removeImage(element.id)">
-								<i class="fas fa-trash" />
-							</button>
-							<klImage
-								:id="element.id"
-								class="choice"
-							/>
-						</div>
+					<div class="image-and-buttons">
+						<button @click="removeImage(element.id)">
+							<i class="fas fa-trash" />
+						</button>
+						<klImage
+							:id="element.id"
+							class="choice"
+						/>
+					</div>
+				</template>
+			</draggable>
+			<draggable
+				class="draggable"
+				v-model="butterflyImages2"
+				group="images"
+				@end="onDragEnd"
+				item-key="imageUrl"
+			>
+
+				<template #item="{ element }">
+					<div class="image-and-buttons">
+						<button @click="removeImage(element.id)">
+							<i class="fas fa-trash" />
+						</button>
+						<klImage
+							:id="element.id"
+							class="choice"
+						/>
 					</div>
 				</template>
 			</draggable>
@@ -65,6 +85,39 @@ const props = defineProps(['id'])
 const data = ref({ content: null })
 let imageData = []
 
+
+const butterflyImages1 = [
+    {
+        "id": "9c9058e0-f8ec-11ee-95b9-47b383c910e1"
+    },
+    {
+        "id": "e6e76a00-f8ec-11ee-95b9-47b383c910e1"
+    },
+    {
+        "id": "39d545c0-f8ed-11ee-95b9-47b383c910e1"
+    },
+    {
+        "id": "4dd57870-f8ec-11ee-8881-b3d50f9242a3"
+    }
+]
+
+const butterflyImages2 = [
+    {
+        "id": "9c9058e0-f8ec-11ee-95b9-47b383c910e1"
+    },
+    {
+        "id": "e6e76a00-f8ec-11ee-95b9-47b383c910e1"
+    },
+    {
+        "id": "39d545c0-f8ed-11ee-95b9-47b383c910e1"
+    },
+    {
+        "id": "4dd57870-f8ec-11ee-8881-b3d50f9242a3"
+    }
+]
+
+
+
 Agent
 	.state(props.id)
 	.then(state => {
@@ -86,6 +139,7 @@ function removeImage(id) {
 }
 
 function onDragEnd(event) {
+	console.log(event)
     const imageDataCopy = JSON.parse(JSON.stringify(imageData));
     const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
     imageDataCopy.splice(event.newIndex, 0, draggedElement);
@@ -96,9 +150,24 @@ function onDragEnd(event) {
 
 </script>
 
+
+
+
 <style scoped>
+@media (width <= 820px) {
+  .rearrange-customizer {
+  	flex-direction: column;
+  	align-items: center;
+  }
+  .draggable {
+  	display: inline-block;
+  }
+}
+
+
 .rearrange-customizer {
 	display: flex;
+	
 	justify-content: space-around;
 	position: relative;
 	height: 100%;
@@ -110,15 +179,10 @@ function onDragEnd(event) {
 .rearrange-customizer .left-col {
 	margin-top: 52px;
 }
-
-.image-row {
-	display: flex;
-	align-items: center;
-	margin-bottom: 10px;
-}
 .image-and-buttons {
 	background: antiquewhite;
 	padding: 20px;
+	margin: 8px;
 	border-radius: 12px;
 	display: flex;
 	align-items: center;

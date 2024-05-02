@@ -5,9 +5,12 @@
       :class="{
         pointer: !!hoverNode
       }"
-      @mousemove="handleMousemove"
-      @mousedown="handleMousedown"
-      @mouseup="handleMouseup"
+      @mousemove="handleMove"
+      @mousedown="handleDown"
+      @mouseup="handleUp"
+      @touchmove="handleMove"
+    	@touchstart="handleDown"
+    	@touchend="handleUp"
       :style="{
         width: `${width}px`,
         height: `${height}px`,
@@ -214,7 +217,7 @@ export default {
 			else if (choice.type === 'audio') return AudioChoice
 			else return undefined
   	},
-		handleMousedown(e) {
+		handleDown(e) {
 			const pos = getSvgCoordinatesFromEvent(e)
 			const node = getClosestNodeWithinTolerance(pos, this.tolerance, this.nodes)
 			const closeSegmentIndex = getClosestSegmentWitinToleranceIndex(pos, this.tolerance, this.segments)
@@ -236,7 +239,7 @@ export default {
 			this.$emit('updateConnections', newConnections)
 			this.selectedConnectionIndex = null
 		},
-		handleMouseup(e) {
+		handleUp(e) {
 			if (!this.workingLine) return // ensure in "draw" mode
 
 			const pos = getSvgCoordinatesFromEvent(e)
@@ -249,7 +252,9 @@ export default {
 			this.workingLine = null
 			this.workingStartNode = null
 		},
-		handleMousemove(e) {
+		handleMove(e) {
+			e.preventDefault()
+
 			this.hoverNode = null
 			const pos = getSvgCoordinatesFromEvent(e)
 			const node = getClosestNodeWithinTolerance(pos, this.tolerance, this.nodes)
