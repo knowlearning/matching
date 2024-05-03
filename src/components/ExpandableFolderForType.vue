@@ -15,7 +15,11 @@
         </h4>
       </div>
       <div v-if="show"
-        v-for="itemId in items"
+      class="item-list"
+      v-bind:style="{ maxHeight: '200px', overflowY: 'auto' }"
+      >
+      <div
+        v-for="(itemId, index) in items"
         :key="`item-${itemId}`"
         :class="{
           'item-choice' : true,
@@ -27,7 +31,10 @@
         @dragstart="$event.dataTransfer.setData('text', itemId)"
       >
         <Suspense>
-          <ItemName :id="itemId" />
+          <div class="item-content">
+            <span>{{ index + 1}}) </span>
+            <ItemName :id="itemId" />
+          </div>
         </Suspense>
         <button
           class="remove-symbol"
@@ -37,6 +44,7 @@
         </button>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
