@@ -136,7 +136,8 @@ function previous() {
 	if (i === null) data.activeItemIndex = sequenceDef.items.length - 1
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
-async function handleItemSubmit(i, { success }) {
+async function handleItemSubmit(i, info={}) {
+  const { success=null } = info
 	await itemFeedbackSwal(t, success)
 	const key = `${i}/${sequenceDef.items[i].id}`
 	data.itemInfo[key].correct = success
