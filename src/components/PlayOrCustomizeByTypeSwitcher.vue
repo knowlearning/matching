@@ -4,7 +4,10 @@
     :id="props.id"
     @close="emits('close')"
   />
-  <vueEmbedComponent v-else :id="props.id" />
+  <vueEmbedComponent
+    v-else :id="props.id"
+    allow="camera;microphone;fullscreen"
+  />
 </template>
 
 <script setup>

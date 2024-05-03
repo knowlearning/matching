@@ -24,6 +24,7 @@
 						'pila/competencies'
 					]
 				}"
+				allow="camera;microphone;fullscreen"
 			/>
 		</div>
 
