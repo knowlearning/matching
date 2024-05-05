@@ -36,6 +36,9 @@ function hasThaiCharacters(text) {
 
 export default {
   name: 'text-choice',
+  mounted() {
+    window.speechSynthesis.getVoices() // annoying, but otherwise doesn't work on first play below
+  },
   props: {
     content: { // text string
       type: String,
@@ -49,7 +52,17 @@ export default {
   methods: {
     playText() {
       const utterance = new SpeechSynthesisUtterance(this.content)
-      if (hasThaiCharacters(this.content)) utterance.lang = "th-TH"
+
+      utterance.rate = 0.9
+
+      if (hasThaiCharacters(this.content)) {
+        utterance.lang = "th-TH"
+      }  else {
+        const voices = window.speechSynthesis.getVoices()
+        const newVoice = voices.find(v => v.name === 'Arthur')
+        if (newVoice) utterance.voice = newVoice
+      }
+
       window.speechSynthesis.speak(utterance);
     }
   }
