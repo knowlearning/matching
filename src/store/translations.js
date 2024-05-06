@@ -267,4 +267,8 @@ export default {
     'en' : 'Upload Preview Image',
     'th' : 'อัปโหลดรูปภาพตัวอย่าง'
   },
+  'add-row' : {
+    'en' : 'Add Row',
+    'th' : 'เพิ่มแถว'
+  },
 }

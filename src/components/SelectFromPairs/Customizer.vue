@@ -14,7 +14,7 @@
 				size="small"
 				append-icon="fa-solid fa-plus"
 			>
-				<span>Add Row</span>
+				<span>{{ t('add-row') }}</span>
 			</v-btn>
 			<AudioBar
 				:id="data.content.audioId"
