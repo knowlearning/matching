@@ -1,5 +1,5 @@
 <template>
-	<div class="expandable-folder-for-type">
+	<div class="expandable-folder-for-type" style="max-height: 100vh;">
       <div
         class="select-type-row"
         @click="$emit('toggle')"
@@ -16,7 +16,7 @@
       </div>
       <div v-if="show"
       class="item-list"
-      v-bind:style="{ maxHeight: '200px', overflowY: 'auto' }"
+      style="max-height:20vh; overflow-y: auto;"
       >
       <div
         v-for="(itemId, index) in items"
