@@ -1,7 +1,7 @@
 <template>
   <div class="content-bar">
-    <div class="native-items-folders-wrapper">
-      <h3>{{ t('customize-items') }}</h3>
+    <h3>{{ t('customize-items') }}</h3>
+    <div class="native-items-folders-wrapper"> 
       <ExpandableFolderForType
         v-for="type,i in nativeQuestionTypes"
         :key="`folder-rows-${type}`"
@@ -92,10 +92,13 @@ function toggleShowType(type) {
   display: flex;
   height: 100%;
   flex-direction: column;
-  padding: 40px 0 20px 0;
+  padding-top: 30px;
 }
 .content-bar h3 {
   border-bottom: 1px solid slategrey;
   margin: 0;
+}
+.native-items-folders-wrapper {
+  overflow-y: scroll;
 }
 </style>

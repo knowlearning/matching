@@ -187,7 +187,8 @@
 .left-col, .right-col {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
+  overflow: scroll;
 }
 .left-col {
   padding: 0 12px;
