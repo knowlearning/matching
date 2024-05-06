@@ -1,5 +1,5 @@
 <template>
-  <div class="expandable-folder-for-type" style="max-height: 100vh;">
+  <div class="expandable-folder-for-type">
       <div
         class="select-type-row"
         @click="$emit('toggle')"
