@@ -1,5 +1,5 @@
 <template>
-	<div class="expandable-folder-for-type" style="max-height: 100vh;">
+  <div class="expandable-folder-for-type" style="max-height: 100vh;">
       <div
         class="select-type-row"
         @click="$emit('toggle')"
@@ -14,35 +14,33 @@
           <span>{{ displayName }}</span>
         </h4>
       </div>
-      <div v-if="show"
-      class="item-list"
-      style="max-height:20vh; overflow-y: auto;"
-      >
-      <div
-        v-for="(itemId, index) in items"
-        :key="`item-${itemId}`"
-        :class="{
-          'item-choice' : true,
-          'active' : itemId === active
-        }"
-        @click.stop="$emit('active', itemId)"
-        draggable="true"
-        style="cursor: grab;"
-        @dragstart="$event.dataTransfer.setData('text', itemId)"
-      >
-        <Suspense>
-          <div class="item-content">
-            <span>{{ index + 1}}) </span>
-            <ItemName :id="itemId" />
-          </div>
-        </Suspense>
-        <button
-          class="remove-symbol"
-          @click.stop="$emit('remove', itemId)"
+
+      <div v-if="show" class="item-list">
+        <div
+          v-for="(itemId, index) in items"
+          :key="`item-${itemId}`"
+          :class="{
+            'item-choice' : true,
+            'active' : itemId === active
+          }"
+          @click.stop="$emit('active', itemId)"
+          draggable="true"
+          style="cursor: grab;"
+          @dragstart="$event.dataTransfer.setData('text', itemId)"
         >
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
+          <Suspense>
+            <div class="item-content">
+              <span>{{ index + 1}}) </span>
+              <ItemName :id="itemId" />
+            </div>
+          </Suspense>
+          <button
+            class="remove-symbol"
+            @click.stop="$emit('remove', itemId)"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
     </div>
   </div>
 </template>
