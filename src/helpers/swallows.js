@@ -102,3 +102,7 @@ export function copyItemSwal(t) {
 		}
 	})
 }
+
+export function alertTextSwal(text) {
+	return Swal.fire({text})
+}

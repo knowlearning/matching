@@ -36,7 +36,10 @@
 					@click="moveItemDown(i)"
 				/>
 				<span>{{ i + 1 }}. </span>
-				<ItemName :id="item" />
+				<ItemName
+					:id="item"
+					@click.shift="alertText(item)"
+				/>
 				<v-btn
 					icon="fa-solid fa-remove"
 					color="red"
@@ -61,7 +64,11 @@ import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePrev
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 
 import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
-import { unsupportedTypeSwal, areYouSureSwal } from '../../helpers/swallows.js'
+import {
+	unsupportedTypeSwal,
+	areYouSureSwal,
+	alertTextSwal
+} from '../../helpers/swallows.js'
 import ItemName from '../ItemName.vue'
 import SelectImage from './SelectImage.vue'
 import KlImage from '../kl-image.vue'
@@ -118,6 +125,9 @@ function handleHideShowImageArea({ offsetX, offsetY }) {
 	if (offsetX < 20 && offsetY < 20) {
 		showImageArea.value = !showImageArea.value	
 	}
+}
+async function alertText(text) {
+	await alertTextSwal(text)
 }
 
 </script>
