@@ -2,6 +2,7 @@
 	<div class="sequence-footer">
 		<div class="left pill-wrapper">
 			<ProgressPill
+				v-if="props.showAttemptedPill"
 				:numItems="numberItems"
 				:numAttempted="numberSubmitted"
 				:textPrefix="t('attempted')"
@@ -31,18 +32,23 @@ function t(slug) { return store.getters.t(slug) }
 function o(x) { return x<10 ? '0'+x : ''+x }
 
 const props = defineProps({
-  activeItemIndex: {
-    required: true,
-    type: [Number, null],
-  },
-  isCorrectArray: {
-    type: Array,
-    required: true
-  },
-  time: {
-  	type: Number,
-  	required: true
-  }
+	activeItemIndex: {
+		required: true,
+		type: [Number, null],
+	},
+	isCorrectArray: {
+		type: Array,
+		required: true
+	},
+	time: {
+		type: Number,
+		required: true
+	},
+	showAttemptedPill: {
+		type: Boolean,
+		required: false,
+		default: false
+	}
 })
 
 const numberItems = computed(() => props.isCorrectArray.length)
@@ -50,11 +56,11 @@ const numberSubmitted = computed(() => props.isCorrectArray.filter(x => x !== nu
 const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length)
 const percentage = computed(() => numberSubmitted.value / numberItems.value)
 const displayString = computed(() => {
-  if (props.activeItemIndex === null) return t('summary')
+	if (props.activeItemIndex === null) return t('summary')
 
-  const oneIndexed = o(props.activeItemIndex + 1)
-  const nItems = o(numberItems.value)
-  return oneIndexed + ' / ' + nItems
+	const oneIndexed = o(props.activeItemIndex + 1)
+	const nItems = o(numberItems.value)
+	return oneIndexed + ' / ' + nItems
 })
 </script>
 
@@ -90,17 +96,17 @@ const displayString = computed(() => {
 	font-size: 1rem;
 }
 button {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  margin: 0 6px;
-  font-size: 48px;
-  cursor: pointer;
-  color: inherit;
-  text-decoration: none;
-  transition: font-size 0.3s ease;
-  width: 30px;
-  transform: translateY(-5px);
+	background-color: transparent;
+	border: none;
+	padding: 0;
+	margin: 0 6px;
+	font-size: 48px;
+	cursor: pointer;
+	color: inherit;
+	text-decoration: none;
+	transition: font-size 0.3s ease;
+	width: 30px;
+	transform: translateY(-5px);
 }
 button:hover {
   font-size: 66px;
