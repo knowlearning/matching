@@ -1,7 +1,7 @@
 <template>
 	<div class="end-sequence-summary">
 
-		<table>
+		<table style="color: #444444;"><!-- see https://github.com/pila-project/pila-platform/issues/130 -->
 			<tbody>
 				<tr
 					v-for="item, i in props.sequenceDef.items"
