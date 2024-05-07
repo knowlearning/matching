@@ -11,8 +11,8 @@ export default {
     'en' : 'Player',
     'th' : 'ผู้เล่น'
   },
-  'customizer': {
-    'en' : 'Customizer',
+  'customiser': {
+    'en' : 'Customiser',
     'th' : 'ปรับแต่ง'
   },
   'add-new': {
@@ -185,19 +185,19 @@ export default {
   },
   'matching' : {
     'en' : 'MATCHING',
-    'th' : 'การจับคู่'
+    'th' : 'โยงเส้นจับ'
   },
   'rearrange-items' : {
     'en' : 'ORDER ITEMS',
-    'th' : 'รายการสั่งซื้อ'
+    'th' : 'เรียง'
   },
   'select-from-pairs' : {
     'en' : 'SELECT FROM PAIRS',
-    'th' : 'เลือกจากคู่'
+    'th' : 'เลือกคำตอบที่ถูกต้อง'
   },
   'sequence' : {
     'en' : 'SEQUENCE',
-    'th' : 'ลำดับ'
+    'th' : 'เลือกคำตอบที่ถูกต้อง'
   },
   'karel-task&version' : {
     'en' : 'KAREL TASKS',
@@ -205,7 +205,7 @@ export default {
   },
   'customize-items' : {
     'en' : 'CUSTOMISE ITEMS',
-    'th' : 'ปรับแต่งสินค้า'
+    'th' : 'ออกแบบการ'
   },
   'logout' : {
     'en' : 'LOGOUT',
