@@ -13,6 +13,16 @@ function itemCorrectSwal(t) {
 	})
 }
 
+export function itemCompetencySwal(t, competencies) {
+	// TODO: calculate success as outlined here: https://github.com/pila-project/pila-platform/issues/113
+	//       recommended styles linked there: https://github.com/pila-project/pila-competency-dashboard/blob/main/src/components/SuccessBox.vue
+	return Swal.fire({
+		icon: 'success',
+		text: JSON.stringify(competencies),
+		confirmButtonText: t('next')
+	})
+}
+
 function itemIncorrectSwal(t) {
 	return Swal.fire({
 		icon: 'warning',

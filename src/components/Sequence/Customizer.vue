@@ -75,6 +75,12 @@ import KlImage from '../kl-image.vue'
 import PickFileButton from '../PickFileButton.vue'
 
 import { useStore } from 'vuex'
+
+const EMBED_DOMAINS = [
+	'localhost:5113',
+	'embed.knowlearning.systems'
+]
+
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
@@ -91,7 +97,7 @@ const data = reactive({
 async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
 	const { active_type, domain } = await Agent.metadata(attemptedId)
-	if (domain !== 'embed.knowlearning.systems' && !sequenceImportableTypes.includes(active_type)) {
+	if (!EMBED_DOMAINS.includes(domain) && !sequenceImportableTypes.includes(active_type)) {
 		await unsupportedTypeSwal(attemptedId, active_type)
 	} else {
 		data.content.items.push({ id: attemptedId })		

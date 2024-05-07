@@ -56,7 +56,7 @@ import { reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
-import { itemFeedbackSwal } from '../../helpers/swallows.js'
+import { itemFeedbackSwal, itemCompetencySwal } from '../../helpers/swallows.js'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -137,11 +137,20 @@ function previous() {
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
 async function handleItemSubmit(i, info={}) {
-  const { success=null } = info
-	await itemFeedbackSwal(t, success)
-	const key = `${i}/${sequenceDef.items[i].id}`
-	data.itemInfo[key].correct = success
-	if (success) next()
+	const { success=null } = info
+	//  TODO: if info includes competency info, render the competency dashboard instead
+	if (info.competencies) {
+		const moveOn = await itemCompetencySwal(t, info.competencies)
+		//  TODO: compute correctness based on competencies
+		data.itemInfo[key].correct = null
+		if (moveOn) next()
+	}
+	else {
+		await itemFeedbackSwal(t, success)
+		const key = `${i}/${sequenceDef.items[i].id}`
+		data.itemInfo[key].correct = success
+		if (success) next()
+	}
 }
 function handleClose() {
 	Agent.close()
