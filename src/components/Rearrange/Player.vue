@@ -146,25 +146,19 @@ async function handleSubmit() {
 function shuffleImages() {
     const shuffledImages = [...userOrderedImages.value];
     const correctOrder = item.images.map(image => image.id);
-
     do {
-        // Resimleri karıştır
         shuffledImages.sort(() => Math.random() - 0.5);
     } while (arraysMatch(correctOrder, shuffledImages.map(image => image.id)));
-
     userOrderedImages.value = shuffledImages;
 }
 
 function arraysMatch(arr1, arr2) {
-    // Eğer diziler aynı uzunluktaysa ve her elemanı eşleşiyorsa true döndür
     if (arr1.length !== arr2.length) return false;
     for (let i = 0; i < arr1.length; i++) {
         if (arr1[i] !== arr2[i]) return false;
     }
     return true;
 }
-
-
 </script>
 
 <style scoped>
