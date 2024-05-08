@@ -146,6 +146,7 @@ async function handleSubmit() {
 function shuffleImages() {
     const shuffledImages = [...userOrderedImages.value];
     const correctOrder = item.images.map(image => image.id);
+    if (shuffledImages.length <= 1) return;
     do {
         shuffledImages.sort(() => Math.random() - 0.5);
     } while (arraysMatch(correctOrder, shuffledImages.map(image => image.id)));
