@@ -156,7 +156,7 @@ async function handleItemSubmit(i, info={}) {
 		competencyDashboardData.value = info.competencies
 		showCompetencyDashboard.value = true
 		//  TODO: compute correctness based on competencies
-		data.itemInfo[key].correct = data.itemInfo[key].correct || success
+		data.itemInfo[key].correct = data.itemInfo[key].correct || competencySuccess(info.competencies)
 		if (success) next()
 	}
 	else {
@@ -168,6 +168,19 @@ async function handleItemSubmit(i, info={}) {
 function handleClose() {
 	Agent.close()
 	emits('close')
+}
+
+function competencySuccess(competencies) {
+	//  Remove attempts from score calculation
+  const scores = JSON.parse(JSON.stringify(competencies))
+  delete scores["general:attempts"]
+
+  const numerator = Object.values(scores)
+    .reduce((acc,cur) => acc + cur[0], 0)
+  const denominator = Object.values(scores)
+    .reduce((acc,cur) => acc + cur[1], 0)
+
+  return 0.85 < (denominator ? numerator / denominator : 0)
 }
 
 </script>
