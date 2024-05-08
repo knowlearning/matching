@@ -47,16 +47,25 @@
 			:time="data.totalTime"
 		/>
 	</div>
+	<v-overlay
+		v-model="showCompetencyDashboard"
+		class="align-center justify-center"
+	>
+		<CompetancyDashboard
+			:competencies="competencyDashboardData"
+		/>
+	</v-overlay>
 </template>
 
 <script setup>
 
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { reactive, computed, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
-import { itemFeedbackSwal, itemCompetencySwal } from '../../helpers/swallows.js'
+import { itemFeedbackSwal } from '../../helpers/swallows.js'
+import CompetancyDashboard from './competency-dashboard.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -70,6 +79,9 @@ const props = defineProps({
 		required: true
 	}
 })
+
+const competencyDashboardData = ref(null)
+const showCompetencyDashboard= ref(false)
 
 const sequenceDef = await Agent.state(props.id)
 
@@ -138,16 +150,16 @@ function previous() {
 }
 async function handleItemSubmit(i, info={}) {
 	const { success=null } = info
-	//  TODO: if info includes competency info, render the competency dashboard instead
+	const key = `${i}/${sequenceDef.items[i].id}`
 	if (info.competencies) {
-		const moveOn = await itemCompetencySwal(t, info.competencies)
+		competencyDashboardData.value = info.competencies
+		showCompetencyDashboard.value = true
 		//  TODO: compute correctness based on competencies
-		data.itemInfo[key].correct = null
-		if (moveOn) next()
+		data.itemInfo[key].correct = data.itemInfo[key].correct || success
+		if (success) next()
 	}
 	else {
 		await itemFeedbackSwal(t, success)
-		const key = `${i}/${sequenceDef.items[i].id}`
 		data.itemInfo[key].correct = success
 		if (success) next()
 	}
