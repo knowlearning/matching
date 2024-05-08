@@ -47,16 +47,26 @@
 			:time="data.totalTime"
 		/>
 	</div>
+	<v-overlay
+		v-model="showCompetencyDashboard"
+		class="align-center justify-center"
+	>
+		<CompetancyDashboard
+			:content="activeItemId"
+			:competencies="competencyDashboardData"
+		/>
+	</v-overlay>
 </template>
 
 <script setup>
 
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { reactive, computed, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, onBeforeUnmount } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
+import CompetancyDashboard from './competency-dashboard.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -70,6 +80,9 @@ const props = defineProps({
 		required: true
 	}
 })
+
+const competencyDashboardData = ref(null)
+const showCompetencyDashboard= ref(false)
 
 const sequenceDef = await Agent.state(props.id)
 
@@ -112,7 +125,7 @@ const activeItemInfo = computed(() => {
 
 const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correct) )
 const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
-
+const activeItemId = computed(() => sequenceDef.items[data.activeItemIndex].id)
 
 const intervalId = setInterval(updateTimeTracking, 1000)
 
@@ -137,15 +150,37 @@ function previous() {
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
 async function handleItemSubmit(i, info={}) {
-  const { success=null } = info
-	await itemFeedbackSwal(t, success)
+	const { success=null } = info
 	const key = `${i}/${sequenceDef.items[i].id}`
-	data.itemInfo[key].correct = success
-	if (success) next()
+	if (info.competencies) {
+		competencyDashboardData.value = info.competencies
+		showCompetencyDashboard.value = true
+		//  TODO: compute correctness based on competencies
+		data.itemInfo[key].correct = data.itemInfo[key].correct || competencySuccess(info.competencies)
+		if (success) next()
+	}
+	else {
+		await itemFeedbackSwal(t, success)
+		data.itemInfo[key].correct = success
+		if (success) next()
+	}
 }
 function handleClose() {
 	Agent.close()
 	emits('close')
+}
+
+function competencySuccess(competencies) {
+	//  Remove attempts from score calculation
+  const scores = JSON.parse(JSON.stringify(competencies))
+  delete scores["general:attempts"]
+
+  const numerator = Object.values(scores)
+    .reduce((acc,cur) => acc + cur[0], 0)
+  const denominator = Object.values(scores)
+    .reduce((acc,cur) => acc + cur[1], 0)
+
+  return 0.85 < (denominator ? numerator / denominator : 0)
 }
 
 </script>
