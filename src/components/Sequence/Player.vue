@@ -52,6 +52,7 @@
 		class="align-center justify-center"
 	>
 		<CompetancyDashboard
+			:content="activeItemId"
 			:competencies="competencyDashboardData"
 		/>
 	</v-overlay>
@@ -124,7 +125,7 @@ const activeItemInfo = computed(() => {
 
 const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correct) )
 const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
-
+const activeItemId = computed(() => sequenceDef.items[data.activeItemIndex].id)
 
 const intervalId = setInterval(updateTimeTracking, 1000)
 

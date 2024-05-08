@@ -1,7 +1,12 @@
 <template>
   <div class="cool-card">
     <div class="top">
-      <img src="https://picsum.photos/100">
+      <div>
+        <v-img
+          :src="contentImageURL"
+          :height="100"
+        />
+      </div>
     </div>
     <div class="main-area">
       <div class="star-row">
@@ -10,8 +15,15 @@
           <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc. --><path d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z"/></svg>
         </div>
       </div>
-      <div>
-        
+      <div class="result-container">
+        <div
+          v-for="([numerator, denominator], key) in scoresICareAbout"
+          :key="key"
+          class="result-row"
+        >
+          <div>{{ key.split(':').pop() }}</div>
+          <div>{{ numerator }} / {{ denominator }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -37,19 +49,35 @@ const DEFAULT_SCORE = {
 export default {
   name: 'cool-card',
   props: {
+    content: String,
     competencies: {
       type: Object,
       required: true,
       default: DEFAULT_SCORE
     }
   },
+  data() {
+    return {
+      contentImageURL: null
+    }
+  },
+  created() {
+    Agent
+      .state(this.content)
+      .then(async ({ picture }) => {
+        if (picture) this.contentImageURL = await Agent.download(picture).url()
+      })
+  },
   computed: {
+    scoresICareAbout() {
+      const scores = JSON.parse(JSON.stringify(this.competencies))
+      delete scores["general:attempts"]
+      return scores
+    },
     completion() {
-      const scoresICareAbout = JSON.parse(JSON.stringify(this.competencies))
-      delete scoresICareAbout["general:attempts"]
-      const numerator = Object.values(scoresICareAbout)
+      const numerator = Object.values(this.scoresICareAbout)
         .reduce((acc,cur) => acc + cur[0], 0)
-      const denominator = Object.values(scoresICareAbout)
+      const denominator = Object.values(this.scoresICareAbout)
         .reduce((acc,cur) => acc + cur[1], 0)
       return denominator ? numerator / denominator : 0
     },
@@ -74,30 +102,25 @@ export default {
   }
   .top {
     height: 100px;
+    padding-top: 20px;
     width: 200px;
     border-top: 2px solid black;
     border-left: 2px solid black;
     border-right: 2px solid black;
     border-bottom: none;
-    border-radius: 2000px 2000px 0 0px;
+    border-radius: 100px 100px 0 0px;
     margin-bottom: -2px;
     z-index: 1000;
     background: white;
     
     text-align: center;
   }
-  .top img {
-    width: 100px;
-    height: 100px;
-    margin-top: 20px;
-    border-radius: 2000px;
-  }
   .main-area {
     border: 2px solid black;
     width: 100%;
     flex-grow: 1;
     background: white;
-    padding: 20px 10px 10px 10px;
+    padding: 26px 10px 10px 10px;
     
     display: flex;
     flex-direction: column;
@@ -110,12 +133,21 @@ export default {
     justify-content: center;
     fill: yellow;
     fill: yellow;
-
   }
   .star-row svg {
     margin: 10px;
     height: 50px;
     fill: rgb(243,204,69);
-}
-
+  }
+  .result-container {
+    width: calc(100% - 32px);
+    padding: 16px 32px;
+    font-size: 1.5em;
+    text-transform: capitalize;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 8px;
+  }
 </style>
