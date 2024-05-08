@@ -1,4 +1,5 @@
 <template>
+<div style="display: inline-block; max-width: 500px;">
   <div class="cool-card">
     <div class="top">
       <div>
@@ -22,11 +23,12 @@
           class="result-row"
         >
           <div>{{ key.split(':').pop() }}</div>
-          <div>{{ numerator }} / {{ denominator }}</div>
+          <div style="white-space: nowrap">{{ numerator }} / {{ denominator }}</div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 
@@ -36,11 +38,11 @@ const DEFAULT_SCORE = {
     3,
     17
   ],
-  "compute:addition": [
+  "compute:addition +": [
     4,
     4
   ],
-  "compute:subtraction": [
+  "compute:subtraction -": [
     5,
     5
   ]
@@ -94,22 +96,25 @@ export default {
 
 <style scoped>
   .cool-card {
-    width: 350px;
-    height: 350px;
+    max-width: 500px;
+    min-width: 350px;
+    padding-bottom: 80px;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   .top {
-    height: 100px;
     padding-top: 20px;
+    height: 100px;
     width: 200px;
+    position: relative;
     border-top: 2px solid black;
     border-left: 2px solid black;
     border-right: 2px solid black;
     border-bottom: none;
-    border-radius: 100px 100px 0 0px;
     margin-bottom: -2px;
+    border-radius: 100px 100px 0 0px;
     z-index: 1000;
     background: white;
     
@@ -120,7 +125,7 @@ export default {
     width: 100%;
     flex-grow: 1;
     background: white;
-    padding: 26px 10px 10px 10px;
+    padding: 26px 10px 20px 10px;
     
     display: flex;
     flex-direction: column;
