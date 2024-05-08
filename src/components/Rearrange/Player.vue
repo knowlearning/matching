@@ -144,15 +144,22 @@ async function handleSubmit() {
 }
 
 function shuffleImages() {
-  const shuffledImages = [...userOrderedImages.value];
-  for (let i = shuffledImages.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = shuffledImages[i];
-    shuffledImages[i] = shuffledImages[j];
-    shuffledImages[j] = temp;
-  }
-  userOrderedImages.value = shuffledImages;
-} 
+    const shuffledImages = [...userOrderedImages.value];
+    const correctOrder = item.images.map(image => image.id);
+    if (shuffledImages.length <= 1) return;
+    do {
+        shuffledImages.sort(() => Math.random() - 0.5);
+    } while (arraysMatch(correctOrder, shuffledImages.map(image => image.id)));
+    userOrderedImages.value = shuffledImages;
+}
+
+function arraysMatch(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
+}
 </script>
 
 <style scoped>
