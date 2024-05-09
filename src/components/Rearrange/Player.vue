@@ -36,7 +36,7 @@
                 @drop="dropImage(i, userOrderedItems)"
                 @dragover.prevent
             >
-                <KlImage v-if="item?.id"
+                <UUIDImage v-if="item?.id"
                     class="image"
                     :id="item.id"
                     :draggable="item?.id"
@@ -57,7 +57,7 @@
                 @drop="dropImage(i, sourceItems)"
                 @dragover.prevent
             >
-                <KlImage v-if="item?.id"
+                <UUIDImage v-if="item?.id"
                     class="image"
                     :id="item.id"
                     :draggable="item?.id"
@@ -79,7 +79,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
-import KlImage from '../kl-image.vue'
+import { UUIDImage } from '@knowlearning/agents/vue.js'
 import { useStore } from 'vuex'
 const store = useStore()
 const copy = x => JSON.parse(JSON.stringify(x))
