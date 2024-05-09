@@ -21,7 +21,8 @@
 				:namespace="{
 					prefix: `sequence-${id}-item-${i}`,
 					allow: [
-						'pila/competencies'
+						'pila/competencies',
+						'pila/latest_competencies'
 					]
 				}"
 				allow="camera;microphone;fullscreen"
