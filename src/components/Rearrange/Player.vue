@@ -215,6 +215,9 @@ function arraysDeepEqual(arr1, arr2) {
     border-radius: 6px;
     margin: 12px;
 }
+.image {
+    cursor: grab;
+}
 .image-placeholder {
     background: #eee;
     color: #aaa;
