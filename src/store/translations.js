@@ -197,7 +197,7 @@ export default {
   },
   'sequence' : {
     'en' : 'SEQUENCE',
-    'th' : 'เลือกคำตอบที่ถูกต้อง'
+    'th' : 'เรียงลำดับชุด'
   },
   'karel-task&version' : {
     'en' : 'KAREL TASKS',
