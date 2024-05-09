@@ -199,6 +199,7 @@ function arraysDeepEqual(arr1, arr2) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    user-select: none;
 }
 .target-items,
 .source-items {
