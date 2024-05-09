@@ -98,7 +98,7 @@ async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
 	const { active_type, domain } = await Agent.metadata(attemptedId)
 	if (!EMBED_DOMAINS.includes(domain) && !sequenceImportableTypes.includes(active_type)) {
-		await unsupportedTypeSwal(attemptedId, active_type)
+		await unsupportedTypeSwal(t, attemptedId, active_type)
 	} else {
 		data.content.items.push({ id: attemptedId })		
 	}
