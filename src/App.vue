@@ -137,7 +137,7 @@
     const lang = store.getters.language()
     const itemToCopy = questionTypes[active_type].newItemSchemas[lang]
       || questionTypes[active_type].newItemSchemas['default']
-    createContent(
+    await createContent(
       active_type,
       copy(itemToCopy)
     )
@@ -148,7 +148,7 @@
     if (!idToCopy) return
     const { active_type } = await Agent.metadata(idToCopy)
     const stateToCopy = await Agent.state(idToCopy)
-    createContent(active_type, copy(stateToCopy))
+    await createContent(active_type, copy(stateToCopy))
   }
   async function createContent(active_type, active) {
     const newItemId = await Agent.create({ active_type, active })

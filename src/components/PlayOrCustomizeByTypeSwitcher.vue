@@ -24,7 +24,7 @@ const props = defineProps({
   mode : {
     type: String,
     required: true,
-    validator: val => ['customize', 'player'].includes(val)
+    validator: val => ['customizer', 'player'].includes(val)
   }
 })
 const { active_type } = await Agent.metadata(props.id)
