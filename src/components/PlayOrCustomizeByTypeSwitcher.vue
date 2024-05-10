@@ -28,5 +28,6 @@ const props = defineProps({
   }
 })
 const { active_type } = await Agent.metadata(props.id)
+if (!active_type) console.warn('active_type not found, is that triggering the embedding bug?')
 
 </script>
