@@ -19,7 +19,6 @@
 
 <script setup>
 import ExpandableFolderForType from './ExpandableFolderForType.vue'
-import ItemName from './ItemName.vue'
 import { ref, reactive, watch } from 'vue'
 import questionTypes from '../helpers/questionTypes.js'
 

@@ -7,21 +7,21 @@
         <h4>
           <i :class="{
             'fas' : true,
-            'fa-folder-plus' : !show,
-            'fa-folder-open' : show
+            'fa-folder-plus' : !props.show,
+            'fa-folder-open' : props.show
           }"
         />
-          <span>{{ displayName }}</span>
+          <span>{{ props.displayName }}</span>
         </h4>
       </div>
 
-      <div v-if="show" class="item-list">
+      <div v-if="props.show" class="item-list">
         <div
-          v-for="(itemId, index) in items"
+          v-for="(itemId, index) in props.items"
           :key="`item-${itemId}`"
           :class="{
             'item-choice' : true,
-            'active' : itemId === active
+            'active' : itemId === props.active
           }"
           @click.stop="$emit('active', itemId)"
           draggable="true"
@@ -31,7 +31,10 @@
           <Suspense>
             <div class="item-content">
               <span>{{ index + 1}}) </span>
-              <ItemName :id="itemId" />
+              <ItemName
+                :id="itemId"
+                :language="store.getters.language()"
+              />
             </div>
           </Suspense>
           <button
@@ -45,30 +48,30 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ItemName from './ItemName.vue'
-export default {
-	name: 'expandable-folder-for-type',
-  components: { ItemName },
-	props: {
-    active: {
-      type: [ String, null ],
-      required: true
-    },
-		displayName: {
-			type: String,
-			required: true
-		},
-		items: {
-			type: Array,
-			required: true
-		},
-		show: {
-			type: Boolean,
-			required: true
-		}
-	}
-}
+import { useStore } from 'vuex'
+const store = useStore()
+
+const props = defineProps({
+  active: {
+    type: [ String, null ],
+    required: true
+  },
+  displayName: {
+    type: String,
+    required: true
+  },
+  items: {
+    type: Array,
+    required: true
+  },
+  show: {
+    type: Boolean,
+    required: true
+  }
+})
+
 </script>
 
 <style scoped>
