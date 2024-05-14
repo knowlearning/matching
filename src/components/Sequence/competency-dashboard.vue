@@ -22,7 +22,7 @@
           :key="key"
           class="result-row"
         >
-          <div>{{ key.split(':').pop() }}</div>
+          <div>{{ translate(key.split(':').pop()) }}</div>
           <div style="white-space: nowrap">{{ numerator }} / {{ denominator }}</div>
         </div>
       </div>
@@ -33,6 +33,8 @@
 
 
 <script>
+import translate from './translations/translate.js'
+
 const DEFAULT_SCORE = {
   "general:attempts": [
     3,
@@ -90,7 +92,12 @@ export default {
         this.completion >= 0.85
       ]
     }
-  } 
+  },
+  methods: {
+    translate(str) {
+      return translate(str)
+    }
+  }
 }  
 </script>
 
