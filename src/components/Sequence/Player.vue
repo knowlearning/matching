@@ -157,8 +157,9 @@ async function handleItemSubmit(i, info={}) {
 		competencyDashboardData.value = info.competencies
 		showCompetencyDashboard.value = true
 		//  TODO: compute correctness based on competencies
-		data.itemInfo[key].correct = data.itemInfo[key].correct || competencySuccess(info.competencies)
-		if (success) {
+		const runWasSuccessful = competencySuccess(info.competencies)
+		data.itemInfo[key].correct = data.itemInfo[key].correct || runWasSuccessful
+		if (runWasSuccessful) {
 			// wait until competency dashboard toggles off, then trigger next
 			const unwatch = watch(
 				showCompetencyDashboard,
