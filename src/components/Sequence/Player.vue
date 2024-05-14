@@ -62,7 +62,7 @@
 <script setup>
 
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-import { ref, reactive, computed, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, onBeforeUnmount, watch } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
@@ -158,7 +158,16 @@ async function handleItemSubmit(i, info={}) {
 		showCompetencyDashboard.value = true
 		//  TODO: compute correctness based on competencies
 		data.itemInfo[key].correct = data.itemInfo[key].correct || competencySuccess(info.competencies)
-		if (success) next()
+		if (success) {
+			// wait until competency dashboard toggles off, then trigger next
+			const unwatch = watch(
+				showCompetencyDashboard,
+				() => {
+					unwatch()
+					next()
+				}
+			)
+		}
 	}
 	else {
 		await itemFeedbackSwal(t, success)
