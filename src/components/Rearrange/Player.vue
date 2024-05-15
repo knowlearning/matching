@@ -33,14 +33,15 @@
                 v-for="(item, i) in userOrderedItems"
                 :key="`source-spot-${i}-${item?.id}`"
                 
-                @drop="dropImage(i, userOrderedItems)"
+                @drop.prevent="handleDrop($event, i, userOrderedItems)"
                 @dragover.prevent
             >
                 <UUIDImage v-if="item?.id"
                     class="image"
                     :id="item.id"
                     :draggable="item?.id"
-                    @dragstart="draggingId = item.id"
+                    @dragstart="handleDragstart($event, userOrderedItems, i, item.id)"
+                    @dragend="handleDragend(item.id)"
                 />
                 <div
                     v-else
@@ -54,14 +55,15 @@
                 :key="`source-spot-${i}-${item?.id}`"
                 class="image-spot"
                 :style="{ backgroundImage: item?.id ? `url(${item.id})` : '' }"
-                @drop="dropImage(i, sourceItems)"
+                @drop.prevent="handleDrop($event, i, sourceItems)"
                 @dragover.prevent
             >
                 <UUIDImage v-if="item?.id"
                     class="image"
                     :id="item.id"
                     :draggable="item?.id"
-                    @dragstart="draggingId = item.id"
+                    @dragstart="handleDragstart($event, sourceItems, i, item.id)"
+                    @dragend="handleDragend(item.id)"
                 />
                 <div v-else class="image-placeholder">?</div>
 
@@ -97,7 +99,8 @@ const item = await Agent.state(props.id)
 const sourceItems = reactive(shuffle(item.images))
 const userOrderedItems = reactive(new Array(item.images.length).fill(null))
 
-const draggingId = ref(null)
+// to return if drag fails { srcArray, index, id }
+const dragRevertInfo = ref(null) 
 
 const audioPlaying = ref(false)
 let audio = null
@@ -151,19 +154,38 @@ function seekAudio() {
         audio.currentTime = currentAudioTime.value;
     }
 }
+function handleDragstart(e, srcArray, i, id) {
+    dragRevertInfo.value = { srcArray, i, id }
 
-function dropImage(index, targetArray) {
-    event.preventDefault()
-    if (!targetArray[index] && draggingId.value) {
+    const dragImage = e.target.cloneNode(true)
+    // TODO: Size and position drag... classList.add not working
+    e.dataTransfer.setDragImage(dragImage, 0, 0)
+    e.dataTransfer.setData('text/plain', id)
+
+    setTimeout(() => { // delay to remove... need time to clone above
         sourceItems.forEach((item,i) => {
-            if (item?.id === draggingId.value) sourceItems[i] = null
+            if (item?.id === id) sourceItems[i] = null
         })
         userOrderedItems.forEach((item,i) => {
-            if (item?.id === draggingId.value) userOrderedItems[i] = null
+            if (item?.id === id) userOrderedItems[i] = null
         })
-        targetArray.splice(index, 1, { id: draggingId.value })
-        draggingId.value = null
-    }
+    })
+}
+function handleDrop(e, index, targetArray) {
+    const id = event.dataTransfer.getData('text/plain');
+    if (!targetArray[index]) {
+        targetArray.splice(index, 1, { id })
+        dragRevertInfo.value = null
+    } // unsuccessful drop cases handled in dragend
+}
+function handleDragend(dragId) {
+    // successfull if id is in an array
+    if (sourceItems.some(item => item?.id === dragId)) return
+    if (userOrderedItems.some(item => item?.id === dragId)) return
+    // if not there, return to previous
+    const { srcArray, i, id } = dragRevertInfo.value
+    srcArray.splice(i, 1, { id })    
+    dragRevertInfo.value = null
 }
 
 async function handleSubmit() {
