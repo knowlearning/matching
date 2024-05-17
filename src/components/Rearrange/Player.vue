@@ -37,13 +37,17 @@
                 @dragover.prevent
             >
                 <UUIDImage v-if="item?.id"
-                    class="image"
+                    :class="{
+                        image: true,
+                        hidden: draggingId === item.id
+                    }"
                     :id="item.id"
                     :draggable="item?.id"
                     @dragstart="draggingId = item.id"
+                    @dragend="draggingId = null"
                 />
                 <div
-                    v-else
+                    v-if="!item?.id || draggingId === item.id"
                     class="image-placeholder"
                 >{{ i+1 }}.</div>
             </div>
@@ -58,12 +62,19 @@
                 @dragover.prevent
             >
                 <UUIDImage v-if="item?.id"
-                    class="image"
+                    :class="{
+                        image: true,
+                        hidden: draggingId === item.id
+                    }"
                     :id="item.id"
                     :draggable="item?.id"
                     @dragstart="draggingId = item.id"
+                    @dragend="draggingId = null"
                 />
-                <div v-else class="image-placeholder">?</div>
+                <div
+                  v-if="!item?.id || draggingId === item.id"
+                  class="image-placeholder"
+                >?</div>
 
             </div>
         </div>
@@ -217,6 +228,10 @@ function arraysDeepEqual(arr1, arr2) {
 }
 .image {
     cursor: grab;
+}
+.image.hidden {
+  opacity: 0;
+  position: absolute;
 }
 .image-placeholder {
     background: #eee;
