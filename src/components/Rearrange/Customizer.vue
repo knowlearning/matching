@@ -16,7 +16,7 @@
 				<PickFileButton
 					fasIcon="fa-plus"
 					acceptType="image/*"
-					@newFile="imageData.push({ id: $event })"
+					@newFile="data.content.images.push({ id: $event })"
 				/>
 			</div>
 		</div>
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import { v4 as uuid } from 'uuid'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
@@ -61,9 +61,10 @@ import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
+const copy = x => JSON.parse(JSON.stringify(x))
+
 const props = defineProps(['id'])
-const data = ref({ content: null })
-let imageData = []
+const data = reactive({ content: null })
 
 Agent
 	.state(props.id)
@@ -71,27 +72,20 @@ Agent
 		if (!state.name) state.name = ''
 		if (!state.audioId) state.audioId = null
 		if (!state.images) state.images = []
-		data.value.content = state
-
-		imageData = data.value.content.images
+		data.content = state
 	})
 
 function removeImage(id) {
-	const imageDataCopy = JSON.parse(JSON.stringify(imageData));
-	const index = imageDataCopy.findIndex(image => image.id === id);
-	imageDataCopy.splice(index, 1);
-
-	data.value.content.images = imageDataCopy;
-	imageData = imageDataCopy;
+	const imagesCopy = copy(data.content.images)
+	const index = imagesCopy.findIndex(image => image.id === id)
+	imagesCopy.splice(index, 1)
+	data.content.images = imagesCopy
 }
 
 function onDragEnd(event) {
-    const imageDataCopy = JSON.parse(JSON.stringify(imageData));
-    const draggedElement = imageDataCopy.splice(event.oldIndex, 1)[0];
-    imageDataCopy.splice(event.newIndex, 0, draggedElement);
-
-    data.value.content.images = imageDataCopy;
-    imageData = imageDataCopy;
+	// vue draggable maintains its own internal copy that it sets after
+	// being set the first time
+	data.content.images = copy(data.content.images)
 }
 
 </script>
