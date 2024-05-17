@@ -191,7 +191,8 @@ function competencySuccess(competencies) {
   const denominator = Object.values(scores)
     .reduce((acc,cur) => acc + cur[1], 0)
 
-  return 0.85 < (denominator ? numerator / denominator : 0)
+  const meetsThreshold = 0.85 < (denominator ? numerator / denominator : 0)
+  return meetsThreshold || null
 }
 
 </script>
