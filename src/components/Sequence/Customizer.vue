@@ -40,6 +40,9 @@
 					:id="item"
 					:language="store.getters.language()"
 					@click.shift="alertText(item)"
+					draggable="true"
+					style="cursor: grab;"
+					@dragstart="$event.dataTransfer.setData('text', item)"
 				/>
 				<v-btn
 					icon="fa-solid fa-remove"
