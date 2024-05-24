@@ -154,6 +154,9 @@
     const newItemId = await Agent.create({ active_type, active })
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true } // tag as 'my-content'
     data.content.push(newItemId) // optimistic update locally loaded
+    
+    // Delay hack because md for id active_type (in PlayOrCustomizeByTypeSwitcher) not guaranteed to exist after await Agent.create(). TODO Remove when fixed.
+    await new Promise(resolve => setTimeout(resolve, 100))
     data.active = newItemId // make new item active
     // ContentBar watches data.active and ensures it opens if not already open
   }
