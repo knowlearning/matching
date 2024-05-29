@@ -7,12 +7,20 @@ postgres:
   tables:
     matching_items:
       type: application/json;type=matching
+      columns:
+        name: TEXT
     select_from_pairs_items:
       type: application/json;type=select-from-pairs
+      columns:
+        name: TEXT
     rearrange_items:
       type: application/json;type=rearrange-items
+      columns:
+        name: TEXT
     sequence_items:
       type: application/json;type=sequence
+      columns:
+        name: TEXT
   queries:
     customised_items_report:
       domains:
@@ -22,11 +30,11 @@ postgres:
       body: |
         SELECT
           md.owner,
-          COUNT(DISTINCT mi.id) AS matching_items,
-          COUNT(DISTINCT spi.id) AS select_pairs_items,
-          COUNT(DISTINCT ri.id) AS rearrange_items,
-          COUNT(DISTINCT si.id) AS sequence_items,
-          (COUNT(DISTINCT mi.id) + COUNT(DISTINCT spi.id) + COUNT(DISTINCT ri.id) + COUNT(DISTINCT si.id)) AS total
+          COUNT(DISTINCT mi.id) AS "matching",
+          COUNT(DISTINCT spi.id) AS "select-from-pairs",
+          COUNT(DISTINCT ri.id) AS "rearrange-items",
+          COUNT(DISTINCT si.id) AS "sequence",
+          (COUNT(DISTINCT mi.id) + COUNT(DISTINCT spi.id) + COUNT(DISTINCT ri.id) + COUNT(DISTINCT si.id)) AS "total"
         FROM metadata md
         LEFT JOIN matching_items mi ON md.id = mi.id
         LEFT JOIN select_from_pairs_items spi ON md.id = spi.id
