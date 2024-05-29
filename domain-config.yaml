@@ -7,20 +7,12 @@ postgres:
   tables:
     matching_items:
       type: application/json;type=matching
-      columns:
-        name: TEXT
     select_from_pairs_items:
       type: application/json;type=select-from-pairs
-      columns:
-        name: TEXT
     rearrange_items:
       type: application/json;type=rearrange-items
-      columns:
-        name: TEXT
     sequence_items:
       type: application/json;type=sequence
-      columns:
-        name: TEXT
   queries:
     customised_items_report:
       domains:
