@@ -63,7 +63,7 @@
                 :y1="A.y"
                 :x2="B.x"
                 :y2="B.y"
-                :stroke="selectedConnectionIndex === i ? 'red' : 'black'"
+                stroke="black"
                 :stroke-width="width/220"
             />
 
@@ -78,12 +78,6 @@
             />
 
         </svg>
-        <v-btn class="remove ma-1"
-            size="small"
-            icon="fa-solid fa-trash"
-            :disabled="selectedConnectionIndex === null"
-            @click="removeConnectionByIndex(selectedConnectionIndex)"
-        />
     </div>
 </template>
 
@@ -172,7 +166,6 @@ export default {
             workingLine: null, // { toPos, fromPos } 
             workingStartNode: null, 
             hoverNode: null,
-            selectedConnectionIndex: null
         }
     },
     computed: {
@@ -229,16 +222,13 @@ export default {
                     to: pos
                 }
             } else if (closeSegmentIndex !== null) {
-                this.selectedConnectionIndex = closeSegmentIndex  
-            } else { // closeSegmentIndex is null
-                this.selectedConnectionIndex = null
+                this.removeConnectionByIndex(closeSegmentIndex)
             }
         },
         removeConnectionByIndex(i) {
             let newConnections = copy(this.connections)
             newConnections.splice(i,1)
             this.$emit('updateConnections', newConnections)
-            this.selectedConnectionIndex = null
         },
         handleUp(e) {
             if (!this.workingLine) return // ensure in "draw" mode
