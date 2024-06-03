@@ -11,7 +11,7 @@
     />
     <foreignObject
       width="100%"
-      height="100%"
+      :height="editMode ? '20%' : '100%'"
       class="text-choice"
       pointer-events="none"
     >
@@ -46,7 +46,13 @@ export default {
     },
     playable: { // Boolean to determine if text is clickable / playable
       type: Boolean,
+      required: false,
       default: true
+    },
+    editMode: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   methods: {
