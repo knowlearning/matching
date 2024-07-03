@@ -8,11 +8,15 @@ import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
 import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.vue'
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
+import MarkdownCustomizer from '../components/Markdown/Customizer.vue'
+import MarkdownPlayer from '../components/Markdown/Player.vue'
 
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
+import defaultMarkdown from './demo-questions/defaultMarkdown.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
+
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
@@ -69,6 +73,18 @@ const questionTypes = {
 			th: copy(monumentPairs)
 		},
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
+	},
+	'application/json;type=markdown' : {
+		description: 'markdown-question',
+		components: {
+			player: MarkdownPlayer,
+			customizer: MarkdownCustomizer
+		},
+		newItemSchemas: {
+			default: copy(defaultMarkdown),
+			th: copy(defaultMarkdown)
+		},
+		sample: '009e59c0-38d2-11ef-b713-21184efafe0d'
 	},
 	'application/json;type=sequence' : {
 		description: 'sequence-builder',
