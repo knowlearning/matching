@@ -263,6 +263,10 @@ export default {
     'en' : 'MARKDOWN',
     'th' : 'Markdown'
   },
+  'markdown-item' : {
+    'en' : 'Markdown Item',
+    'th' : 'คำถามเกี่ยวกับ Markdown'
+  },
   'see-example' : {
     'en' : 'see example',
     'th' : 'ดูตัวอย่าง'
