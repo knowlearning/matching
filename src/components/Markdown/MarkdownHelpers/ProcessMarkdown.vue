@@ -2,6 +2,10 @@
     <div
         class="markdown"
         v-html="sanitizedMarkdown"
+        style="
+            text-align: initial;
+            list-style-position: inside;
+        "
     ></div>
 </template>
 
