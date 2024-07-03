@@ -9,7 +9,7 @@
 import { ref, watch } from 'vue'
 
 import { marked } from 'marked'
-import DOMPurify from 'DOMPurify'
+import DOMPurify from 'dompurify'
 import renderLatex from './renderLatex.js'
 import replaceUUIDs from './replaceUUIDs.js'
 
