@@ -2,7 +2,7 @@
     <div class="player">
         <ProcessMarkdown :userInput="item.md" />
         <v-btn color="green" @click="handleSubmit">
-            {{ t('submit') }}
+            {{ t('next') }}
         </v-btn>
     </div>
 </template>
@@ -38,7 +38,10 @@ async function handleSubmit() {
 <style scoped>
 .player {
     display: flex;
+    padding: 12px;
+    height: calc(100% - 24px);
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 </style>
