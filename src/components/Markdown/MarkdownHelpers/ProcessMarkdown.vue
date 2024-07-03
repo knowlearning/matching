@@ -2,10 +2,6 @@
     <div
         class="markdown"
         v-html="sanitizedMarkdown"
-        style="
-            text-align: initial;
-            list-style-position: inside;
-        "
     ></div>
 </template>
 
@@ -76,3 +72,20 @@ async function replacer(uuid, optionsStr) {
 }
 
 </script>
+
+<style>
+/*  namespace: scoped won't reach into marked and katex stuff  */
+.markdown {
+    text-align: initial;
+    list-style-position: inside;
+}
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6
+{
+    margin: 0.65em 0 0.1em 0;
+}
+</style>
