@@ -7,10 +7,7 @@
                 :label="t('item-name')"
                 class="vuetify-text-input"
             />
-            <MarkdownInput
-                v-model="data.content.md"
-                :label="t('your-markdown')"
-            />
+            <MarkdownInput v-model="data.content.md" />
         </div>
         <div class="right-col">
             <ProcessMarkdown

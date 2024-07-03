@@ -255,6 +255,14 @@ export default {
     'en' : 'Students play through a series of questions, one after the other, and receive feedback and a report of success along the way!',
     'th' : 'นักเรียนจะเล่นผ่านชุดของคำถามต่อเนื่องกัน ต่อหนึ่งคำถามต่อหนึ่ง และได้รับข้อคิดเห็นและรายงานความสำเร็จขณะทาง!'
   },
+  'markdown-description' : {
+    'en' : 'Build markdown items including capacity for embedding videos, images, audio and LaTex.',
+    'th' : 'สร้างรายการ markdown รวมถึงความสามารถในการฝังวิดีโอ รูปภาพ เสียง และ LaTex'
+  },
+  'markdown' : {
+    'en' : 'MARKDOWN',
+    'th' : 'Markdown'
+  },
   'see-example' : {
     'en' : 'see example',
     'th' : 'ดูตัวอย่าง'

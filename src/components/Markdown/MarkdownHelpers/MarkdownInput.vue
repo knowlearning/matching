@@ -1,14 +1,14 @@
 <template>
     <v-textarea
         @drop="handleAttemptedDrop"
-        :label="props.label"
+        label="Markdown"
+        rows="22"
     />
 </template>
 
 <script setup>
 import { validate as isUUID } from 'uuid'
 
-const props = defineProps(['label'])
 const emit = defineEmits([ 'input' ])
 
 async function handleAttemptedDrop(e) {
