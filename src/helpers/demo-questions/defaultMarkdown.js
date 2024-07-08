@@ -9,34 +9,20 @@ Most any [TeX or LaTeX expressions](https://wch.github.io/latexsheet/) should wo
 
 $ \\nabla \\phi = \\left( \\frac{\\partial \\phi}{\\partial x}, \\frac{\\partial \\phi}{\\partial y}, \\frac{\\partial \\phi}{\\partial z} \\right) $
 
-### 2. Html
-Most any html will work for content or layout. For example, here's  a little html table.
-<div style="display: flex; justify-content: center; align-items: center; margin: 12px;" >
-    <table border="1" style="border-collapse: collapse; ">
-        <tr style="padding: 8px;">
-            <th style="padding: 8px;">Header 1</th>
-            <th style="padding: 8px;">Header 2</th>
-            <th style="padding: 8px;">Header 3</th>
-        </tr>
-        <tr style="padding: 8px;">
-            <td style="padding: 8px;">Row 1, Cell 1</td>
-            <td style="padding: 8px;">Row 1, Cell 2</td>
-            <td style="padding: 8px;">Row 1, Cell 3</td>
-        </tr>
-        <tr style="padding: 8px;">
-            <td style="padding: 8px;">Row 2, Cell 1</td>
-            <td style="padding: 8px;">Row 2, Cell 2</td>
-            <td style="padding: 8px;">Row 2, Cell 3</td>
-        </tr>
-    </table>
-</div>
-
-### 3. KnowLearning Assets
+### 2. KnowLearning Assets
 
 From [KnowLearning's files Application](https://kl-files.netlify.app/), you can drag uuid references to videos, audio, or images. Notice I've mixed with html to center and size it too.
 <br><br>
 <div style="text-align: center;">
 f036b500-37ff-11ef-b423-4126a202cbc5{"width":200, "height": 120}
+</div>
+
+### 3. Html
+Most any html will work for content or layout. For example, here's how we can use html to layout and equally spread two KnowLearning image asset.
+<div style="display: flex; justify-content: space-around; align-items: center; margin: 12px;" >
+36c0baa0-3997-11ef-8a59-2dd88f0ca544{"width": 90, "height": 90}
+
+2e799b50-3d34-11ef-9a0a-db6f64acb29a{"width": 90, "height": 90}
 </div>
 `
 }
