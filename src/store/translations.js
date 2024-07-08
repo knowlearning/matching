@@ -283,4 +283,28 @@ export default {
     'en' : 'Add Row',
     'th' : 'เพิ่มแถว'
   },
+  'multiple-choice' : {
+    'en' : 'Multiple Choice',
+    'th' : 'ตัวเลือกหลายตัว'
+  },
+  'select-multiple' : {
+    'en' : 'Select Multiple',
+    'th' : 'เลือกหลายตัว'
+  },
+  'add-choice' : {
+    'en' : 'Add Choice',
+    'th' : 'เพิ่มตัวเลือก'
+  },
+  'select-all-that-apply' : {
+    'en' : 'Select All That Apply',
+    'th' : 'เลือกทั้งหมดที่ใช้ได้'
+  },
+  'multiple-choice-description' : {
+    'en' : 'Build multiple choice questions with one or many answers.',
+    'th' : 'สร้างคำถามแบบตัวเลือกหลายข้อที่มีคำตอบหนึ่งหรือหลายคำตอบ'
+  },
+  'new-choice' : {
+    'en' : 'New Choice',
+    'th' : 'ตัวเลือกใหม่'
+  }
 }

@@ -1,5 +1,7 @@
 import MatchingPlayer from '../components/Matching/Player.vue'
 import MatchingCustomizer from '../components/Matching/Customizer.vue'
+import MultipleChoicePlayer from '../components/MultipleChoice/Player.vue'
+import MultipleChoiceCustomizer from '../components/MultipleChoice/Customizer.vue'
 import TextEntryPlayer from '../components/TextEntry/Player.vue'
 import TextEntryCustomizer from '../components/TextEntry/Customizer.vue'
 import RearrangeCustomizer from '../components/Rearrange/Customizer.vue'
@@ -12,6 +14,7 @@ import MarkdownCustomizer from '../components/Markdown/Customizer.vue'
 import MarkdownPlayer from '../components/Markdown/Player.vue'
 
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
+import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
 import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
 import defaultMarkdown from './demo-questions/defaultMarkdown.js'
@@ -33,6 +36,22 @@ const questionTypes = {
 		},
 		sample: '0c014c40-fb93-11ee-a57d-19b2f6cf4b58'
 	},
+	'application/json;type=multiple-choice' : {
+		description: 'multiple-choice-question',
+		components: {
+			player: MultipleChoicePlayer,
+			customizer: MultipleChoiceCustomizer
+		},
+		newItemSchemas: {
+			default: copy(multipleChoiceDefault),
+			th: copy(multipleChoiceDefault)
+		},
+		sample: '1a1c2410-3d4e-11ef-8319-adf6059912ac'
+	},
+
+
+
+
 	// 'application/json;type=textEntry' : {
 	// 	    description: 'Text Entry Question',
 	// 	    components: {

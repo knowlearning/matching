@@ -9,6 +9,7 @@
 			v-model="props.content.instructions"
 			:label="t('instructions-optional')"
 			rows="3"
+			auto-grow
 			class="vuetify-text-input"
 		/>
 	</div>
