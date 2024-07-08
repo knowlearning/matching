@@ -1,6 +1,5 @@
 <template>
 <div class="player">
-    {{ userSelect }}
     <div
         v-if="item?.instructions"
         class="instructions"
@@ -10,13 +9,14 @@
     </div>
 
     <div class="choices-wrapper">
-        <v-checkbox
+        <v-checkbox class="checkbox-row"
             v-for="choice,i in item.choices"
             :key="`checkbox-for-choice-${i}`"
             :label="choice.value"
             :value="i"
             :multiple="item.selectMultiple"
             v-model="userSelect"
+            hide-details
         />
     </div>
     <v-btn
@@ -66,4 +66,20 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.choices-wrapper {
+    width: 100%;
+    max-width: 500px;
+    border-bottom: 1px solid grey;
+    margin: 12px 0;
+}
+.checkbox-row {
+    border-top: 1px solid grey;
+    text-align: left;
+    padding: 8px 0;
+}
 </style>
