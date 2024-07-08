@@ -7,7 +7,7 @@
     <div
         v-if="item.selectMultiple"
         class="font-weight-bold"
-    >Select All that Apply</div>
+    >{{ t('select-all-that-apply') }}</div>
 
     <div class="choices-wrapper">
         <v-checkbox class="checkbox-row"

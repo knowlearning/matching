@@ -7,7 +7,7 @@
         />
         <v-switch
             v-model="data.content.selectMultiple"
-            label="Select Multiple"
+            :label="t('select-multiple')"
             color="primary"
             hide-details
         />
@@ -19,12 +19,12 @@
         />
         <v-btn
             @click="data.content.choices.push({
-                value: 'New Choice',
+                value: t('new-choice'),
                 isCorrect: false
             })"
             class="mb-12"
         >
-            {{ 'translate add-choice' }}
+            {{ t('new-choice') }}
         </v-btn>
     </div>
 </template>
@@ -34,6 +34,11 @@ import { reactive, watch } from 'vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import EditMCOptions from './EditMCOptions.vue'
+
+import { useStore } from 'vuex'
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
+
 
 const props = defineProps(['id'])
 const data = reactive({
