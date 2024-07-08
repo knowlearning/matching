@@ -46,7 +46,6 @@ const questionTypes = {
 			default: copy(multipleChoiceDefault),
 			th: copy(multipleChoiceDefault)
 		},
-		// TODONOW
 		sample: '0c014c40-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 
