@@ -46,7 +46,7 @@ const questionTypes = {
 			default: copy(multipleChoiceDefault),
 			th: copy(multipleChoiceDefault)
 		},
-		sample: '0c014c40-fb93-11ee-a57d-19b2f6cf4b58'
+		sample: '1a1c2410-3d4e-11ef-8319-adf6059912ac'
 	},
 
 

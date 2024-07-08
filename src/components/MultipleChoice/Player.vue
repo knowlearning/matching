@@ -3,10 +3,11 @@
     <div
         v-if="item?.instructions"
         class="instructions"
-    >
-        <span class="instructions-prefix">{{ t('instructions') }}:</span>
-        {{ item.instructions }}
-    </div>
+    ><span class="instructions-prefix">{{ t('instructions') }}:</span>{{ item.instructions }}</div>
+    <div
+        v-if="item.selectMultiple"
+        class="font-weight-bold"
+    >Select All that Apply</div>
 
     <div class="choices-wrapper">
         <v-checkbox class="checkbox-row"

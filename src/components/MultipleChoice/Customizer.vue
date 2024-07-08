@@ -3,7 +3,7 @@
         <AbsolutePreviewAndItemId :id="props.id" />
         <NameAndInstructions
             :content="data.content"
-            style="width: 420px; margin-top: 50px;"
+            style="width: 560px; margin-top: 50px;"
         />
         <v-switch
             v-model="data.content.selectMultiple"

@@ -1,7 +1,7 @@
 export default {
     "name": "New Multiple Choice",
     "instructions": "Your Instructions Here...",
-    "selectMultiple" : true,
+    "selectMultiple" : false,
     "audioId": null,
     "choices": [
         {
@@ -15,10 +15,6 @@ export default {
         {
             "value": "Choice 3",
             "isCorrect" : false
-        },
-        {
-            "value": "Choice 4",
-            "isCorrect" : true
         }
     ]
 }
