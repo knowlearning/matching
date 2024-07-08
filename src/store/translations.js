@@ -284,7 +284,7 @@ export default {
     'th' : 'เพิ่มแถว'
   },
   'multiple-choice' : {
-    'en' : 'Multiple Choice',
+    'en' : 'MULTIPLE CHOICE',
     'th' : 'ตัวเลือกหลายตัว'
   },
   'select-multiple' : {
