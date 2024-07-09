@@ -306,5 +306,9 @@ export default {
   'new-choice' : {
     'en' : 'New Choice',
     'th' : 'ตัวเลือกใหม่'
-  }
+  },
+  'multiple-choice-question' : {
+    'en' : 'Multiple Choice Question',
+    'th' : 'คำถามแบบหลายตัวเลือก'
+  },
 }
