@@ -44,7 +44,7 @@ const props = defineProps({
 const item = await Agent.state(props.id)
 
 // v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
-let userSelect = ref(item.selectMultiple ? [] : 0)
+let userSelect = ref(item.selectMultiple ? [] : false)
 
 function isCorrect() {
     if (item.selectMultiple) {
