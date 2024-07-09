@@ -21,7 +21,7 @@
     <div class="left-col">
       <div class="logo-line" @click="data.active = null">
         <div class="logo-and-name">
-          <img id="logo" src="./assets/pila.png" @click="toggleLanguage" >
+          <img id="logo" src="./assets/pila.png">
           <h2>Pila {{ t('create') }}</h2>
         </div>
         <div class="button-area">
@@ -62,6 +62,16 @@
           class="mx-2"
           size="small"
           :image="data.userAvatarPath"
+        />
+        <v-select
+          class="pa-2"
+          density="compact"
+          hide-details
+          bg-color="white"
+          :items="['en','th']"
+          :model-value="store.getters.language()"
+          @update:model-value="store.dispatch('language', $event)"
+          style="max-width: 100px;"
         />
       </div>
       <div class="right-inner" v-if="data.active">
@@ -165,13 +175,6 @@
     if (data.active === id) data.active = null
     data.content = data.content.filter(content => content !== id)
     data.tags[MY_CONTENT_TAG][id] = { value: null }
-  }
-  function toggleLanguage(e) {
-    if (e.shiftKey && e.offsetX < 10 && e.offsetY < 10) {
-      const lang = store.getters.language()
-      const newLang = (lang === 'en' ? 'th' : 'en')
-      store.dispatch('language', newLang)
-    }
   }
   function logout() {
     Agent.logout()
