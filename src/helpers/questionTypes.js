@@ -12,6 +12,8 @@ import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 import MarkdownCustomizer from '../components/Markdown/Customizer.vue'
 import MarkdownPlayer from '../components/Markdown/Player.vue'
+import TrueOrFalseCustomizer from '../components/TrueOrFalse/Customizer.vue'
+import TrueOrFalsePlayer from '../components/TrueOrFalse/Player.vue'
 
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
@@ -19,6 +21,9 @@ import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
 import defaultMarkdown from './demo-questions/defaultMarkdown.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
+import TrueOrFalse from './demo-questions/defaultTrueFalse.js'
+
+
 
 
 const copy = x => JSON.parse(JSON.stringify(x))
@@ -104,6 +109,18 @@ const questionTypes = {
 			th: copy(defaultMarkdown)
 		},
 		sample: '009e59c0-38d2-11ef-b713-21184efafe0d'
+	},
+	'application/json;type=true-false' : {
+		description: 'true-false-question',
+		components: {
+			player: TrueOrFalsePlayer,
+			customizer: TrueOrFalseCustomizer
+		},
+		newItemSchemas: {
+			default: copy(TrueOrFalse),
+			th: copy(TrueOrFalse)
+		},
+		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
 	},
 	'application/json;type=sequence' : {
 		description: 'sequence-builder',
