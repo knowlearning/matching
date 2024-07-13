@@ -311,4 +311,16 @@ export default {
     'en' : 'Multiple Choice Question',
     'th' : 'คำถามแบบหลายตัวเลือก'
   },
+  'FillInTheBlank-description' : {
+    'en' : 'Fill-in-the-Blank questions allow users to complete sentences by filling in missing words, displayed as underscores (_____), testing their understanding and recall.',
+    'th' : 'คำถามเติมคำในช่องว่างให้ผู้ใช้กรอกคำที่หายไปในประโยค ซึ่งจะแสดงเป็นขีดเส้นใต้ (_____) เพื่อทดสอบความเข้าใจและความสามารถในการระลึกถึงข้อมูลของพวกเขา'
+  },
+  'FillInTheBlank' : {
+    'en' : 'FILL IN THE BLANK',
+    'th' : 'เติมคำในช่องว่าง'
+  },
+  'fill-in-the-blank-question' : {
+    'en' : 'Fill in the Blank Question',
+    'th' : 'คำถามเติมคำในช่องว่าง'
+  },
 }

@@ -12,6 +12,8 @@ import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 import MarkdownCustomizer from '../components/Markdown/Customizer.vue'
 import MarkdownPlayer from '../components/Markdown/Player.vue'
+import FillInTheBlankCustomizer from '../components/FillInTheBlank/Customizer.vue'
+import FillInTheBlankPlayer from '../components/FillInTheBlank/Player.vue'
 
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
@@ -19,6 +21,8 @@ import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
 import defaultMarkdown from './demo-questions/defaultMarkdown.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
+
+
 
 
 const copy = x => JSON.parse(JSON.stringify(x))
@@ -105,6 +109,24 @@ const questionTypes = {
 		},
 		sample: '009e59c0-38d2-11ef-b713-21184efafe0d'
 	},
+	'application/json;type=FillInTheBlank' : {
+        description: 'fill-in-the-blank-question',
+        components: {
+            player: FillInTheBlankPlayer,
+            customizer: FillInTheBlankCustomizer
+        },
+        newItemSchemas: {
+            default: {
+                question: '',
+                blanks: []
+            },
+            th: {
+                question: '',
+                blanks: []
+            }
+        },
+        sample: 'd5ee4cb0-3f81-11ef-9db1-add59686a112'
+    },
 	'application/json;type=sequence' : {
 		description: 'sequence-builder',
 		components: {
