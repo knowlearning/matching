@@ -311,4 +311,16 @@ export default {
     'en' : 'Multiple Choice Question',
     'th' : 'คำถามแบบหลายตัวเลือก'
   },
+  'true-false' : {
+    'en' : 'TRUE/FALSE',
+    'th' : 'เติมคำในช่องว่าง'
+  },
+  'true-false-description' : {
+    'en' : 'True/False questions require users to determine if a statement is true or false, testing their knowledge and comprehension.',
+    'th' : 'คำถามจริง/เท็จให้ผู้ใช้ตัดสินใจว่าข้อความนั้นเป็นจริงหรือเท็จ ทดสอบความรู้และความเข้าใจของพวกเขา'
+  },
+  'true-false-question' : {
+    'en' : 'True/False Question',
+    'th' : 'คำถามจริง/เท็จ'
+  },
 }
