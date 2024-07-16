@@ -5,15 +5,19 @@
       </div>
   
       <div class="question-wrapper">
-        <p v-html="formattedQuestion"></p>
+        <div>{{ questionText }}</div>
       </div>
   
       <div class="answer-inputs">
-        <div v-for="(blank, index) in blanks" :key="index" class="input-group">
-          <label :for="'answer-' + index">Blank {{ index + 1 }}:</label>
+        <div
+            v-for="(blank, i) in item.blanks"
+            :key="`user-input-${i}`"
+            class="input-group"
+        >
+          <label :for="'answer-' + i">Blank {{ i + 1 }}:</label>
           <v-text-field
-            v-model="userAnswers[index]"
-            :id="'answer-' + index"
+            v-model="userAnswers[i]"
+            :id="'answer-' + i"
             hide-details
             class="answer-input"
           />
@@ -30,43 +34,36 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
-import { useStore } from 'vuex'
 
+import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
 const props = defineProps({
-id: {
-    type: String,
-    required: true
-}
+    id: {
+        type: String,
+        required: true
+    }
 })
 const item = await Agent.state(props.id)
 
-const blanks = ref([...item.blanks || []])
-const userAnswers = ref(Array(blanks.value.length).fill(''))
+const userAnswers = ref(Array(item.blanks.length).fill(''))
 
-const formattedQuestion = computed(() => {
-let question = item.question
-blanks.value.forEach((blank, index) => {
-    const blankRegex = new RegExp(
-    `<span style="font-weight: bold; text-decoration: underline;">${blank.word}</span>`,
-    'g'
-    )
-    question = question.replace(blankRegex, '_____')
-})
-return question
-})
+const questionText = computed(() => {
+    return replaceUnderscoreStrings(item.question, replacerFn)
 
-function isCorrect() {
-return blanks.value.every((blank, index) => {
-    return userAnswers.value[index].trim().toLowerCase() === blank.word.trim().toLowerCase()
+    function replacerFn(word) { return '______' }
+    function replaceUnderscoreStrings(str, fn) {
+        return str.replace(/_(.*?)_/g, (match, p1) => fn(p1))
+    }
 })
-}
 
 async function handleSubmit() {
-    if (Agent.embedded) Agent.close({ success: isCorrect() })
-    else await itemFeedbackSwal(t, isCorrect())
+    const isCorrect = item.blanks.every((blank, i) => {
+        return userAnswers.value[i].trim().toLowerCase() === blank.trim().toLowerCase()
+    })
+    if (Agent.embedded) Agent.close({ success: isCorrect })
+    else await itemFeedbackSwal(t, isCorrect)
 }
 </script>
   
