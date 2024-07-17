@@ -3,6 +3,7 @@
         @drop="handleAttemptedDrop"
         label="Markdown"
         rows="22"
+
     />
 </template>
 
@@ -14,6 +15,10 @@ const emit = defineEmits([ 'input' ])
 
 async function handleAttemptedDrop(e) {
     const droppedText = e.dataTransfer.getData('text/plain').trim()
+
+    // fix bug dragon doesn't work when textarea empty
+    if (!e.target.value) e.target.value = droppedText
+
     if (isUUID(droppedText)) {
         try {
             const { active_type } = await Agent.metadata(droppedText)
