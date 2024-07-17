@@ -46,7 +46,7 @@ function insertEmbedIframes(markdown) {
     const scope = Math.random().toString(32).substring(2)
     Object.keys(uuidsForIframes).forEach(id => {
         const scopedId = scope + id
-        md = md.replaceAll(id, `<iframe class="${scopedId}" style="width:100%; height:100%;"></iframe>`)
+        md = md.replaceAll(id, `<iframe class="${scopedId}" style="width:100%; height:100%; border: none;"></iframe>`)
         embeddingsToHookUp.push({
             className: scopedId,
             id
@@ -67,6 +67,7 @@ onUpdated(() => {
                 embedding.on('state', e => console.log('state', e))
                 embedding.on('mutate', e => console.log('mutate', e))
                 embedding.on('close', e => console.log('close', e))
+
                 embeddings.push(embedding)
             })
     }
