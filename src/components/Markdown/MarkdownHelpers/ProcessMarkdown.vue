@@ -99,13 +99,11 @@ async function replacer(uuid, optionsStr) {
                 setTimeout(() => reject(new Error('Timeout')), 2000);
             })
         ])
+        const height = options.height ? options.height + 'px' : 'auto'
+        const width = options.width ? options.width + 'px' : 'auto'
         if (typeName === 'image') {
-            const height = options.height ? options.height + 'px' : '100px'
-            const width = options.width ? options.width + 'px' : '100px'
             return `\n\n<img height="${height};" width="${width};" src="${res?.url}">`
         } else if (typeName === 'audio' || typeName === 'video') {
-            const height = options.height || '225px'
-            const width = options.width || '300px'
             return `\n\n<${typeName} height="${height};" width="${width};" controls controlsList="nodownload noplaybackrate">\n<source src="${res?.url}" type="${active_type}">\nYour browser does not support the ${typeName} element.\n</${typeName}>`
         }
     } catch {
