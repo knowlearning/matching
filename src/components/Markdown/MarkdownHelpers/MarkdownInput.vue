@@ -8,6 +8,7 @@
 
 <script setup>
 import { validate as isUUID } from 'uuid'
+import { sequenceImportableTypes } from '../../../helpers/questionTypes.js'
 
 const emit = defineEmits([ 'input' ])
 
@@ -16,12 +17,15 @@ async function handleAttemptedDrop(e) {
     if (isUUID(droppedText)) {
         try {
             const { active_type } = await Agent.metadata(droppedText)
-            let typeName = null
+            let supportedType = false
             const supportedTypePrefixes = [ 'audio', 'image', 'video' ]
             supportedTypePrefixes.forEach(type => {
-                if (active_type.startsWith(type)) typeName = type
+                if (active_type.startsWith(type)) supportedType = true  
             })
-            if (!typeName) { // if none set above
+            if (sequenceImportableTypes.includes(active_type)) {
+                supportedType = true
+            }
+            if (!supportedType) { // if none set above
                 alert('uuid not found or not supported type')
                 return
             }
