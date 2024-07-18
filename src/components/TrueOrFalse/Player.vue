@@ -5,7 +5,10 @@
         </div>
         
         <div class="choices-wrapper">
-            <v-radio-group v-model="userSelect">
+            <v-radio-group
+                v-model="userSelect"
+                hide-details
+            >
                 <v-radio 
                     label="True" 
                     :value="true" 
@@ -55,6 +58,7 @@ async function handleSubmit() {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
     
     padding: 30px;
     background: linear-gradient(135deg, #f0f4f8, #d0d8e0);

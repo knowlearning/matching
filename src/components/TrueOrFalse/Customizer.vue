@@ -45,6 +45,7 @@ data.content = state
     flex-direction: column;
     align-items: center;
     position: relative;
+    height: 100%;
 
     padding: 20px;
     background: linear-gradient(135deg, #f0f4f8, #d0d8e0);
@@ -61,6 +62,7 @@ data.content = state
 
 .choices-wrapper {
     width: 100%;
+    flex: 0 0 auto;
     max-width: 600px;
     margin: 20px 0;
     padding: 15px;
