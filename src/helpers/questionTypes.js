@@ -21,10 +21,7 @@ import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
 import defaultMarkdown from './demo-questions/defaultMarkdown.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
-import TrueOrFalse from './demo-questions/defaultTrueFalse.js'
-
-
-
+import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
@@ -117,8 +114,8 @@ const questionTypes = {
 			customizer: TrueOrFalseCustomizer
 		},
 		newItemSchemas: {
-			default: copy(TrueOrFalse),
-			th: copy(TrueOrFalse)
+			default: copy(defaultTrueFalse),
+			th: copy(defaultTrueFalse)
 		},
 		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
 	},

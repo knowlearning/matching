@@ -6,6 +6,7 @@
             class="name-instructions"
         />
         <v-radio-group v-model="data.content.answer" class="choices-wrapper">
+
             <v-radio
                 label="True"
                 :value="true"
@@ -44,14 +45,13 @@ data.content = state
     flex-direction: column;
     align-items: center;
     position: relative;
+
     padding: 20px;
     background: linear-gradient(135deg, #f0f4f8, #d0d8e0);
     border-radius: 20px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     max-width: 100%;
     margin: auto;
-    font-family: 'Roboto', sans-serif;
-    color: #333;
 }
 
 .name-instructions {
