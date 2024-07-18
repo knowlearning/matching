@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onUpdated } from 'vue'
 
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
@@ -23,16 +23,55 @@ const props = defineProps({
 
 const sanitizedMarkdown = ref('')
 
+let uuidsForIframes = {}
+const embeddingsToHookUp = []
+const embeddings = []
+
 watch(
     () => props.userInput,
     async val => {
+        uuidsForIframes = {}
+        while (embeddings.length) embeddings.shift().remove()
+
         const withIDsReplaced = await replaceUUIDs(val, replacer)
         const katex = renderLatex(withIDsReplaced)
         const md = marked.parse(katex)
-        sanitizedMarkdown.value = DOMPurify.sanitize(md)
+        sanitizedMarkdown.value = insertEmbedIframes(DOMPurify.sanitize(md))
     },
     { immediate: true }
 )
+
+function insertEmbedIframes(markdown) {
+    let md = markdown
+    const scope = Math.random().toString(32).substring(2)
+    Object.keys(uuidsForIframes).forEach(id => {
+        const scopedId = scope + id
+        md = md.replaceAll(id, `<iframe class="${scopedId}" style="width:100%; height:100%; border: none;"></iframe>`)
+        embeddingsToHookUp.push({
+            className: scopedId,
+            id
+        })
+    })
+    return md
+}
+
+onUpdated(() => {
+    while (embeddingsToHookUp.length) {
+        const { className, id } = embeddingsToHookUp.shift()
+        document
+            .getElementsByClassName(className)
+            .forEach(iframe => {
+                console.log('Got stuff??', className, id, iframe)
+                const embedding = Agent.embed({ id, mode: 'bla', namespace: undefined }, iframe)
+                embedding.on('environment', e => Agent.environment(e)) // not sure if necessary, but gives a hook to modify child environment if desired
+                embedding.on('state', e => console.log('state', e))
+                embedding.on('mutate', e => console.log('mutate', e))
+                embedding.on('close', e => console.log('close', e))
+
+                embeddings.push(embedding)
+            })
+    }
+})
 
 async function replacer(uuid, optionsStr) {
     let options = {}
@@ -47,7 +86,11 @@ async function replacer(uuid, optionsStr) {
         supportedTypePrefixes.forEach(type => {
             if (active_type.startsWith(type)) typeName = type
         })
-        if (!typeName) return uuid // return uuid if type match not found
+
+        if (!typeName) {
+          uuidsForIframes[uuid] = true
+          return uuid // return uuid if type match not found
+        }
 
         // TODO: make a dictionary of uuids to url to prevent refecthing on each keystroke
 
@@ -57,13 +100,11 @@ async function replacer(uuid, optionsStr) {
                 setTimeout(() => reject(new Error('Timeout')), 2000);
             })
         ])
+        const height = options.height ? options.height + 'px' : 'auto'
+        const width = options.width ? options.width + 'px' : 'auto'
         if (typeName === 'image') {
-            const height = options.height ? options.height + 'px' : '100px'
-            const width = options.width ? options.width + 'px' : '100px'
             return `\n\n<img height="${height};" width="${width};" src="${res?.url}">`
         } else if (typeName === 'audio' || typeName === 'video') {
-            const height = options.height || '225px'
-            const width = options.width || '300px'
             return `\n\n<${typeName} height="${height};" width="${width};" controls controlsList="nodownload noplaybackrate">\n<source src="${res?.url}" type="${active_type}">\nYour browser does not support the ${typeName} element.\n</${typeName}>`
         }
     } catch {

@@ -48,10 +48,13 @@ Agent
     height: 100%;
 }
 .left-col, .right-col {
-    flex: 1 1 50%;
+    flex: 0 0 50%;
     padding: 8px;
     height: 100%;
     border-right: 1px solid black;
 }
-.left-col { padding-top: 56px; }
+.left-col {
+    padding-top: 56px;
+    min-width: 400px;
+}
 </style>
