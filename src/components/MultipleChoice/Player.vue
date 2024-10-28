@@ -71,6 +71,7 @@ async function handleSubmit() {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0 8px;
 }
 .choices-wrapper {
     width: 100%;

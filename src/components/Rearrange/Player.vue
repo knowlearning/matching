@@ -241,4 +241,15 @@ function arraysDeepEqual(arr1, arr2) {
     align-items: center;
     font-size: 1.4rem;
 }
+@media only screen and (max-width: 600px) {
+    .drag-areas-wrapper {
+        flex-direction: row;
+        justify-content: center;
+    }
+    .target-items,
+    .source-items {
+        flex-direction: column;
+    }
+}
+
 </style>

@@ -57,3 +57,7 @@
     return every && only
   }
 </script>
+
+<style scoped>
+  .player { padding: 0 8px; }
+</style>
