@@ -59,21 +59,12 @@ async function handleSubmit() {
     flex-direction: column;
     align-items: center;
     height: 100%;
-    
-    padding: 30px;
-    background: linear-gradient(135deg, #f0f4f8, #d0d8e0);
-    border-radius: 20px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    max-width: 100%;
+    padding: 0 6px;
 }
 .choices-wrapper {
     width: 100%;
-    max-width: 600px;
+    max-width: 400px;
     margin: 12px 0;
-    
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .instructions {
     font-size: 1.2em;

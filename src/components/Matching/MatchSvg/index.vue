@@ -12,6 +12,7 @@
             @mouseup="handleUp"
             @touchend="handleUp"
             :style="{
+                'max-width': '100%',
                 width: `${width}px`,
                 height: `${height}px`,
             }"

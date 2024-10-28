@@ -46,13 +46,6 @@ data.content = state
     align-items: center;
     position: relative;
     height: 100%;
-
-    padding: 20px;
-    background: linear-gradient(135deg, #f0f4f8, #d0d8e0);
-    border-radius: 20px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    max-width: 100%;
-    margin: auto;
 }
 
 .name-instructions {
