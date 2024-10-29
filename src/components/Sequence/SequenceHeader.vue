@@ -23,12 +23,22 @@
 				}"
 			/>
 		</div>
-		<div class="right">{{ text }}</div>		
+		<div class="right">
+			<span class="wide">
+				{{ wideDisplayText }}
+			</span>
+			<DisplayTime
+				class="mobile"
+				:time="props.time"
+			/>
+		</div>		
+
 	</div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import DisplayTime from './DisplayTime.vue'
 import NameOrTranslatedNameFromItemId from '../NameOrTranslatedNameFromItemId.vue'
 
 import { useStore } from 'vuex'
@@ -38,6 +48,10 @@ function t(slug) { return store.getters.t(slug) }
 const o = n => (n < 10 ? '0' + n : '' + n);
 
 const props = defineProps({
+	time: {
+		type: Number,
+		required: true
+	},
 	activeItemIndex: {
 		type: [ Number, null ],
 		required: true
@@ -54,7 +68,7 @@ const props = defineProps({
 
 const numItems = computed(() => props.isCorrectArray.length)
 const numCorrect = computed(() =>  props.isCorrectArray.filter(x => x).length)
-const text = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numItems.value)}`)
+const wideDisplayText = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numItems.value)}`)
 
 
 </script>
@@ -62,7 +76,7 @@ const text = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numI
 
 <style scoped>
 .sequence-header {
-	height: 40px;
+	min-height: 40px;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	align-items: center;
@@ -73,12 +87,17 @@ const text = computed(() => `${t('correct')} : ${o(numCorrect.value)} / ${o(numI
 }
 .middle {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
+
 }
 .right {
 	text-align: right;
 	margin-right: 8px;
+}
+.right .mobile { /*toggle in media query */
+	display: none;
 }
 i {
 	cursor: pointer;
@@ -100,4 +119,13 @@ i.active {
 i:not(.active):hover {
 	font-size: 1.2rem;
 }
+@media only screen and (max-width: 600px) {
+	.sequence-header { 
+		grid-template-columns: 4fr 1fr 0fr;
+	}
+	.left { display: none;  }
+	.right .mobile { display: unset; }
+	.right .wide { display: none; }
+}
+
 </style>
