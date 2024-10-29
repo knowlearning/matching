@@ -66,7 +66,7 @@ const displayString = computed(() => {
 <style scoped>
 .sequence-footer {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 2fr 5fr 2fr;
 	height: 48px; /* so the font grow won't expand it */
 	font-size: 1.1rem;
 	overflow: hidden;
