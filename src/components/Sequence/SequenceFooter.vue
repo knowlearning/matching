@@ -14,7 +14,7 @@
 			<button @click="$emit('next')">&#8250;</button>
 		</div>
 		<div class="right">
-			<DisplayTime :time="time" />
+			<DisplayTime class="wide" :time="time" />
 			<i @click="$emit('goToSummary')" class="fas fa-chart-bar"></i>
 		</div>
 	</div>
@@ -57,7 +57,6 @@ const numberCorrect = computed(() => props.isCorrectArray.filter(x => x).length)
 const percentage = computed(() => numberSubmitted.value / numberItems.value)
 const displayString = computed(() => {
 	if (props.activeItemIndex === null) return t('summary')
-
 	const oneIndexed = o(props.activeItemIndex + 1)
 	const nItems = o(numberItems.value)
 	return oneIndexed + ' / ' + nItems
@@ -110,5 +109,8 @@ button {
 }
 button:hover {
   font-size: 66px;
+}
+@media only screen and (max-width: 600px) {
+	.wide { display: none; }
 }
 </style>

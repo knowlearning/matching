@@ -4,6 +4,7 @@
 			:sequenceId="props.id"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
+			:time="data.totalTime"
 			@select="data.activeItemIndex = $event"
 			@close="handleClose"
 		/>
