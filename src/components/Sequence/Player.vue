@@ -23,7 +23,8 @@
 					prefix: `sequence-${id}-item-${i}`,
 					allow: [
 						'pila/competencies',
-						'pila/latest_competencies'
+						'pila/latest_competencies',
+						'my-' //  TODO: Disable!
 					]
 				}"
 				allow="camera;microphone;fullscreen"
