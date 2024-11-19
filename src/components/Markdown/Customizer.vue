@@ -21,8 +21,8 @@
 <script setup>
 import { reactive } from 'vue'
 import { v4 as uuid } from 'uuid'
-import MarkdownInput from './MarkdownHelpers/MarkdownInput.vue'
-import ProcessMarkdown from './MarkdownHelpers/ProcessMarkdown.vue'
+import MarkdownInput from '../MarkdownHelpers/MarkdownInput.vue'
+import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 
 import { useStore } from 'vuex'

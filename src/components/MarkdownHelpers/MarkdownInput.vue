@@ -9,7 +9,7 @@
 
 <script setup>
 import { validate as isUUID } from 'uuid'
-import { sequenceImportableTypes } from '../../../helpers/questionTypes.js'
+import { sequenceImportableTypes } from '../../helpers/questionTypes.js'
 
 const emit = defineEmits([ 'input' ])
 
