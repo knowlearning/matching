@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import ProcessMarkdown from './MarkdownHelpers/ProcessMarkdown.vue'
+import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 
 

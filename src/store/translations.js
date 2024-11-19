@@ -323,4 +323,12 @@ export default {
     'en' : 'True/False Question',
     'th' : 'คำถามจริง/เท็จ'
   },
+  'markdown-with-questions' : {
+    'en' : 'MARKDOWN WITH QUESTIONS',
+    'th' : 'Markdown พร้อมคำถาม'
+  },
+    'markdown-with-sub-questions' : {
+    'en' : 'Markdown with Sub-Questions',
+    'th' : 'Markdown พร้อมคำถาม'
+  },
 }
