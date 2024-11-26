@@ -7,14 +7,16 @@
             </v-btn>
         </div>
         <div class="right-side-questions">
+            {{ data.activeItemIndex }}
             <div
                 v-for="item,i in itemData.items"
-                :key="`play-item-${i}`"
+                :key="`play-item-wrapper-${i}`"
                 class="embedded-question-wrapper"
                 v-show="i === data.activeItemIndex"
             >
                 <vueEmbedComponent
-                    v-if="i === data.activeItemIndex"
+                    v-show="i === data.activeItemIndex"
+                :key="`play-item-embedded-${i}`"
                     style="position: absolute; top: 0; left: 0;"
                     :id="item.id"
                     allow="camera;microphone;fullscreen"
