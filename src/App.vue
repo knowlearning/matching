@@ -147,7 +147,7 @@
     const lang = store.getters.language()
     const itemToCopy = questionTypes[active_type].newItemSchemas[lang]
       || questionTypes[active_type].newItemSchemas['default']
-    await createContent(
+    const r = await createContent(
       active_type,
       copy(itemToCopy)
     )
@@ -167,6 +167,10 @@
     await Agent.synced()
     data.active = newItemId // make new item active
     // ContentBar watches data.active and ensures it opens if not already open
+
+    // temporary... re-write translations so agent picks up and responds to path change
+    const state = await Agent.state(newItemId)
+    if (active.translations) state.translations = active.translations
   }
   async function removeItem(id) {
     const { isConfirmed } = await areYouSureSwal(t)
