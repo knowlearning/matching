@@ -1,13 +1,26 @@
 <template>
     <div class="player">
-        <div class="left-side-markdown">
-            <ProcessMarkdown :userInput="itemData.md" />
-            <v-btn color="green" @click="handleSubmit">
-                {{ t('next') }}
-            </v-btn>
-        </div>
-        <div class="right-side-questions">
-            {{ data.activeItemIndex }}
+        <transition name="slide">
+            <div
+                :class="{
+                    'left-or-top-side-markdown' : true,
+                    collapsed: isBottomVisible
+                }"
+            >
+                <ProcessMarkdown :userInput="itemData.md" />
+                <v-btn color="green" @click="handleSubmit">
+                    {{ t('next') }}
+                </v-btn>
+                <button
+                    class="toggle-button"
+                    @click="isBottomVisible = !isBottomVisible"
+                >
+                    {{ isBottomVisible ? 'Show Markdown' : 'Show Questions' }}
+                </button>
+            </div>
+        </transition>
+
+        <div class="right-or-bottom-side-questions">
             <div
                 v-for="item,i in itemData.items"
                 :key="`play-item-wrapper-${i}`"
@@ -45,7 +58,7 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
@@ -61,6 +74,8 @@ const props = defineProps({
         required: true
     }
 })
+
+const isBottomVisible = ref(false)
 
 const itemData = await Agent.state(props.id)
 const data = reactive(await Agent.state(`markdown-${props.id}`))
@@ -86,29 +101,30 @@ async function handleSubmit() {
 
 <style scoped>
 .player {
+    width: 100%;
     display: flex;
     padding: 12px;
     height: 100%;
     justify-content: space-between;
 }
-.left-side-markdown,
-.right-side-questions {
+.left-or-top-side-markdown,
+.right-or-bottom-side-questions {
     border: 1px solid #111;
     border-radius: 8px;
     padding: 6px;
 }
 
-.left-side-markdown {
+.left-or-top-side-markdown {
     height: 100% ;
     flex: 0 0 48%;
 }
-.right-side-questions {
+.right-or-bottom-side-questions {
     height: calc(100% - 32px);
     flex: 0 0 49%;
     height: 100%;
     position: relative;
 }
-.right-side-questions .navbar {
+.right-or-bottom-side-questions .navbar {
     height: 32px;
     background: lightgrey;
     position: absolute;
@@ -119,6 +135,49 @@ async function handleSubmit() {
 
     display: flex;
     justify-content: space-between;
-
 }
+.toggle-button { display: none; }
+
+@media only screen and (max-width: 600px) {
+    .player {
+        flex-direction: column;
+    }
+    .left-or-top-side-markdown {
+        width: 100%;
+        padding: 20px;
+        transition: min-height 0.3s ease;
+        min-height: 85%; /* Expanded state */
+        position: relative;
+        overflow: hidden;
+    }
+
+    .left-or-top-side-markdown.collapsed {
+        min-height: 15%; /* Collapsed state */
+        max-height: 15%;
+    }
+
+    .right-or-bottom-side-questions {
+        flex-grow: 1;
+        padding: 20px;
+    }
+
+    .toggle-button {
+        display: revert;
+        position: absolute;
+        bottom: -10px;
+        right: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .toggle-button:hover {
+        background-color: #0056b3;
+    }
+}
+
 </style>
