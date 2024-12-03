@@ -166,8 +166,8 @@
     data.content.push(newItemId) // optimistic update locally loaded
     await Agent.synced()
     data.active = newItemId // make new item active
-    // ContentBar watches data.active and ensures it opens if not already open
   }
+
   async function removeItem(id) {
     const { isConfirmed } = await areYouSureSwal(t)
     if (!isConfirmed) return
