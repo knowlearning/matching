@@ -32,7 +32,6 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
-function copy(x) { return JSON.parse(JSON.stringify(x))}
 
 const props = defineProps({
     id: {
