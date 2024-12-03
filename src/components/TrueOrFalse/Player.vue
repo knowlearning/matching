@@ -40,8 +40,8 @@ const props = defineProps({
     }
 })
 
-
-const item = await translate(props.id)
+const lang = store.getters.language()
+const item = await translate(props.id, lang)
 
 async function translate(id, lang = 'ar-iq') {
     // const TRANSLATION_DEV_DOMAIN = 'f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:5889'
