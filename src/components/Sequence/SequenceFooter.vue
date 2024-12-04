@@ -9,13 +9,25 @@
 			/>
 		</div>
 		<div class="middle">
-			<button @click="$emit('previous')">&#8249;</button>
+			<button class="arrow" @click="$emit('previous')">&#8249;</button>
 			<span>{{ displayString }}</span>
-			<button @click="$emit('next')">&#8250;</button>
+			<button class="arrow" @click="$emit('next')">&#8250;</button>
 		</div>
 		<div class="right">
 			<DisplayTime class="wide" :time="time" />
-			<i @click="$emit('goToSummary')" class="fas fa-chart-bar"></i>
+			<i
+				v-if="!props.quizMode || props.quizFinished"
+				@click="$emit('goToSummary')"
+				class="fas fa-chart-bar"
+			></i>
+			<v-btn
+				v-if="props.quizMode && !props.quizFinished"
+				@click="guardFinished"
+				compact
+				class="ml-2"
+				size="small"
+				:text="t('finish')"
+			/>
 		</div>
 	</div>
 </template>
@@ -24,6 +36,7 @@
 import { computed } from 'vue'
 import ProgressPill from './ProgressPill.vue'
 import DisplayTime from './DisplayTime.vue'
+import { confirmFinishQuizSwal } from '../../helpers/swallows.js'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -31,6 +44,7 @@ function t(slug) { return store.getters.t(slug) }
 
 function o(x) { return x<10 ? '0'+x : ''+x }
 
+const emits = defineEmits([ 'quizFinished' ])
 const props = defineProps({
 	activeItemIndex: {
 		required: true,
@@ -48,6 +62,16 @@ const props = defineProps({
 		type: Boolean,
 		required: false,
 		default: false
+	},
+	quizMode: {
+		type: Boolean,
+		required: false,
+		default: false
+	},
+	quizFinished: {
+		type: Boolean,
+		required: false,
+		default: false
 	}
 })
 
@@ -61,6 +85,12 @@ const displayString = computed(() => {
 	const nItems = o(numberItems.value)
 	return oneIndexed + ' / ' + nItems
 })
+
+async function guardFinished() {
+	const { isConfirmed } = await confirmFinishQuizSwal(t)
+	if (isConfirmed) emits('quizFinished')
+}
+
 </script>
 
 <style scoped>
@@ -94,7 +124,7 @@ const displayString = computed(() => {
 .right .display-time {
 	font-size: 1rem;
 }
-button {
+button.arrow {
 	background-color: transparent;
 	border: none;
 	padding: 0;
@@ -107,7 +137,7 @@ button {
 	width: 30px;
 	transform: translateY(-5px);
 }
-button:hover {
+button.arrow:hover {
   font-size: 66px;
 }
 @media only screen and (max-width: 600px) {

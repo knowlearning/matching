@@ -2,6 +2,7 @@
 	<div class="sequence-player">
 		<SequenceHeader class="header"
 			:sequenceId="props.id"
+			:quizMode="sequenceDef.quizMode"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
 			:time="data.totalTime"
@@ -16,7 +17,12 @@
 		>
 			<vueEmbedComponent
 				v-if="i === data.activeItemIndex"
-				style="position: absolute; top: 0; left: 0;"
+				:style="{
+					position: 'absolute',
+					top: '0',
+					left: '0',
+					'pointer-events': data.quizFinished ? 'none' : 'auto'
+				}"
 				:id="item.id"
 				@close="handleItemSubmit(i, $event)"
 				:namespace="{
@@ -29,6 +35,12 @@
 				}"
 				allow="camera;microphone;fullscreen"
 			/>
+			<div
+				v-if="sequenceDef.quizMode && data.quizFinished"
+				style="position: absolute; bottom: 2px; right: 6px;"
+			>
+				{{ t('review-mode-quiz-finished') }}
+			</div>
 		</div>
 
 		<EndSequenceSummary
@@ -45,7 +57,10 @@
 			@previous="previous"
 			@next="next"
 			@goToSummary="data.activeItemIndex = null"
+			@quizFinished="handleQuizFinished"
 			:activeItemIndex="data.activeItemIndex"
+			:quizMode="sequenceDef.quizMode"
+			:quizFinished="data.quizFinished"
 			:isCorrectArray="isCorrectArray"
 			:time="data.totalTime"
 		/>
@@ -95,7 +110,8 @@ if (!data.itemInfo) { // bellwether for first init
 	Object.assign(data, {
 	  activeItemIndex: 0,
 	  itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
-	  totalTime: 0
+	  totalTime: 0,
+	  quizFinished: null
 	})
 } else { // if reattaching add any needed new keys
 	data.activeItemIndex = 0
@@ -130,7 +146,17 @@ const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correc
 const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
 const activeItemId = computed(() => sequenceDef.items[data.activeItemIndex].id)
 
-const intervalId = setInterval(updateTimeTracking, 1000)
+// start timer, but only if not already locked
+let intervalId = undefined
+if (!data.quizFinished) {
+	intervalId = setInterval(updateTimeTracking, 1000)
+}
+
+function handleQuizFinished() {
+	data.quizFinished = true
+	data.activeItemIndex = null
+	clearInterval(intervalId)
+}
 
 onBeforeUnmount(() => clearInterval(intervalId) )
 
@@ -143,10 +169,21 @@ function updateTimeTracking() {
 	}
 }
 function next() {
-	const i = data.activeItemIndex  // expect to be null
-	if (i === null) data.activeItemIndex = 0
-	else data.activeItemIndex = (i === sequenceDef.items.length - 1) ? null : i + 1
+	const i = data.activeItemIndex
+	if (i === null) return // if on dashboard, do nothing. already at 'end'
+
+	const onLastItem = (i === sequenceDef.items.length - 1)
+	const activeQuiz = (sequenceDef.quizMode && !data.quizFinished)
+
+	if (onLastItem && activeQuiz) {
+		return // no dashboard yet
+	} else if (onLastItem && !activeQuiz) {
+		data.activeItemIndex = null // to dashboard
+	} else {
+		data.activeItemIndex ++
+	}
 }
+
 function previous() {
 	const i = data.activeItemIndex
 	if (i === null) data.activeItemIndex = sequenceDef.items.length - 1
@@ -173,9 +210,14 @@ async function handleItemSubmit(i, info={}) {
 		}
 	}
 	else {
-		await itemFeedbackSwal(t, success)
+		if (sequenceDef.quizMode) {
+			next()
+		} else { // normal learn mode
+				await itemFeedbackSwal(t, success)
+				if (success) next()
+		}
+		// both learn and quiz mode
 		data.itemInfo[key].correct = success
-		if (success) next()
 	}
 }
 function handleClose() {

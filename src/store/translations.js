@@ -131,6 +131,10 @@ export default {
     'en' : 'Finished',
     'th' : 'สิ้นสุด'
   },
+  'finish': {
+    'en' : 'Finish',
+    'th' : 'เสร็จ'
+  },
   'next': {
     'en' : 'Next',
     'th' : 'ต่อไป'
@@ -322,5 +326,21 @@ export default {
   'true-false-question' : {
     'en' : 'True/False Question',
     'th' : 'คำถามจริง/เท็จ'
+  },
+  'quiz-mode' : {
+    'en' : 'Quiz Mode',
+    'th' : 'โหมดแบบทดสอบ'
+  },
+  'you-cannot-undo-this' : {
+    'en' : 'You Cannot Undo This!',
+    'th' : 'คุณไม่สามารถยกเลิกสิ่งนี้ได้'
+  },
+  'keep-working' : {
+    'en' : 'Keep Working',
+    'th' : 'ทำงานต่อไป'
+  },
+  'review-mode-quiz-finished' : {
+    'en' : 'Review Mode, Quiz Finished',
+    'th' : 'โหมดตรวจสอบ แบบทดสอบเสร็จสิ้น'
   },
 }
