@@ -339,4 +339,8 @@ export default {
     'en' : 'Keep Working',
     'th' : 'ทำงานต่อไป'
   },
+  'review-mode-quiz-finished' : {
+    'en' : 'Review Mode, Quiz Finished',
+    'th' : 'โหมดตรวจสอบ แบบทดสอบเสร็จสิ้น'
+  },
 }

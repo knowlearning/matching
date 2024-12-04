@@ -35,6 +35,12 @@
 				}"
 				allow="camera;microphone;fullscreen"
 			/>
+			<div
+				v-if="sequenceDef.quizMode && data.quizFinished"
+				style="position: absolute; bottom: 2px; right: 6px;"
+			>
+				{{ t('review-mode-quiz-finished') }}
+			</div>
 		</div>
 
 		<EndSequenceSummary
@@ -140,7 +146,6 @@ const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correc
 const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
 const activeItemId = computed(() => sequenceDef.items[data.activeItemIndex].id)
 
-console.log(data)
 // start timer, but only if not already locked
 let intervalId = undefined
 if (!data.quizFinished) {
