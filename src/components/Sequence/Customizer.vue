@@ -53,6 +53,12 @@
 				/>
 			</div>
 		</div>
+
+		<v-checkbox
+			v-model="data.content.quizMode"
+			:label="t('quiz-mode')"
+		></v-checkbox>
+
 		<div class="preview-image-section" v-if="showImageArea">
 			<SelectImage
 				:active="data.content.image"
@@ -91,6 +97,7 @@ function t(slug) { return store.getters.t(slug) }
 const props = defineProps(['id'])
 
 const state = await Agent.state(props.id)
+
 
 let showImageArea = ref(false)
 

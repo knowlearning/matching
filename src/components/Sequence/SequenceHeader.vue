@@ -15,7 +15,8 @@
 				@click="$emit('select',i)"
 				:class="{
 					'fas': true,
-					'fa-circle-check': isCorrect,
+					'always-grey' : props.quizMode,
+					'fa-circle-check': isCorrect || (props.quizMode && isCorrect !== null),
 					'fa-circle-minus': !isCorrect,
 					'correct': isCorrect,
 					'incorrect': isCorrect === false,
@@ -24,7 +25,7 @@
 			/>
 		</div>
 		<div class="right">
-			<span class="wide">
+			<span class="wide" v-if="!props.quizMode">
 				{{ wideDisplayText }}
 			</span>
 			<DisplayTime
@@ -63,6 +64,11 @@ const props = defineProps({
   isCorrectArray: {
   	type: Array,
   	required: true
+  },
+  quizMode: {
+  	type: Boolean,
+  	required: false,
+	  default: false
   }
 })
 
@@ -112,6 +118,10 @@ i.correct {
 }
 i.incorrect {
 	color: orangered;
+}
+i.always-grey.correct,
+i.always-grey.incorrect {
+	color: grey;
 }
 i.active {
 	font-size: 1.6rem;

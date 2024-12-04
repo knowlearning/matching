@@ -36,7 +36,7 @@ export function uploadSizeNotificationSwal(t) {
 		html: t('long-upload-warning-html-text'),
 		icon: 'warning',
 		confirmButtonText: t('ok'),
-    })
+	})
 }
 
 export function areYouSureSwal(t) {
@@ -46,7 +46,18 @@ export function areYouSureSwal(t) {
 		confirmButtonText: t('remove'),
 		cancelButtonText: t('cancel'),
 		showCancelButton: true,
-    })
+	})
+}
+
+export function confirmFinishQuizSwal(t) {
+	return Swal.fire({
+		title: t('are-you-sure'),
+		text: t('you-cannot-undo-this'),
+		icon: 'warning',
+		confirmButtonText: t('finish'),
+		cancelButtonText: t('keep-working'),
+		showCancelButton: true,
+	})
 }
 
 export function inputSwal(t, pre = '') {
