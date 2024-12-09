@@ -343,4 +343,12 @@ export default {
     'en' : 'Review Mode, Quiz Finished',
     'th' : 'โหมดตรวจสอบ แบบทดสอบเสร็จสิ้น'
   },
+  'true' : {
+    'en' : 'True',
+    'th' : 'จริง'
+  },
+  'false' : {
+    'en' : 'False',
+    'th' : 'เท็จ'
+  }
 }

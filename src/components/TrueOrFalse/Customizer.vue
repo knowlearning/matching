@@ -8,12 +8,12 @@
         <v-radio-group v-model="data.content.answer" class="choices-wrapper">
 
             <v-radio
-                label="True"
+                :label="t('true')"
                 :value="true"
                 hide-details
             />
             <v-radio
-                label="False"
+                :label="t('false')"
                 :value="false"
                 hide-details
             />
