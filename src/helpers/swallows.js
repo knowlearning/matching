@@ -2,21 +2,22 @@ import Swal from 'sweetalert2'
 import { validate as isUUID } from 'uuid'
 import questionTypes from './questionTypes.js'
 
-export function itemFeedbackSwal(t, isCorrect) {
-	 return isCorrect ?  itemCorrectSwal(t) : itemIncorrectSwal(t)
+export function itemFeedbackSwal(t, isCorrect, message) {
+	return isCorrect ?  itemCorrectSwal(t, message) : itemIncorrectSwal(t, message)
 }
 
-function itemCorrectSwal(t) {
+function itemCorrectSwal(t, message) {
 	return Swal.fire({
 		icon: 'success',
+		text: message || null,
 		confirmButtonText: t('next')
 	})
 }
 
-function itemIncorrectSwal(t) {
+function itemIncorrectSwal(t, message) {
 	return Swal.fire({
 		icon: 'warning',
-		text: t('try-again'),
+		text: message || t('try-again'),
 		confirmButtonText: t('ok')
 	})
 }

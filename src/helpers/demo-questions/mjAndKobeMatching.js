@@ -2,6 +2,10 @@ export default {
     "name": "ทูเดอะเกรทเทส / The Greatest Two",
     "instructions": "การแข่งขัน / Match",
     "textIsPlayable" : true,
+    "feedback" : {
+        "correct" : null,
+        "incorrect" : null
+    },
     "fromChoices": [
         {
             "type": "image",

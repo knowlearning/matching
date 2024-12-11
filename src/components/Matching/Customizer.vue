@@ -53,6 +53,11 @@
 
     </div>
 
+    <CustomizeFeedback
+      :feedback="data.content.feedback"
+      style="width: 420px; margin: 8px auto;"
+    />
+
   </div>
 </template>
 
@@ -61,6 +66,8 @@ import { reactive} from 'vue'
 import { v4 as uuid, validate as isUUID } from 'uuid'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
+
 import MatchSvg from './MatchSvg/index.vue'
 import PickFileButton from '../PickFileButton.vue'
 import { inputSwal,
@@ -81,7 +88,12 @@ const data = reactive({
 })
 
 const state = await Agent.state(props.id)
+
+// rehab old content without feedback
+if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+
 data.content = state
+
 
 async function addChoice() {
   const { isConfirmed, value } = await inputSwal(t)
