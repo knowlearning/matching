@@ -31,7 +31,11 @@
 <script setup>
 import { ref } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
+import translateScopeId from '../../helpers/translateScopeId.js'
+
+
 import { useStore } from 'vuex'
+
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
@@ -41,7 +45,10 @@ const props = defineProps({
         required: true
     }
 })
-const item = await Agent.state(props.id)
+
+const lang = store.getters.language()
+const item = await translateScopeId(props.id, lang)
+
 
 // v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
 let userSelect = ref(item.selectMultiple ? [] : false)

@@ -145,11 +145,9 @@
     if (!active_type) return
     // get demo question for active language
     const lang = store.getters.language()
-    const itemToCopy = questionTypes[active_type].newItemSchemas[lang]
-      || questionTypes[active_type].newItemSchemas['default']
     await createContent(
       active_type,
-      copy(itemToCopy)
+      questionTypes[active_type].newItemGenerator({})
     )
   }
   

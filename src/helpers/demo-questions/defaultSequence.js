@@ -1,4 +1,4 @@
-export default {
+export default ({ source_language }) => ({
 	name: 'ลำดับใหม่ / New Sequence',
 	items: [
 		{ id : '01fd0ef0-fb93-11ee-a57d-19b2f6cf4b58' }, // Butterfly Reordering
@@ -6,4 +6,4 @@ export default {
 		{ id : '13d0f650-fb93-11ee-a57d-19b2f6cf4b58' }, // Monument Pairs
 	],
 	quizMode: false
-}
+})
