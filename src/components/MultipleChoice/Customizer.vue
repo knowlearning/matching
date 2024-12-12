@@ -18,10 +18,7 @@
             @removeChoice="removeChoice"
         />
         <v-btn
-            @click="data.content.choices.push({
-                value: t('new-choice'),
-                isCorrect: false
-            })"
+            @click="addChoice"
             class="mb-12"
         >
             {{ t('new-choice') }}
@@ -62,14 +59,31 @@ function removeChoice(index) {
     const choicesCopy = JSON.parse(JSON.stringify(data.content.choices))
     choicesCopy.splice(index,1)
     data.content.choices = choicesCopy
+    updateTranslationPaths()
 }
-
+function addChoice() {
+    data.content.choices.push({
+        value: t('new-choice'),
+        isCorrect: false
+    })
+    updateTranslationPaths()
+}
 function toggleChoice(index,value) {
     // if  turning on and not selectMultiple, set all others to false 
     if (!data.content.selectMultiple && value === true) {
         unselectAll()
     }
     data.content.choices[index].isCorrect = value
+}
+function updateTranslationPaths() {
+    let paths = [
+        [ 'name' ],
+        [ 'instructions' ],
+        [ 'feedback', 'correct' ],
+        [ 'feedback', 'incorrect' ]
+    ]
+    data.content.choices.forEach((_,i) => paths.push([ 'choices', i, 'value' ]))
+    data.content.translations.paths = paths
 }
 function unselectAll() {
     data.content.choices.forEach(c => c.isCorrect = false)
