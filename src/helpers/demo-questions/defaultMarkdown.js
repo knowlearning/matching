@@ -1,4 +1,4 @@
-export default {
+export default ({ source_language }) => ({
 	name: 'New Markdown',
 	md: `# Markdown "How To"
 
@@ -25,4 +25,4 @@ Most any html will work for content or layout. For example, here's how we can us
 2e799b50-3d34-11ef-9a0a-db6f64acb29a{"width": 90, "height": 90}
 </div>
 `
-}
+})

@@ -1,4 +1,4 @@
-export default {
+export default ({ source_language }) => ({
     "name": "โบราณสถานที่ระลึกชื่อเสียง / Famous Monuments",
     "instructions": "ฟังและเลือก / Listen and Choose",
     "audioId" : null,
@@ -47,4 +47,4 @@ export default {
             ]
         }
     ]
-}
+})

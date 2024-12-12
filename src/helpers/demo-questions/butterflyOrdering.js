@@ -1,4 +1,4 @@
-export default {
+export default ({ source_language }) => ({
     "name": "ผีเสื้อ / Butterfly",
     "instructions": "ลำดับตั้งแต่แรกจนถึงสุดท้าย / Order First to Last",
     "feedback" : {
@@ -20,4 +20,4 @@ export default {
         }
     ],
     "audioId": null
-}
+})

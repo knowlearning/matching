@@ -1,4 +1,4 @@
-export default {
+export default ({ source_language }) => ({
     "name": "ทูเดอะเกรทเทส / The Greatest Two",
     "instructions": "การแข่งขัน / Match",
     "textIsPlayable" : true,
@@ -40,4 +40,4 @@ export default {
             "634a6859-17ca-4d21-a92a-76b1a9c5158f"
         ]
     ]
-}
+})

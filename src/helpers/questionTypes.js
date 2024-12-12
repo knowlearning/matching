@@ -32,10 +32,7 @@ const questionTypes = {
 			player: MatchingPlayer,
 			customizer: MatchingCustomizer
 		},
-		newItemSchemas: {
-			default: copy(mjAndKobeMatching),
-			th: copy(mjAndKobeMatching)
-		},
+		newItemGenerator: mjAndKobeMatching,
 		sample: '0c014c40-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=multiple-choice' : {
@@ -44,43 +41,16 @@ const questionTypes = {
 			player: MultipleChoicePlayer,
 			customizer: MultipleChoiceCustomizer
 		},
-		newItemSchemas: {
-			default: copy(multipleChoiceDefault),
-			th: copy(multipleChoiceDefault)
-		},
+		newItemGenerator: multipleChoiceDefault,
 		sample: '1a1c2410-3d4e-11ef-8319-adf6059912ac'
 	},
-
-
-
-
-	// 'application/json;type=textEntry' : {
-	// 	    description: 'Text Entry Question',
-	// 	    components: {
-	// 		    player: TextEntryPlayer,
-	// 		    customizer: TextEntryCustomizer
-	// 	    },
-	// 	    newItemSchemas: {
-	//          default: {
-	// 	            name: 'Unnamed Text Entry Item',
-	// 	            question: 'Your Question Here',
-	//          },
-	//          th: {
-	// 	            name: 'Unnamed Text Entry Item',
-	// 	            question: 'THAI Your Question Here',
-	//          }
-	// 	     }
-	// },
 	'application/json;type=rearrange-items' : {
 		description: 'rearrange-question',
 		components: {
 			player: RearrangePlayer,
 			customizer: RearrangeCustomizer
 		},
-		newItemSchemas: {
-			default: copy(butterflyOrdering),
-			th: copy(butterflyOrdering)
-		},
+		newItemGenerator: butterflyOrdering,
 		sample: '01fd0ef0-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=select-from-pairs' : {
@@ -89,10 +59,7 @@ const questionTypes = {
 			player: SelectFromPairsPlayer,
 			customizer: SelectFromPairsCustomizer
 		},
-		newItemSchemas: {
-			default: copy(monumentPairs),
-			th: copy(monumentPairs)
-		},
+		newItemGenerator: monumentPairs,
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=markdown' : {
@@ -101,10 +68,7 @@ const questionTypes = {
 			player: MarkdownPlayer,
 			customizer: MarkdownCustomizer
 		},
-		newItemSchemas: {
-			default: copy(defaultMarkdown),
-			th: copy(defaultMarkdown)
-		},
+		newItemGenerator: defaultMarkdown,
 		sample: '009e59c0-38d2-11ef-b713-21184efafe0d'
 	},
 	'application/json;type=true-false' : {
@@ -113,10 +77,7 @@ const questionTypes = {
 			player: TrueOrFalsePlayer,
 			customizer: TrueOrFalseCustomizer
 		},
-		newItemSchemas: {
-			default: copy(defaultTrueFalse),
-			th: copy(defaultTrueFalse)
-		},
+		newItemGenerator: defaultTrueFalse,
 		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
 	},
 	'application/json;type=sequence' : {
@@ -125,10 +86,7 @@ const questionTypes = {
 			player: SequencePlayer,
 			customizer: SequenceCustomizer
 		},
-		newItemSchemas: {
-			default: copy(defaultSequence),
-			th: copy(defaultSequence)
-		},
+		newItemGenerator: defaultSequence,
 		sample: '92719c10-026b-11ef-8b1d-b914e5d38307'
 	},
 }
