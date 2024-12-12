@@ -7,6 +7,10 @@
 				:content="data.content"
 				style="width: 300px;"
 			/>
+			<CustomizeFeedback
+				:feedback="data.content.feedback"
+				style="width: 300px;"
+			/>
 			<v-btn
 				@click="addRow"
 				color="green"
@@ -43,6 +47,7 @@
 import { reactive, ref } from 'vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
 import RowCustomizer from './RowSelection/Customizer.vue'
 import AudioBar from '../AudioBar.vue'
 import newRowSchema from './newRowSchema.js'
@@ -57,6 +62,9 @@ const props = defineProps({
 })
 
 const state = await Agent.state(props.id)
+// rehab old content without feedback
+if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+
 const data = reactive({ content: state })
 
 function updateRow(i,payload) {

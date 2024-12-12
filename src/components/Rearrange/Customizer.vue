@@ -8,6 +8,10 @@
 				:content="data.content"
 				style="width: 420px;"
 			/>
+			<CustomizeFeedback
+				:feedback="data.content.feedback"
+				style="width: 420px;"
+			/>
 			<div class="audio-area">
 				<AudioBar
 					:id="data.content.audioId"
@@ -43,7 +47,6 @@
 				</template>
 			</draggable>
 		</div>
-		
 	</div>
 </template>
 
@@ -52,6 +55,8 @@ import { reactive } from 'vue'
 import { v4 as uuid } from 'uuid'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
+
 import AudioBar from '../AudioBar.vue'
 import PickFileButton from '../PickFileButton.vue'
 import draggable from 'vuedraggable'
@@ -72,6 +77,7 @@ Agent
 		if (!state.name) state.name = ''
 		if (!state.audioId) state.audioId = null
 		if (!state.images) state.images = []
+		if (!state.feedback) state.feedback = { correct: null, incorrect: null }
 		data.content = state
 	})
 

@@ -68,9 +68,19 @@ function isCorrect() {
 }
 
 async function handleSubmit() {
-    if (Agent.embedded) Agent.close({ success: isCorrect() })
-    else await itemFeedbackSwal(t, isCorrect())
+    const correct = isCorrect()
+    if (Agent.embedded) Agent.close({
+        success: correct,
+        message: getMessage(correct)
+    })
+    else await itemFeedbackSwal(t, correct, getMessage(correct))
 }
+function getMessage(isCorrect) {
+    if (isCorrect && item.feedback?.correct) return item.feedback.correct 
+    else if (!isCorrect && item.feedback?.incorrect) return item.feedback.incorrect
+    else return undefined
+}
+
 </script>
 
 <style scoped>

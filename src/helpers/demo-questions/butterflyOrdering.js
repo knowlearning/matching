@@ -1,6 +1,10 @@
 export default {
     "name": "ผีเสื้อ / Butterfly",
     "instructions": "ลำดับตั้งแต่แรกจนถึงสุดท้าย / Order First to Last",
+    "feedback" : {
+        "correct" : null,
+        "incorrect" : null
+    },
     "images": [
         {
             "id": "9c9058e0-f8ec-11ee-95b9-47b383c910e1"

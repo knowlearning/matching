@@ -6,7 +6,6 @@
             class="name-instructions"
         />
         <v-radio-group v-model="data.content.answer" class="choices-wrapper">
-
             <v-radio
                 :label="t('true')"
                 :value="true"
@@ -18,6 +17,9 @@
                 hide-details
             />
         </v-radio-group>
+        <CustomizeFeedback
+            :feedback="data.content.feedback"
+        />
     </div>
 </template>
 
@@ -25,6 +27,7 @@
 import { reactive } from 'vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -36,7 +39,11 @@ const data = reactive({
 })
 
 const state = await Agent.state(props.id)
+// rehab old content without feedback
+if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+
 data.content = state
+
 </script>
 
 <style scoped>
