@@ -13,8 +13,6 @@
                 @click="data.tab = 'questions'"
             >Questions</v-btn>
         </div>
-        
-
 
         <div
             v-if="data.tab === 'markdown'"
@@ -26,12 +24,12 @@
                     :label="t('item-name')"
                     class="vuetify-text-input"
                 />
-                <MarkdownInput v-model="data.content.md" />
+                <MarkdownInput v-model="data.markdownContent.md" />
             </div>
             <div class="right-col">
                 <ProcessMarkdown
-                    v-if="data?.content?.md"
-                    :userInput="data.content.md"
+                    v-if="data?.markdownContent?.md"
+                    :userInput="data.markdownContent.md"
                 />
             </div>
         </div>
@@ -59,16 +57,13 @@ function t(slug) { return store.getters.t(slug) }
 const props = defineProps(['id'])
 const data = reactive({
     content: null,  // will be  synced to scope for item def
-    tab: 'markdown' // or 'questions'
+    tab: 'markdown', // or 'questions'
+    markdownContent: null // will be populated from uuid at data.content.md
 })
-Agent
-    .state(props.id)
-    .then(state => {
-        if (!state.name) state.name = ''
-        if (!state.md) state.md = ''
-        if (!state.items) state.items = [ {id: 'abc'}]
-        data.content = state
-    })
+
+data.content = await Agent.state(props.id)
+data.markdownContent = await Agent.state(data.content.md)
+
 </script>
 
 <style scoped>

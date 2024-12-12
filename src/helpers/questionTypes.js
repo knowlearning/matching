@@ -80,10 +80,7 @@ const questionTypes = {
 			player: MarkdownWithQuestionsPlayer,
 			customizer: MarkdownWithQuestionsCustomizer
 		},
-		newItemSchemas: {
-			default: copy(defaultMarkdownWithQuestions),
-			th: copy(defaultMarkdownWithQuestions)
-		},
+		newItemGenerator: defaultMarkdownWithQuestions,
 		sample: '3b0b6850-a100-11ef-961b-01e8ac0cee62'
 	},
 	'application/json;type=true-false' : {

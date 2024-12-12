@@ -7,7 +7,7 @@
                     collapsed: isBottomVisible
                 }"
             >
-                <ProcessMarkdown :userInput="itemData.md" />
+                <ProcessMarkdown v-if="markdownContent?.md" :userInput="markdownContent.md" />
                 <v-btn color="green" @click="handleSubmit">
                     {{ t('next') }}
                 </v-btn>
@@ -78,6 +78,7 @@ const props = defineProps({
 const isBottomVisible = ref(false)
 
 const itemData = await Agent.state(props.id)
+const markdownContent = await Agent.state(itemData.md)
 const data = reactive(await Agent.state(`markdown-${props.id}`))
 data.activeItemIndex = 0
 
