@@ -9,8 +9,10 @@ export default {
     translations: {
         source_language: 'en-us',
         paths: [
-            ['name'],
-            ['instructions']
+            [ 'name' ],
+            [ 'instructions' ],
+            [ 'feedback', 'correct' ],
+            [ 'feedback', 'incorrect' ]
         ]
     }
 }
