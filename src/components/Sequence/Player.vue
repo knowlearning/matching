@@ -190,7 +190,12 @@ function previous() {
 	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
 }
 async function handleItemSubmit(i, info={}) {
-	const { success=null } = info
+
+	const {
+		success = null,
+		message = null
+	} = info
+
 	const key = `${i}/${sequenceDef.items[i].id}`
 	if (info.competencies) {
 		competencyDashboardData.value = info.competencies
@@ -213,7 +218,7 @@ async function handleItemSubmit(i, info={}) {
 		if (sequenceDef.quizMode) {
 			next()
 		} else { // normal learn mode
-				await itemFeedbackSwal(t, success)
+				await itemFeedbackSwal(t, success, message)
 				if (success) next()
 		}
 		// both learn and quiz mode

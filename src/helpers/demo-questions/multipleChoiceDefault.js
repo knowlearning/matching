@@ -3,6 +3,10 @@ export default {
     "instructions": "Your Instructions Here...",
     "selectMultiple" : false,
     "audioId": null,
+    "feedback" : {
+        "correct" : null,
+        "incorrect" : null
+    },
     "choices": [
         {
             "value": "Choice 1",

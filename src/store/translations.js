@@ -350,5 +350,13 @@ export default {
   'false' : {
     'en' : 'False',
     'th' : 'เท็จ'
-  }
+  },
+  'feedback-if-correct' : {
+    'en' : 'Feedback if Correct',
+    'th' : 'ข้อเสนอแนะถ้าถูกต้อง'
+  },
+  'feedback-if-incorrect' : {
+    'en' : 'Feedback if Incorrect',
+    'th' : 'ข้อเสนอแนะถ้าไม่ถูกต้อง'
+  },
 }

@@ -26,6 +26,11 @@
         >
             {{ t('new-choice') }}
         </v-btn>
+
+        <CustomizeFeedback
+            :feedback="data.content.feedback"
+            style="width: 560px;"
+        />
     </div>
 </template>
 
@@ -33,6 +38,8 @@
 import { reactive, watch } from 'vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
+import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
+
 import EditMCOptions from './EditMCOptions.vue'
 
 import { useStore } from 'vuex'
@@ -46,6 +53,9 @@ const data = reactive({
 })
 
 const state = await Agent.state(props.id)
+// rehab old content without feedback
+if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+
 data.content = state
 
 function removeChoice(index) {

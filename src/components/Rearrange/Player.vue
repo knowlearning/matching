@@ -180,11 +180,14 @@ function dropImage(index, targetArray) {
 async function handleSubmit() {
     const correctOrder = item.images.map(image => image.id)
     const submittedOrder = userOrderedItems.map(image => image?.id)
-    const isCorrect = arraysDeepEqual(correctOrder, submittedOrder)
+    const correct = arraysDeepEqual(correctOrder, submittedOrder)
     if (Agent.embedded) {
-        Agent.close({ success: isCorrect })
+        Agent.close({
+            success: correct,
+            message: getMessage(correct)
+        })
     } else {
-        await itemFeedbackSwal(t, isCorrect)
+        await itemFeedbackSwal(t, correct, getMessage(correct))
     }
 }
 
@@ -201,6 +204,12 @@ function arraysDeepEqual(arr1, arr2) {
         }
     }
     return true
+}
+
+function getMessage(isCorrect) {
+    if (isCorrect && item.feedback?.correct) return item.feedback.correct 
+    else if (!isCorrect && item.feedback?.incorrect) return item.feedback.incorrect
+    else return undefined
 }
 
 </script>

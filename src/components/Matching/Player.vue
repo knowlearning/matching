@@ -45,9 +45,12 @@
 
   async function handleSubmit() {
     if (Agent.embedded) {
-      Agent.close({ success: isCorrect() })
+      Agent.close({
+        success: isCorrect(),
+        message: getMessage(isCorrect())
+      })
     } else {
-      await itemFeedbackSwal(t, isCorrect())
+      await itemFeedbackSwal(t, isCorrect(), getMessage(isCorrect()))
     }
   }
 
@@ -55,6 +58,11 @@
     const every = data.studentConnections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
     const only = item.answerConnections.every(c1 => data.studentConnections.some(c2 => sameConnection(c1, c2)))
     return every && only
+  }
+  function getMessage(isCorrect) {
+    if (isCorrect && item.feedback?.correct) return item.feedback.correct 
+    else if (!isCorrect && item.feedback?.incorrect) return item.feedback.incorrect
+    else return undefined
   }
 </script>
 

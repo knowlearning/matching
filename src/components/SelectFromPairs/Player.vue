@@ -1,21 +1,21 @@
 <template>
 	<div class="player">
 		<div
-			v-if="questionDef?.instructions"
+			v-if="item?.instructions"
 			class="instructions"
 		>
 			<span class="instructions-prefix">{{ t('instructions') }}:</span>
-			{{ questionDef.instructions }}
+			{{ item.instructions }}
 		</div>
 		<div class="audio-control">
 			<AudioPlayerButton
-				v-if="questionDef.audioId"
-				:id="questionDef.audioId"
+				v-if="item.audioId"
+				:id="item.audioId"
 			/>
 		</div>
 		<Row
 			class="row"
-			v-for="r, i in questionDef.rows"
+			v-for="r, i in item.rows"
 			:key="`row-${i}`"
 			v-bind="r"
 			:rowIndex="i"
@@ -46,28 +46,38 @@ const props = defineProps({
 	id: { type: String, required: true }
 })
 
-const questionDef = await Agent.state(props.id)
-const rowsCorrect = reactive(questionDef.rows.map(r => false)) // init to array of false
+const item = await Agent.state(props.id)
+const rowsCorrect = reactive(item.rows.map(r => false)) // init to array of false
 
 async function handleSubmit() {
 	const isCorrect = rowsCorrect.every(el => el)
   if (Agent.embedded) {
-    Agent.close({ success: isCorrect })
+    Agent.close({
+    	success: isCorrect,
+    	message: getMessage(isCorrect)
+    })
   } else {
-    await itemFeedbackSwal(t, isCorrect)
+    await itemFeedbackSwal(t, isCorrect, getMessage(isCorrect))
   }
 }
 
 function wideItemArea() {
 // we want ALL rows to have the same width, narrow or wide
 // go through each row. get ALL choices to see if any force wide layout
-  const allChoiceLengths = questionDef.rows.reduce((acc, currentRow) => {
+  const allChoiceLengths = item.rows.reduce((acc, currentRow) => {
   	const rowChoiceLengths = currentRow.choices.map(c => isUUID(c.content) ? 0 : c.content.length)
   	return [ ...acc, ...rowChoiceLengths]
   }, [ 0 ])
   const maxChars = Math.max( ...allChoiceLengths )
   return maxChars > 10
 }
+
+function getMessage(isCorrect) {
+  if (isCorrect && item.feedback?.correct) return item.feedback.correct 
+  else if (!isCorrect && item.feedback?.incorrect) return item.feedback.incorrect
+  else return undefined
+}
+
 </script>
 
 <style scoped>
