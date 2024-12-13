@@ -360,7 +360,7 @@ export default {
     'th' : 'ข้อเสนอแนะถ้าไม่ถูกต้อง'
   },
   'markdown-with-questions' : {
-    'en' : 'MARKDOWN WITH QUESTIONS',
+    'en' : 'Markdown with Questions',
     'th' : 'Markdown พร้อมคำถาม'
   },
     'markdown-with-sub-questions' : {

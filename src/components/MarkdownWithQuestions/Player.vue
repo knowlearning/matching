@@ -22,7 +22,7 @@
 
         <div class="right-or-bottom-side-questions">
             <div
-                v-for="item,i in itemData.items"
+                v-for="item,i in item.items"
                 :key="`play-item-wrapper-${i}`"
                 class="embedded-question-wrapper"
                 v-show="i === data.activeItemIndex"
@@ -44,7 +44,7 @@
                 />
                 <span>{{ itemNumberDisplayString }}</span>
                 <v-btn
-                    @click="data.activeItemIndex = Math.min(data.activeItemIndex + 1, itemData.items.length - 1)"
+                    @click="data.activeItemIndex = Math.min(data.activeItemIndex + 1, item.items.length - 1)"
                     icon="fa-solid fa-arrow-right"
                     size="x-small"
                     class="mr-2"
@@ -62,6 +62,8 @@ import { reactive, ref, computed } from 'vue'
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
+import translateScopeId from '../../helpers/translateScopeId.js'
+
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -77,8 +79,10 @@ const props = defineProps({
 
 const isBottomVisible = ref(false)
 
-const itemData = await Agent.state(props.id)
-const markdownContent = await Agent.state(itemData.md)
+const lang = store.getters.language()
+const item = await translateScopeId(props.id, lang)
+
+const markdownContent = await Agent.state(item.md)
 const data = reactive(await Agent.state(`markdown-${props.id}`))
 data.activeItemIndex = 0
 
@@ -86,7 +90,7 @@ const itemNumberDisplayString = computed(() => {
     if (data.activeItemIndex === null || data.activeItemIndex === undefined) return ''
     let active = data.activeItemIndex + 1
     if (active < 10) active = '0' + active
-    let total = itemData.items.length
+    let total = item.items.length
     if (total < 10) total = '0' + total
     return `${active}/${total}`
 })

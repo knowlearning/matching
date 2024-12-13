@@ -10,8 +10,6 @@ import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
 import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.vue'
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
-import MarkdownCustomizer from '../components/Markdown/Customizer.vue'
-import MarkdownPlayer from '../components/Markdown/Player.vue'
 import MarkdownWithQuestionsCustomizer from '../components/MarkdownWithQuestions/Customizer.vue'
 import MarkdownWithQuestionsPlayer from '../components/MarkdownWithQuestions/Player.vue'
 import TrueOrFalseCustomizer from '../components/TrueOrFalse/Customizer.vue'
@@ -21,7 +19,6 @@ import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
 import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
-import defaultMarkdown from './demo-questions/defaultMarkdown.js'
 import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQuestions.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
 import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
@@ -65,17 +62,8 @@ const questionTypes = {
 		newItemGenerator: monumentPairs,
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
-	'application/json;type=markdown' : {
-		description: 'markdown-item',
-		components: {
-			player: MarkdownPlayer,
-			customizer: MarkdownCustomizer
-		},
-		newItemGenerator: defaultMarkdown,
-		sample: '009e59c0-38d2-11ef-b713-21184efafe0d'
-	},
 	'application/json;type=markdown-with-questions' : {
-		description: 'markdown-with-sub-questions',
+		description: 'markdown-with-questions',
 		components: {
 			player: MarkdownWithQuestionsPlayer,
 			customizer: MarkdownWithQuestionsCustomizer
