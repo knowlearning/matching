@@ -1,7 +1,6 @@
 export default async function translateScopeId(id, lang) {
     const TRANSLATION_DOMAIN = 'f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:5889'
     // const TRANSLATION_DOMAIN = 'translations.pilaproject.org'
-
     const translations = await Agent.query('translate-item', [id, [lang]], TRANSLATION_DOMAIN)
     let translated = JSON.parse(JSON.stringify(await Agent.state(id)))
 

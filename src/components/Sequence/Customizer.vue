@@ -29,6 +29,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import { useStore } from 'vuex'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import ItemListCustomizer from './ItemListCustomizer.vue'
@@ -36,6 +37,9 @@ import ItemListCustomizer from './ItemListCustomizer.vue'
 import SelectImage from './SelectImage.vue'
 import KlImage from '../kl-image.vue'
 import PickFileButton from '../PickFileButton.vue'
+
+const store = useStore()
+const t = slug => store.getters.t(slug)
 
 const EMBED_DOMAINS = [
 	'localhost:5113',

@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     translate(str) {
-      return translate(str)
+      return translate(str, this.$store.getters.language())
     }
   }
 }  

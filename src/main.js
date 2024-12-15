@@ -1,4 +1,4 @@
-import Agent from '@knowlearning/agents/browser.js'
+import Agent from '@knowlearning/agents'
 import { createApp } from 'vue'
 import { validate as isUUID } from 'uuid'
 import './style.css'
@@ -21,6 +21,18 @@ import * as directives from 'vuetify/directives'
 import polyfillDragAndDrop from './dragDropTouch.js'
 
 window.Agent = Agent
+
+Agent
+  .environment()
+  .then( ({ variables }) => {
+    if (variables?.LANGUAGES) {
+      store
+        .dispatch(
+          'languages',
+          variables.LANGUAGES.map(lang => lang.split('-')[0])
+        )
+    }
+  })
 
 if (!Agent.embedded) polyfillDragAndDrop()
 
