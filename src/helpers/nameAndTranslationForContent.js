@@ -1,18 +1,19 @@
 import { validate as isUUID } from 'uuid'
+import translateScopeId from './translateScopeId.js'
 
-const DEFAULT_TRANSLATION_DOMAIN = 'translate-karel-alpha.netlify.app'
 const isBettyURL = url => url?.startsWith?.('https://bettysbrain.knowlearning.systems/')
 
-export async function displayTranslatedContent(
+export default async function displayTranslatedContent(
     content,
-    lang,
-    domain = DEFAULT_TRANSLATION_DOMAIN
+    lang
 ) {
     if (isBettyURL(content)) {
         const name = nameFromBettyURL(content)
+        // LEGACY :: We were using the Karel Translation Domain to Translate Random UUIDs for Betty??
+        const domain = 'translate-karel-alpha.netlify.app'
         return isUUID(name) ? (await translateId(name, lang, domain)) : name
     } else { // content is task
-        return translateNameFromTaskId(content, lang, domain)
+        return translateNameFromTaskId(content, lang)
     }
 }
 
@@ -34,23 +35,23 @@ async function nameFromBettyURL(url) {
     return name
 }
 
-export async function translateNameFromTaskId (
+async function translateNameFromTaskId (
     taskId,
-    lang,
-    domain = DEFAULT_TRANSLATION_DOMAIN
+    lang
 ) {
     const { name } = await Agent.state(taskId)
     if (!name) {
         console.warn(`task name not found for ${taskId}`)
         return `task name not found for ${taskId}`
-    } else if (isUUID(name)) {
+    } else if (isUUID(name)) { // we're in old translation system
         return await translateId(name, lang, domain)
     } else {
-        return name
+        const translatedItem = await translateScopeId(taskId, lang)
+        return translatedItem.name
     }
 }
 
-async function translateId(id, lang, domain = DEFAULT_TRANSLATION_DOMAIN) {
+async function translateId(id, lang, domain) {
     // order of return preference is this:
     // - no translation needed, return source_string (breadcrumb)
     // - translation in lang found, return

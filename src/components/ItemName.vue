@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-    import { displayTranslatedContent } from '../helpers/nameAndTranslationForContent.js'
+    import displayTranslatedContent from '../helpers/nameAndTranslationForContent.js'
 
     const props = defineProps({
         id: {
