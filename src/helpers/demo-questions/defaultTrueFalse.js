@@ -1,4 +1,4 @@
-export default ({ source_language }) => ({
+export default ({ source_language = 'en' }) => ({
     name: 'New True/False Question',
     instructions: "The Earth is the third planet from the Sun.",
     answer: true,
@@ -7,7 +7,7 @@ export default ({ source_language }) => ({
         "incorrect" : null
     },
     translations: {
-        source_language: source_language || 'en-us',
+        source_language,
         paths: [
             [ 'name' ],
             [ 'instructions' ],

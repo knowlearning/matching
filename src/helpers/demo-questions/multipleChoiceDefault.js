@@ -1,4 +1,4 @@
-export default ({ source_language }) => ({
+export default ({ source_language = 'en' }) => ({
     "name": "New Multiple Choice",
     "instructions": "Your Instructions Here...",
     "selectMultiple" : false,
@@ -21,9 +21,9 @@ export default ({ source_language }) => ({
             "isCorrect" : false
         }
     ],
-    "translations": {
-        "source_language": source_language || "en-us",
-        "paths": [
+    translations: {
+        source_language,
+        paths: [
             [ "name" ],
             [ "instructions" ],
             [ "feedback", "correct" ],
