@@ -31,10 +31,7 @@
           <Suspense>
             <div class="item-content">
               <span>{{ index + 1}}) </span>
-              <ItemName
-                :id="itemId"
-                :language="store.getters.language()"
-              />
+              <ItemName :id="itemId" />
             </div>
           </Suspense>
           <button
@@ -50,8 +47,6 @@
 
 <script setup>
 import ItemName from './ItemName.vue'
-import { useStore } from 'vuex'
-const store = useStore()
 
 const props = defineProps({
   active: {

@@ -28,7 +28,6 @@
 			<span>{{ i + 1 }}. </span>
 			<ItemName
 				:id="item"
-				:language="store.getters.language()"
 				@click.shift="alertText(item)"
 				draggable="true"
 				style="cursor: grab;"
