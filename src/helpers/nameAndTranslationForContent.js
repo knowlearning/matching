@@ -1,6 +1,7 @@
 import { validate as isUUID } from 'uuid'
 import translateScopeId from './translateScopeId.js'
 
+const KAREL_TRANSLATION_DOMAIN = 'translate-karel-alpha.netlify.app'
 const isBettyURL = url => url?.startsWith?.('https://bettysbrain.knowlearning.systems/')
 
 export default async function displayTranslatedContent(
@@ -10,7 +11,7 @@ export default async function displayTranslatedContent(
     if (isBettyURL(content)) {
         const name = nameFromBettyURL(content)
         // LEGACY :: We were using the Karel Translation Domain to Translate Random UUIDs for Betty??
-        const domain = 'translate-karel-alpha.netlify.app'
+        const domain = KAREL_TRANSLATION_DOMAIN
         return isUUID(name) ? (await translateId(name, lang, domain)) : name
     } else { // content is task
         return translateNameFromTaskId(content, lang)
@@ -44,6 +45,7 @@ async function translateNameFromTaskId (
         console.warn(`task name not found for ${taskId}`)
         return `task name not found for ${taskId}`
     } else if (isUUID(name)) { // we're in old translation system
+        const domain = KAREL_TRANSLATION_DOMAIN
         return await translateId(name, lang, domain)
     } else {
         const translatedItem = await translateScopeId(taskId, lang)
