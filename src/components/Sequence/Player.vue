@@ -33,6 +33,7 @@
 						'my-' //  TODO: Disable!
 					]
 				}"
+				:environmentProxy="sendEnvironment"
 				allow="camera;microphone;fullscreen"
 			/>
 			<div
@@ -242,6 +243,10 @@ function competencySuccess(competencies) {
 
   const meetsThreshold = 0.85 < (denominator ? numerator / denominator : 0)
   return meetsThreshold || null
+}
+
+async function sendEnvironment(e) {
+	return Agent.environment(e)
 }
 
 </script>

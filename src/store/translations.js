@@ -359,4 +359,12 @@ export default {
     'en' : 'Feedback if Incorrect',
     'th' : 'ข้อเสนอแนะถ้าไม่ถูกต้อง'
   },
+  'markdown-with-questions' : {
+    'en' : 'Markdown with Questions',
+    'th' : 'Markdown พร้อมคำถาม'
+  },
+    'markdown-with-sub-questions' : {
+    'en' : 'Markdown with Sub-Questions',
+    'th' : 'Markdown พร้อมคำถาม'
+  },
 }

@@ -10,8 +10,8 @@ import SequenceCustomizer from '../components/Sequence/Customizer.vue'
 import SequencePlayer from '../components/Sequence/Player.vue'
 import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.vue'
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
-import MarkdownCustomizer from '../components/Markdown/Customizer.vue'
-import MarkdownPlayer from '../components/Markdown/Player.vue'
+import MarkdownWithQuestionsCustomizer from '../components/MarkdownWithQuestions/Customizer.vue'
+import MarkdownWithQuestionsPlayer from '../components/MarkdownWithQuestions/Player.vue'
 import TrueOrFalseCustomizer from '../components/TrueOrFalse/Customizer.vue'
 import TrueOrFalsePlayer from '../components/TrueOrFalse/Player.vue'
 
@@ -19,7 +19,7 @@ import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
 import butterflyOrdering from './demo-questions/butterflyOrdering.js'
 import monumentPairs from './demo-questions/monumentPairs.js'
-import defaultMarkdown from './demo-questions/defaultMarkdown.js'
+import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQuestions.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
 import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
 
@@ -62,14 +62,14 @@ const questionTypes = {
 		newItemGenerator: monumentPairs,
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
-	'application/json;type=markdown' : {
-		description: 'markdown-item',
+	'application/json;type=markdown-with-questions' : {
+		description: 'markdown-with-questions',
 		components: {
-			player: MarkdownPlayer,
-			customizer: MarkdownCustomizer
+			player: MarkdownWithQuestionsPlayer,
+			customizer: MarkdownWithQuestionsCustomizer
 		},
-		newItemGenerator: defaultMarkdown,
-		sample: '009e59c0-38d2-11ef-b713-21184efafe0d'
+		newItemGenerator: defaultMarkdownWithQuestions,
+		sample: '3b0b6850-a100-11ef-961b-01e8ac0cee62'
 	},
 	'application/json;type=true-false' : {
 		description: 'true-false-question',
