@@ -5,7 +5,9 @@
 <script setup>
     import displayTranslatedContent from '../helpers/nameAndTranslationForContent.js'
     import { useStore } from 'vuex'
+
     const store = useStore()
+    const lang = store.getters.language()
 
     const props = defineProps({
         id: {
@@ -15,9 +17,8 @@
         language: {
             required: false,
             type: String,
-            default: store.getters.language()
         }
     })
 
-    const displayString = await displayTranslatedContent(props.id, props.language)
+    const displayString = await displayTranslatedContent(props.id, props.language || lang)
 </script>
