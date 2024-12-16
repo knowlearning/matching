@@ -15,7 +15,7 @@
 						/>
 					</td>
 					<td>
-						<NameOrTranslatedNameFromItemId :itemId="item.id" />
+						<ItemName :id="item.id" />
 					</td>
 					<td>
 						<DisplayTime :time="props.timeOnTasks[i]" />
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import NameOrTranslatedNameFromItemId from '../NameOrTranslatedNameFromItemId.vue'
+import ItemName from '../ItemName.vue'
 import DisplayTime from './DisplayTime.vue'
 
 import { useStore } from 'vuex'

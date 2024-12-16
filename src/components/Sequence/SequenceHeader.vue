@@ -5,7 +5,7 @@
 				@click="$emit('close')"
 				class="exit fas fa-arrow-left"
 			/>	
-			<NameOrTranslatedNameFromItemId :itemId="sequenceId" />
+			<ItemName :id="sequenceId" />
 		</div>
 
 		<div class="middle">
@@ -40,7 +40,7 @@
 <script setup>
 import { computed } from 'vue'
 import DisplayTime from './DisplayTime.vue'
-import NameOrTranslatedNameFromItemId from '../NameOrTranslatedNameFromItemId.vue'
+import ItemName from '../ItemName.vue'
 
 import { useStore } from 'vuex'
 const store = useStore()
