@@ -259,17 +259,13 @@ export default {
     'en' : 'Students play through a series of questions, one after the other, and receive feedback and a report of success along the way!',
     'th' : 'นักเรียนจะเล่นผ่านชุดของคำถามต่อเนื่องกัน ต่อหนึ่งคำถามต่อหนึ่ง และได้รับข้อคิดเห็นและรายงานความสำเร็จขณะทาง!'
   },
-  'markdown-description' : {
-    'en' : 'Build markdown items including capacity for embedding videos, images, audio and LaTex.',
+  'markdown-with-questions-description' : {
+    'en' : 'Build markdown items including accompanying questions, embedding videos, images, audio and LaTex.',
     'th' : 'สร้างรายการ markdown รวมถึงความสามารถในการฝังวิดีโอ รูปภาพ เสียง และ LaTex'
   },
-  'markdown' : {
-    'en' : 'MARKDOWN',
-    'th' : 'Markdown'
-  },
-  'markdown-item' : {
-    'en' : 'Markdown Item',
-    'th' : 'คำถามเกี่ยวกับ Markdown'
+  'markdown-with-questions-lower' : {
+    'en' : 'Markdown with Questions',
+    'th' : 'Markdown พร้อมคำถาม'
   },
   'see-example' : {
     'en' : 'see example',
@@ -360,11 +356,7 @@ export default {
     'th' : 'ข้อเสนอแนะถ้าไม่ถูกต้อง'
   },
   'markdown-with-questions' : {
-    'en' : 'Markdown with Questions',
-    'th' : 'Markdown พร้อมคำถาม'
-  },
-    'markdown-with-sub-questions' : {
-    'en' : 'Markdown with Sub-Questions',
-    'th' : 'Markdown พร้อมคำถาม'
+    'en' : 'MARKDOWN WITH QUESTIONS',
+    'th' : 'MARKDOWN พร้อมคำถาม'
   },
 }

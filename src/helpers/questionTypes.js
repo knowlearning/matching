@@ -63,7 +63,7 @@ const questionTypes = {
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=markdown-with-questions' : {
-		description: 'markdown-with-questions',
+		description: 'markdown-with-questions-lower',
 		components: {
 			player: MarkdownWithQuestionsPlayer,
 			customizer: MarkdownWithQuestionsCustomizer
