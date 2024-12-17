@@ -69,7 +69,7 @@ const questionTypes = {
 			customizer: MarkdownWithQuestionsCustomizer
 		},
 		newItemGenerator: defaultMarkdownWithQuestions,
-		sample: '3b0b6850-a100-11ef-961b-01e8ac0cee62'
+		sample: '694de7f0-bc9f-11ef-af19-8b6bb634a52d'
 	},
 	'application/json;type=true-false' : {
 		description: 'true-false-question',
