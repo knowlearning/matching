@@ -14,7 +14,8 @@ import MarkdownWithQuestionsCustomizer from '../components/MarkdownWithQuestions
 import MarkdownWithQuestionsPlayer from '../components/MarkdownWithQuestions/Player.vue'
 import TrueOrFalseCustomizer from '../components/TrueOrFalse/Customizer.vue'
 import TrueOrFalsePlayer from '../components/TrueOrFalse/Player.vue'
-
+import TrueFalseGridCustomizer from '../components/TrueFalseGrid/Customizer.vue'
+import TrueFalseGridPlayer from '../components/TrueFalseGrid/Player.vue'
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
 import butterflyOrdering from './demo-questions/butterflyOrdering.js'
@@ -22,6 +23,8 @@ import monumentPairs from './demo-questions/monumentPairs.js'
 import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQuestions.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
 import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
+import defaultTrueFalseGrid from './demo-questions/defaultTrueFalseGrid.js'
+
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
@@ -79,6 +82,15 @@ const questionTypes = {
 		},
 		newItemGenerator: defaultTrueFalse,
 		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
+	},
+	'application/json;type=true-false-grid' : {
+		description: 'true-false-grid-question',
+		components: {
+			player: TrueFalseGridPlayer,
+			customizer: TrueFalseGridCustomizer
+		},
+		newItemGenerator: defaultTrueFalseGrid,
+		sample: 'xxxxxxxxxxx'
 	},
 	'application/json;type=sequence' : {
 		description: 'sequence-builder',

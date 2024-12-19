@@ -62,13 +62,24 @@ const EMBED_DOMAINS = [
 	'embed.knowlearning.systems'
 ]
 
-const props = defineProps([ 'items' ])
+const props = defineProps({
+	items: {
+		type: Array,
+		required: true
+	},
+	supportedTypes: {
+		type: Array,
+		required: false,
+		default: () => sequenceImportableTypes
+	}
+})
+
 const emits = defineEmits([ 'updateItems' ])
 
 async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
 	const { active_type, domain } = await Agent.metadata(attemptedId)
-	if (!EMBED_DOMAINS.includes(domain) && !sequenceImportableTypes.includes(active_type)) {
+	if (!EMBED_DOMAINS.includes(domain) && !props.supportedTypes.includes(active_type)) {
 		await unsupportedTypeSwal(t, attemptedId, active_type)
 	} else {
 		const itemsCopy = JSON.parse(JSON.stringify(props.items))
