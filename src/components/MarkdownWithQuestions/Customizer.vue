@@ -25,6 +25,15 @@
                     class="vuetify-text-input"
                 />
                 <MarkdownInput v-model="data.markdownContent.md" />
+                <div class="uuid-grab">
+                    <span>Item UUID: </span>
+                    <span @click="copyText(props.id)">{{ props.id }}</span>
+                </div>
+                <div class="uuid-grab">
+                    <span>Markdown UUID: </span>
+                    <span @click="copyText(data.content.md)">{{ data.content.md }}</span>
+                </div>
+
             </div>
             <div class="right-col">
                 <ProcessMarkdown
@@ -64,6 +73,16 @@ const data = reactive({
 data.content = await Agent.state(props.id)
 data.markdownContent = await Agent.state(data.content.md)
 
+function copyText(val) {
+  const textarea = document.createElement("textarea")
+  textarea.value = val
+  textarea.style.position = "fixed"
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  document.body.removeChild(textarea)
+}
+
 </script>
 
 <style scoped>
@@ -76,6 +95,22 @@ data.markdownContent = await Agent.state(data.content.md)
 }
 .markdown-edit {
     display: flex;
+}
+.uuid-grab {
+    text-align: left;
+    font-size: 0.8rem;
+}
+.uuid-grab span:nth-of-type(1) {
+    font-weight: bold;
+}
+.uuid-grab span:nth-of-type(2) {
+    padding: 1px 6px;
+    border-radius: 3px;
+}
+.uuid-grab span:nth-of-type(2):hover {
+    background: #eee;
+    cursor: pointer;
+    color: darkblue;
 }
 .left-col, .right-col {
     flex: 0 0 50%;
