@@ -12,8 +12,11 @@ import SelectFromPairsCustomizer from '../components/SelectFromPairs/Customizer.
 import SelectFromPairsPlayer from '../components/SelectFromPairs/Player.vue'
 import MarkdownWithQuestionsCustomizer from '../components/MarkdownWithQuestions/Customizer.vue'
 import MarkdownWithQuestionsPlayer from '../components/MarkdownWithQuestions/Player.vue'
-import TrueOrFalseCustomizer from '../components/TrueOrFalse/Customizer.vue'
-import TrueOrFalsePlayer from '../components/TrueOrFalse/Player.vue'
+import TrueFalseCustomizer from '../components/TrueFalse/Customizer.vue'
+import TrueFalsePlayer from '../components/TrueFalse/Player.vue'
+import FillInTheBlankCustomizer from '../components/FillInTheBlank/Customizer.vue'
+import FillInTheBlankPlayer from '../components/FillInTheBlank/Player.vue'
+
 
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
 import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
@@ -22,6 +25,8 @@ import monumentPairs from './demo-questions/monumentPairs.js'
 import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQuestions.js'
 import defaultSequence from './demo-questions/defaultSequence.js'
 import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
+import defaultFillInTheBlank from './demo-questions/defaultFillInTheBlank.js'
+
 
 const copy = x => JSON.parse(JSON.stringify(x))
 
@@ -74,8 +79,8 @@ const questionTypes = {
 	'application/json;type=true-false' : {
 		description: 'true-false-question',
 		components: {
-			player: TrueOrFalsePlayer,
-			customizer: TrueOrFalseCustomizer
+			player: TrueFalsePlayer,
+			customizer: TrueFalseCustomizer
 		},
 		newItemGenerator: defaultTrueFalse,
 		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
@@ -88,6 +93,15 @@ const questionTypes = {
 		},
 		newItemGenerator: defaultSequence,
 		sample: '92719c10-026b-11ef-8b1d-b914e5d38307'
+	},
+	'application/json;type=fill-in-the-blank' : {
+		description: 'fill-in-the-blank-question',
+		components: {
+			player: FillInTheBlankPlayer,
+			customizer: FillInTheBlankCustomizer
+		},
+		newItemGenerator: defaultFillInTheBlank,
+		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
 	},
 }
 
