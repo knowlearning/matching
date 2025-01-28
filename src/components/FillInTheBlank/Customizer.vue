@@ -3,6 +3,8 @@
 
     <AbsolutePreviewAndItemId :id="props.id" />
 
+    <h2>Fill in the Blank Customizer</h2>
+
     <NameAndInstructions 
       hideInstructions
       :content="state"
@@ -10,53 +12,49 @@
     />
 
     <div class="input-section">
-      <h2>Fill in the Blank Customizer</h2>
-      <textarea
+      <v-textarea
         id="prompt-input"
         v-model="inputText"
         @input="processInput"
         placeholder="Example question: The closest planet to the sun is ____, and the furthest is ____."
         class="prompt-input"
-      ></textarea>
-      <h3 v-if="inputText">Preview:</h3>
-      <div class="preview" v-if="inputText">{{ inputText }}</div>
+      ></v-textarea>
     </div>
 
-    <div class="answers-section">
-      <h3>Define answers:</h3>
+    <div class="answers-section" v-if="state.blanks.length">
+      <h3>Blanks:</h3>
       <div
         v-for="(_, i) in answers"
         :key="i"
         class="answer-item"
       >
-        <label :for="`answer-${i}`">Blank {{ i + 1 }}:</label>
-        <input
-          :id="'answer-' + i"
+        <v-text-field :id="`answer-${i}`"
           v-model="answers[i]"
+          :label="`Blank ${i + 1}`"
           placeholder="color | colour"
           class="answer-input"
         />
       </div>
     </div>
 
-    <button @click="outputResult" class="output-button">Generate Question</button>
-
     <CustomizeFeedback
       :feedback="state.feedback"
       style="width: 420px; margin: 8px auto;"
     />
+
+    <div class="preview" v-if="state.prompt">
+      <h3>Preview:</h3>
+      <div>{{ inputText }}</div>
+    </div>
 
   </div>
 </template>
 
 <script setup>
 import { reactive, ref, watch } from "vue";
-
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
-
-
 
 const props = defineProps(['id'])
 const state = reactive( await Agent.state(props.id) )
@@ -84,57 +82,13 @@ function processInput() {
 
 <style scoped>
 .customizer {
-  font-family: Arial, sans-serif;
-  padding: 1rem;
+  position: relative;
+  height: 100%;
   max-width: 600px;
   margin: 0 auto;
-}
-
-.input-section {
-  margin-bottom: 1rem;
-}
-
-.prompt-input {
-  width: 100%;
-  height: 100px;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-.prompt-input::placeholder {
-  color: #d3d3d3;
-}
-
-.answers-section {
-  margin-bottom: 1rem;
-}
-
-.answer-item {
-  margin-bottom: 0.5rem;
-}
-
-.answer-input {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-.answer-input::placeholder {
-  color: #d3d3d3;
-}
-
-.output-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.output-button:hover {
-  background-color: #45a049;
+  padding-top: 56px;
+  flex-direction: column;
+  align-items: center;
 }
 
 .preview {
