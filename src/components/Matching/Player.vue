@@ -29,8 +29,6 @@
   import { sameConnection } from '../../helpers/mathHelpers.js'
   import { itemFeedbackSwal } from '../../helpers/swallows.js'
   import { useStore } from 'vuex'
-  
-
 
   const store = useStore()
   function t(slug) { return store.getters.t(slug) }
