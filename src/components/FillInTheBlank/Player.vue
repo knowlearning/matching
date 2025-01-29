@@ -1,13 +1,21 @@
 <script setup>
 import { ref } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
+import translateScopeId from '../../helpers/translateScopeId.js'
+
 import { useStore } from 'vuex'
 
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
-const props = defineProps(['id'])
-const questionDef = await Agent.state(props.id)
+const props = defineProps({
+    id: {
+        type: String,
+        required: true
+    }
+})
+const lang = store.getters.language()
+const questionDef = await translateScopeId(props.id, lang)
 
 const userAnswers = ref(Array(questionDef.blanks.length).fill(""))
 const parsedPrompt = ref( questionDef.prompt.split(/(_+)/g) )
