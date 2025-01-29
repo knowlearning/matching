@@ -65,6 +65,7 @@ if (!state.blanks) state.blanks = []
 const answers = reactive(state.blanks)
 
 watch(inputText, processInput)
+watch(() => state.blanks.length, updateTranslationPaths)
 
 function processInput() {
   const underscoreSegments = [ ...inputText.value.matchAll(/_{1,}/g) ]
@@ -72,10 +73,19 @@ function processInput() {
   // Ensure answers array length matches the number of underscore segments
   const numBlanks = underscoreSegments.length
   while (answers.length > numBlanks) { answers.pop() } // elim old answers, if any
-  while (answers.length < numBlanks) { answers.push("") } // blanks for new answers, if any
-    
+  while (answers.length < numBlanks) { answers.push("") } // blanks for new answers, if any    
   state.prompt = inputText.value.trim()
-  // TODO include update to translation of blanks array.
+}
+
+function updateTranslationPaths() {
+    let paths = [
+        [ 'name' ],
+        [ 'prompt' ],
+        [ 'feedback', 'correct' ],
+        [ 'feedback', 'incorrect' ]
+    ]
+    state.blanks.forEach((_,i) => paths.push([ 'blanks', i ]))
+    state.translations.paths = paths
 }
 
 </script>
