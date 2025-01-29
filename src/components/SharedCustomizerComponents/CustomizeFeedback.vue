@@ -1,5 +1,6 @@
 <template>
 	<v-container class="customize-feedback-wrapper">
+		<h3>{{ t('feedback') }}:</h3>
 		<v-textarea
 			v-model="props.feedback.correct"
 			:label="t('feedback-if-correct')"

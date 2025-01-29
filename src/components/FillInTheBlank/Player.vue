@@ -52,7 +52,7 @@ function getMessage(isCorrect) {
       <span v-for="(seg, i) in parsedPrompt" :key="i">
         <span v-if="!areUnderscores(seg)">{{ seg }}</span>
         <input v-else class="blank-input"
-          :placeholder="`Blank`"
+          :placeholder="t('blank')"
           v-model="userAnswers[mapSegmentIndexToAnswerIndex(i)]"
         />
       </span>

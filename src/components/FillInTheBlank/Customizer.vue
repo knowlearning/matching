@@ -3,7 +3,7 @@
 
     <AbsolutePreviewAndItemId :id="props.id" />
 
-    <h2>Fill in the Blank Customizer</h2>
+    <h2>{{ t('fill-in-the-blank-question-customizer') }}</h2>
 
     <NameAndInstructions 
       hideInstructions
@@ -11,18 +11,18 @@
       style="width: 420px; margin: 8px auto;"
     />
 
-    <div class="input-section">
+    <div class="input-wrapper-width">
       <v-textarea
         id="prompt-input"
         v-model="inputText"
         @input="processInput"
-        placeholder="Example question: The closest planet to the sun is ____, and the furthest is ____."
+        :placeholder="t('fill-in-the-blank-prompt-placeholder')"
         class="prompt-input"
       ></v-textarea>
     </div>
 
-    <div class="answers-section" v-if="state.blanks.length">
-      <h3>Blanks:</h3>
+    <div class="input-wrapper-width" v-if="state.blanks.length">
+      <h3>{{ t('blanks') }}:</h3>
       <div
         v-for="(_, i) in answers"
         :key="i"
@@ -30,7 +30,7 @@
       >
         <v-text-field :id="`answer-${i}`"
           v-model="answers[i]"
-          :label="`Blank ${i + 1}`"
+          :label="`${t('blank')} ${i + 1}`"
           placeholder="color | colour"
           class="answer-input"
         />
@@ -43,7 +43,7 @@
     />
 
     <div class="preview" v-if="state.prompt">
-      <h3>Preview:</h3>
+      <h3>{{ t('preview-titlecase') }}:</h3>
       <div>{{ inputText }}</div>
     </div>
 
@@ -55,6 +55,11 @@ import { reactive, ref, watch } from "vue";
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import CustomizeFeedback from '../SharedCustomizerComponents/CustomizeFeedback.vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+function t(slug) { return store.getters.t(slug) }
+
 
 const props = defineProps(['id'])
 const state = reactive( await Agent.state(props.id) )
@@ -94,11 +99,14 @@ function updateTranslationPaths() {
 .customizer {
   position: relative;
   height: 100%;
-  max-width: 600px;
   margin: 0 auto;
   padding-top: 56px;
   flex-direction: column;
   align-items: center;
+}
+.input-wrapper-width {
+  width: 420px;
+  margin: 8px auto;
 }
 
 .preview {

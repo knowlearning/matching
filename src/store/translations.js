@@ -219,6 +219,18 @@ export default {
     'en' : 'PREVIEW',
     'th' : 'ตัวอย่าง'
   },
+  'preview-titlecase' : {
+    'en' : 'Preview',
+    'th' : 'ตัวอย่าง'
+  },
+  'blanks' : {
+    'en' : 'Blanks',
+    'th' : 'ช่องว่าง'
+  },
+  'blank' : {
+    'en' : 'Blank',
+    'th' : 'ช่องว่าง'
+  },
   'copied' : {
     'en' : 'Copied',
     'th' : 'คัดลอก'
@@ -371,4 +383,16 @@ export default {
     'en' : 'MARKDOWN WITH QUESTIONS',
     'th' : 'MARKDOWN พร้อมคำถาม'
   },
+  'fill-in-the-blank-prompt-placeholder' : {
+    'en' : 'Example question: The closest planet to the sun is ____, and the furthest is ____.',
+    'th' : 'ใส่ข้อความของคุณที่นี่'
+  },
+  'fill-in-the-blank-question-customizer' : {
+    'en' : 'Fill in the Blank Question Customizer',
+    'th' : 'เครื่องมือสร้างและปรับแต่งคำถามแบบเติมคำ'
+  },
+  'feedback': {
+    'en' : 'Feedback',
+    'th' : 'คำติชม'
+  }
 }
