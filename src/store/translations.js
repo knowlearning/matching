@@ -323,6 +323,18 @@ export default {
     'en' : 'True/False Question',
     'th' : 'คำถามจริง/เท็จ'
   },
+  'fill-in-the-blank' : {
+    'en' : 'FILL IN THE BLANK',
+    'th' : 'เติมคำในช่องว่าง'
+  },
+  'fill-in-the-blank-description' : {
+    'en' : 'Students see text with things missing, and try to fill those in.',
+    'th' : 'นักเรียนจะเห็นข้อความที่ขาดหายไปและพยายามเติมคำให้สมบูรณ์'
+  },
+  'fill-in-the-blank-question' : {
+    'en' : 'Fill in the Blank Question',
+    'th' : 'คำถามเติมคำในช่องว่าง'
+  },
   'quiz-mode' : {
     'en' : 'Quiz Mode',
     'th' : 'โหมดแบบทดสอบ'
