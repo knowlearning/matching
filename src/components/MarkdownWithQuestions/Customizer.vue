@@ -54,6 +54,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { v4 as uuid } from 'uuid'
+import defaultMarkdown from '../../helpers/demo-questions/defaultMarkdown.js'
 import MarkdownInput from '../MarkdownHelpers/MarkdownInput.vue'
 import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
@@ -71,6 +72,16 @@ const data = reactive({
 })
 
 data.content = await Agent.state(props.id)
+
+// on first customize, need to initialize sub-scope for markdown content
+if (data.content.md === null) {
+    const newMarkdownContentScopeId = uuid()
+    data.content.md = newMarkdownContentScopeId
+    const x = await Agent.state(newMarkdownContentScopeId)
+    x.md = defaultMarkdown
+}
+
+// bind to reactive set in data above
 data.markdownContent = await Agent.state(data.content.md)
 
 function copyText(val) {
