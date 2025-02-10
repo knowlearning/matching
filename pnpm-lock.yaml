@@ -12,8 +12,8 @@ importers:
         specifier: ^6.5.2
         version: 6.5.2
       '@knowlearning/agents':
-        specifier: 0.9.163
-        version: 0.9.163
+        specifier: ^0.9.167
+        version: 0.9.167
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.2.8)
@@ -216,11 +216,11 @@ packages:
   '@jridgewell/sourcemap-codec@1.4.15':
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
 
-  '@knowlearning/agents@0.9.163':
-    resolution: {integrity: sha512-93Cs8Hulr8qUwaIs3TQf/c9z9DuVCFj8gczTKf1wgRKGMVrCkHHnDQLQtQI8+Y8/2zZRfpqQC8AO9887AItdmA==}
+  '@knowlearning/agents@0.9.167':
+    resolution: {integrity: sha512-A/jYe6ItVVKsxfwhWiyH/X8h1NOsZE0oacmbI8m23encjnqQNtODWc9UqRqD26D5y9Sy1Nz7nd6heGA0GfOjGg==}
 
-  '@knowlearning/patch-proxy@1.3.3':
-    resolution: {integrity: sha512-c56y4qshtd+fdApeLtpqn2p1D0gQ6MUQylvvl9ado6YD5R65lwFxWVr/s9KnThLCwVqT9ofrNjI4GGoNtGCO1A==}
+  '@knowlearning/patch-proxy@1.3.4':
+    resolution: {integrity: sha512-F1ay1UaPXsEJfTm6IX6NvEvorVXI3qXabQGCDeyDSu9qZmETqubgOYqx6B6wImCxGL9TgrB6ZC4QLF0tJHYwng==}
 
   '@rollup/rollup-android-arm-eabi@4.14.1':
     resolution: {integrity: sha512-fH8/o8nSUek8ceQnT7K4EQbSiV7jgkHq81m9lWZFIXjJ7lJzpWXbQFpT/Zh6OZYnpFykvzC3fbEvEAFZu03dPA==}
@@ -581,9 +581,9 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.4.15': {}
 
-  '@knowlearning/agents@0.9.163':
+  '@knowlearning/agents@0.9.167':
     dependencies:
-      '@knowlearning/patch-proxy': 1.3.3
+      '@knowlearning/patch-proxy': 1.3.4
       fast-json-patch: 3.1.1
       uuid: 8.3.2
       vue: 3.4.21
@@ -591,9 +591,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@knowlearning/patch-proxy@1.3.3':
-    dependencies:
-      fast-json-patch: 3.1.1
+  '@knowlearning/patch-proxy@1.3.4': {}
 
   '@rollup/rollup-android-arm-eabi@4.14.1':
     optional: true
