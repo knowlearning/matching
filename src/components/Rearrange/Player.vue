@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import { UUIDImage } from '@knowlearning/agents/vue.js'
 import { useStore } from 'vuex'
@@ -124,6 +124,20 @@ if (runstate.currentAudioTime === undefined) {
 if (runstate.lastSubmissionCorrect === undefined) {
     runstate.lastSubmissionCorrect = null
 }
+if (runstate.currentlyCorrect === undefined) {
+    runstate.currentlyCorrect = null
+}
+
+watch(  // set currently correct, if changed, on each run-state edit
+    runstate,
+    () => {
+        const correctOrder = item.images.map(image => image.id)
+        const submittedOrder = runstate.userOrderedItems.map(image => image?.id)
+        const isCorrect =  arraysDeepEqual(correctOrder, submittedOrder)
+        if (runstate.currentlyCorrect !== isCorrect) runstate.currentlyCorrect = isCorrect
+    },
+    { deep: true }
+)
 
 let audio = null
 
@@ -181,9 +195,7 @@ function dropImage(index, targetArray) {
 }
 
 async function handleSubmit() {
-    const correctOrder = item.images.map(image => image.id)
-    const submittedOrder = runstate.userOrderedItems.map(image => image?.id)
-    const correct = arraysDeepEqual(correctOrder, submittedOrder)
+    const correct = runstate.currentlyCorrect
     runstate.lastSubmissionCorrect = correct
 
     if (Agent.embedded) {
