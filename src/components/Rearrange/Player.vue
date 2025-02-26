@@ -1,7 +1,7 @@
 <template>
 <div class="player">
     <div
-        v-if="item?.instructions"
+        v-if="item.instructions"
         class="instructions"
     >
         <span class="instructions-prefix">{{ t('instructions') }}:</span>
@@ -10,10 +10,10 @@
 
     <div
         class="audio-play-area"
-        v-if="data.content?.audioId"
+        v-if="item.audioId"
     >
         <i 
-            :class="audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
+            :class="runstate.audioPlaying ? 'fas fa-pause' : 'fas fa-volume-up'" 
             style="cursor: pointer;"
             @click="toggleAudioPlayback"
         />
@@ -30,49 +30,49 @@
     <div class="drag-areas-wrapper">
         <div class="target-items">
             <div
-                v-for="(item, i) in userOrderedItems"
+                v-for="(item, i) in runstate.userOrderedItems"
                 :key="`source-spot-${i}-${item?.id}`"
                 
-                @drop="dropImage(i, userOrderedItems)"
+                @drop="dropImage(i, runstate.userOrderedItems)"
                 @dragover.prevent
             >
                 <UUIDImage v-if="item?.id"
                     :class="{
                         image: true,
-                        hidden: draggingId === item.id
+                        hidden: runstate.draggingId === item.id
                     }"
                     :id="item.id"
                     :draggable="item?.id"
-                    @dragstart="draggingId = item.id"
-                    @dragend="draggingId = null"
+                    @dragstart="runstate.draggingId = item.id"
+                    @dragend="runstate.draggingId = null"
                 />
                 <div
-                    v-if="!item?.id || draggingId === item.id"
+                    v-if="!item?.id || runstate.draggingId === item.id"
                     class="image-placeholder"
                 >{{ i+1 }}.</div>
             </div>
         </div>
         <div class="source-items">
             <div
-                v-for="(item, i) in sourceItems"
+                v-for="(item, i) in runstate.sourceItems"
                 :key="`source-spot-${i}-${item?.id}`"
                 class="image-spot"
                 :style="{ backgroundImage: item?.id ? `url(${item.id})` : '' }"
-                @drop="dropImage(i, sourceItems)"
+                @drop="dropImage(i, runstate.sourceItems)"
                 @dragover.prevent
             >
                 <UUIDImage v-if="item?.id"
                     :class="{
                         image: true,
-                        hidden: draggingId === item.id
+                        hidden: runstate.draggingId === item.id
                     }"
                     :id="item.id"
                     :draggable="item?.id"
-                    @dragstart="draggingId = item.id"
-                    @dragend="draggingId = null"
+                    @dragstart="runstate.draggingId = item.id"
+                    @dragend="runstate.draggingId = null"
                 />
                 <div
-                  v-if="!item?.id || draggingId === item.id"
+                  v-if="!item?.id || runstate.draggingId === item.id"
                   class="image-placeholder"
                 >?</div>
 
@@ -104,25 +104,28 @@ const props = defineProps({
 })
 
 const item = await Agent.state(props.id)
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
-const sourceItems = reactive(shuffle(item.images))
-const userOrderedItems = reactive(new Array(item.images.length).fill(null))
+if (runstate.sourceItems === undefined) {
+    runstate.sourceItems = shuffle(item.images)
+}
+if (runstate.userOrderedItems === undefined) {
+    runstate.userOrderedItems = new Array(item.images.length).fill(null)
+}
+if (runstate.draggingId === undefined) {
+    runstate.draggingId = null
+}
+if (runstate.audioPlaying === undefined) {
+    runstate.audioPlaying = false
+}
+if (runstate.currentAudioTime === undefined) {
+    runstate.currentAudioTime = 0
+}
+if (runstate.lastSubmissionCorrect === undefined) {
+    runstate.lastSubmissionCorrect = null
+}
 
-const draggingId = ref(null)
-
-const audioPlaying = ref(false)
 let audio = null
-const currentAudioTime = ref(0)
-
-const data = ref({ content: null })
-Agent
-    .state(props.id)
-    .then(state => {
-        if (!state.name) state.name = ''
-        if (!state.instructions) state.instructions = ''
-        if (!state.images) state.images = []
-        data.value.content = state
-  })
 
 function shuffle(arr) {
     const arrCopy = copy(arr)
@@ -136,51 +139,53 @@ function shuffle(arr) {
 }
 
 async function toggleAudioPlayback() {
-    const audioId = data.value.content.audioId;
-    if (!audioId) return;
-    const audioUrl = await Agent.download(audioId).url();
+    const audioId = item.audioId
+    if (!audioId) return
+    const audioUrl = await Agent.download(audioId).url()
     if (!audio) {
         audio = new Audio(audioUrl);
         audio.addEventListener('ended', () => {
-            audioPlaying.value = false;
+            runstate.audioPlaying = false;
         });
         audio.addEventListener('timeupdate', () => {
-            currentAudioTime.value = audio.currentTime;
+            runstate.currentAudioTime = audio.currentTime;
         });
     }
     if (audio.paused) {
         audio.play();
-        audioPlaying.value = true;
+        runstate.audioPlaying = true;
     } else {
         audio.pause();
-        audioPlaying.value = false;
+        runstate.audioPlaying = false;
     }
 }
 
 function seekAudio() {
     if (audio) {
-        audio.currentTime = currentAudioTime.value;
+        audio.currentTime = runstate.currentAudioTime;
     }
 }
 
 function dropImage(index, targetArray) {
     event.preventDefault()
-    if (!targetArray[index] && draggingId.value) {
-        sourceItems.forEach((item,i) => {
-            if (item?.id === draggingId.value) sourceItems[i] = null
+    if (!targetArray[index] && runstate.draggingId) {
+        runstate.sourceItems.forEach((item,i) => {
+            if (item?.id === runstate.draggingId) runstate.sourceItems[i] = null
         })
-        userOrderedItems.forEach((item,i) => {
-            if (item?.id === draggingId.value) userOrderedItems[i] = null
+        runstate.userOrderedItems.forEach((item,i) => {
+            if (item?.id === runstate.draggingId) runstate.userOrderedItems[i] = null
         })
-        targetArray.splice(index, 1, { id: draggingId.value })
-        draggingId.value = null
+        targetArray.splice(index, 1, { id: runstate.draggingId })
+        runstate.draggingId = null
     }
 }
 
 async function handleSubmit() {
     const correctOrder = item.images.map(image => image.id)
-    const submittedOrder = userOrderedItems.map(image => image?.id)
+    const submittedOrder = runstate.userOrderedItems.map(image => image?.id)
     const correct = arraysDeepEqual(correctOrder, submittedOrder)
+    runstate.lastSubmissionCorrect = correct
+
     if (Agent.embedded) {
         Agent.close({
             success: correct,
