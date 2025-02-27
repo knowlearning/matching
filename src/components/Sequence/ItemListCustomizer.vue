@@ -67,13 +67,17 @@ const emits = defineEmits([ 'updateItems' ])
 
 async function handleDrop(e) {
 	const attemptedId = e.dataTransfer.getData('text')
-	const { active_type, domain } = await Agent.metadata(attemptedId)
-	if (!EMBED_DOMAINS.includes(domain) && !sequenceImportableTypes.includes(active_type)) {
-		await unsupportedTypeSwal(t, attemptedId, active_type)
-	} else {
-		const itemsCopy = JSON.parse(JSON.stringify(props.items))
-		emits('updateItems', [ ...itemsCopy, { id: attemptedId } ])
-	}
+	const itemsCopy = JSON.parse(JSON.stringify(props.items))
+	emits('updateItems', [ ...itemsCopy, { id: attemptedId } ])
+	
+	// TYPE CHECK GUARD ON DROP TURNED OFF
+	// const { active_type, domain } = await Agent.metadata(attemptedId)
+	// if (!EMBED_DOMAINS.includes(domain) && !sequenceImportableTypes.includes(active_type)) {
+	// 	await unsupportedTypeSwal(t, attemptedId, active_type)
+	// } else {
+	// 	const itemsCopy = JSON.parse(JSON.stringify(props.items))
+	// 	emits('updateItems', [ ...itemsCopy, { id: attemptedId } ])
+	// }
 }
 async function removeItem(i) {
 	const { isConfirmed } = await areYouSureSwal(t)

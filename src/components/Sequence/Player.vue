@@ -17,6 +17,7 @@
 		>
 			<vueEmbedComponent
 				v-if="i === data.activeItemIndex"
+				@mutate="fetchXapiIfNeeded"
 				:style="{
 					position: 'absolute',
 					top: '0',
@@ -247,6 +248,10 @@ function competencySuccess(competencies) {
 
 async function sendEnvironment(e) {
 	return Agent.environment(e)
+}
+
+function fetchXapiIfNeeded(e) {
+	console.log(e.patch)
 }
 
 </script>

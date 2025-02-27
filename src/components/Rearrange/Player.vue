@@ -106,27 +106,19 @@ const props = defineProps({
 const item = await Agent.state(props.id)
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
-if (runstate.sourceItems === undefined) {
-    runstate.sourceItems = shuffle(item.images)
+const initialRunstateMap = {
+    sourceItems: () => shuffle(item.images),
+    userOrderedItems: () => new Array(item.images.length).fill(null),
+    draggingId: () => null,
+    audioPlaying: () => false,
+    currentAudioTime: () => 0,
+    lastSubmissionCorrect: () => null,
+    currentlyCorrect: () => null
 }
-if (runstate.userOrderedItems === undefined) {
-    runstate.userOrderedItems = new Array(item.images.length).fill(null)
-}
-if (runstate.draggingId === undefined) {
-    runstate.draggingId = null
-}
-if (runstate.audioPlaying === undefined) {
-    runstate.audioPlaying = false
-}
-if (runstate.currentAudioTime === undefined) {
-    runstate.currentAudioTime = 0
-}
-if (runstate.lastSubmissionCorrect === undefined) {
-    runstate.lastSubmissionCorrect = null
-}
-if (runstate.currentlyCorrect === undefined) {
-    runstate.currentlyCorrect = null
-}
+
+Object.entries(initialRunstateMap).forEach(([key, fn]) => {
+    if (runstate[key] === undefined) runstate[key] = fn()
+})
 
 watch(  // set currently correct, if changed, on each run-state edit
     runstate,
