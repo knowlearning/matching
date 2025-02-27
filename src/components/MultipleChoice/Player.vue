@@ -16,7 +16,7 @@
             :label="choice.value"
             :value="i"
             :multiple="item.selectMultiple"
-            v-model="userSelect"
+            v-model="runstate.userSelect"
             hide-details
         />
     </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
@@ -49,25 +49,43 @@ const props = defineProps({
 const lang = store.getters.language()
 const item = await translateScopeId(props.id, lang)
 
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+const initialRunstateMap = {
+    lastSubmissionCorrect: () => null,
+    currentlyCorrect: () => null,
+    // userSelect ->  v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
+    userSelect: () => item.selectMultiple ? [] : false
+}
 
-// v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
-let userSelect = ref(item.selectMultiple ? [] : false)
+watch(  // set currently correct, if changed, on each run-state edit
+    runstate,
+    () => {
+        const correct = determineCorrect()
+        if (runstate.currentlyCorrect !== correct) runstate.currentlyCorrect = correct
+    },
+    { deep: true }
+)
 
-function isCorrect() {
+Object.entries(initialRunstateMap).forEach(([key, fn]) => {
+    if (runstate[key] === undefined) runstate[key] = fn()
+})
+
+function determineCorrect() {
     if (item.selectMultiple) {
         const neededIndices = []
         item.choices.forEach((c,i) => c.isCorrect && neededIndices.push(i))
-        const all = neededIndices.every(i => userSelect.value.includes(i))
-        const only = userSelect.value.every(i => neededIndices.includes(i))
+        const all = neededIndices.every(i => runstate.userSelect.includes(i))
+        const only = runstate.userSelect.every(i => neededIndices.includes(i))
         return all && only
     } else {
         const correctIndex = item.choices.findIndex(c => c.isCorrect)
-        return userSelect.value === correctIndex
+        return runstate.userSelect === correctIndex
     }
 }
 
 async function handleSubmit() {
-    const correct = isCorrect()
+    const correct = runstate.currentlyCorrect
+    runstate.lastSubmissionCorrect = correct
     if (Agent.embedded) Agent.close({
         success: correct,
         message: getMessage(correct)

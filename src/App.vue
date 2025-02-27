@@ -118,11 +118,16 @@
   async function fetchMyContentAndUserInfo() {
     const { auth: { user, info: { picture } } } = await Agent.environment()
     data.userAvatarPath = picture
-    data.content = (await Agent.query(
-      'taggings-for-tag',
-      [ user, MY_CONTENT_TAG ],
-      'tags.knowlearning.systems'
-    )).map(obj => obj.target)
+    data.content = (
+      await Agent.query(
+        'taggings-for-tag',
+        [ user, MY_CONTENT_TAG ],
+        'tags.knowlearning.systems'
+      ).catch(err => {
+        console.log(err)
+        return []
+      })
+    ).map(obj => obj.target)
   }
   fetchMyContentAndUserInfo()
 

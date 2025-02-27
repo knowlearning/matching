@@ -78,6 +78,7 @@ const initialLoad = async () => {
 }
 
 async function routeIsUUIDOfValidType(route) {
+    return true
 	if (!isUUID(route)) return false
 	
 	const { active_type } = await Agent.metadata(route)
