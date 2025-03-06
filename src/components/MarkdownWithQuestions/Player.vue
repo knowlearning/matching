@@ -4,7 +4,8 @@
             <div
                 :class="{
                     'left-or-top-side-markdown' : true,
-                    collapsed: isBottomVisible
+                    'collapsed': isBottomVisible,
+                    'markdown-only' : numberOfItems === 0
                 }"
             >
                 <ProcessMarkdown v-if="markdownContent?.md" :userInput="markdownContent.md" />
@@ -12,6 +13,7 @@
                     {{ t('next') }}
                 </v-btn>
                 <button
+                    v-if="numberOfItems > 0"
                     class="toggle-button"
                     @click="isBottomVisible = !isBottomVisible"
                 >
@@ -20,7 +22,12 @@
             </div>
         </transition>
 
-        <div class="right-or-bottom-side-questions">
+        <div
+            :class="{
+                'right-or-bottom-side-questions' : true,
+                'markdown-only' : numberOfItems === 0
+            }"
+        >
             <div
                 v-for="item,i in item.items"
                 :key="`play-item-wrapper-${i}`"
@@ -35,7 +42,12 @@
                     allow="camera;microphone;fullscreen"
                 />
             </div>
-            <div class="navbar">
+            <div
+                :class="{
+                    'navbar' : true,
+                    'no-navbar' :numberOfItems === 1
+                }"
+            >
                 <v-btn
                     @click="data.activeItemIndex = Math.max(data.activeItemIndex - 1, 0)"
                     icon="fa-solid fa-arrow-left"
@@ -86,6 +98,8 @@ const markdownContent = await Agent.state(item.md)
 const data = reactive(await Agent.state(`markdown-${props.id}`))
 data.activeItemIndex = 0
 
+const numberOfItems = computed( () => item.items.length )
+
 const itemNumberDisplayString = computed(() => {
     if (data.activeItemIndex === null || data.activeItemIndex === undefined) return ''
     let active = data.activeItemIndex + 1
@@ -123,11 +137,20 @@ async function handleSubmit() {
     height: 100% ;
     flex: 0 0 48%;
 }
+.left-or-top-side-markdown.markdown-only {
+    height: 100% ;
+    flex: 0 0 100%;
+    border: none;
+}
+
 .right-or-bottom-side-questions {
     height: calc(100% - 32px);
     flex: 0 0 49%;
     height: 100%;
     position: relative;
+}
+.right-or-bottom-side-questions.markdown-only {
+    display: none;
 }
 .right-or-bottom-side-questions .navbar {
     height: 32px;
@@ -141,6 +164,10 @@ async function handleSubmit() {
     display: flex;
     justify-content: space-between;
 }
+.right-or-bottom-side-questions .navbar.no-navbar {
+    display: none;
+}
+
 .toggle-button { display: none; }
 
 @media only screen and (max-width: 600px) {
