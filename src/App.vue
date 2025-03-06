@@ -19,6 +19,7 @@
     </Modal>
 
     <div class="left-col">
+      <pre>{{ data.tags }}</pre>
       <div class="logo-line" @click="data.active = null">
         <div class="logo-and-name">
           <img id="logo" src="./assets/pila.png">
@@ -136,7 +137,7 @@
     .then(state => {
       data.tags = state
       if (!data.tags[MY_CONTENT_TAG]) {
-        data.tags[MY_CONTENT_TAG] = { value: true }
+        data.tags[MY_CONTENT_TAG] = {}
       }
     })
     
