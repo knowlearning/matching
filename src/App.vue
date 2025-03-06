@@ -19,7 +19,6 @@
     </Modal>
 
     <div class="left-col">
-      <pre>{{ data.tags }}</pre>
       <div class="logo-line" @click="data.active = null">
         <div class="logo-and-name">
           <img id="logo" src="./assets/pila.png">
@@ -167,7 +166,7 @@
   async function createContent(active_type, active) {
     const newItemId = await Agent.create({ active_type, active })
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true } // tag as 'my-content'
-    data.content.push(newItemId) // optimistic update locally loaded
+    data.content = [ ...data.content, newItemId ] // optimistic update locally loaded
     await Agent.synced()
     data.active = newItemId // make new item active
   }
