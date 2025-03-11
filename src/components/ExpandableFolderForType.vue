@@ -1,18 +1,25 @@
 <template>
   <div class="expandable-folder-for-type">
-      <div
-        class="select-type-row"
-        @click="$emit('toggle')"
-      >
-        <h4>
-          <i :class="{
-            'fas' : true,
-            'fa-folder-plus' : !props.show,
-            'fa-folder-open' : props.show
-          }"
-        />
-          <span>{{ props.displayName }}</span>
-        </h4>
+      <div class="select-type-row">
+        <div @click="$emit('toggle')">
+          <h4>
+            <i :class="{
+              'fas' : true,
+              'fa-folder-plus' : !props.show,
+              'fa-folder-open' : props.show
+            }"
+          />
+            <span>{{ props.displayName }}</span>
+          </h4>
+        </div>
+        <div>
+          <v-btn
+            icon="fa-solid fa-plus"
+            size="x-small"
+            class="mb-2 ml-2"
+            @click="$emit('addNew')"
+          />
+        </div>
       </div>
 
       <div v-if="props.show" class="item-list">
@@ -48,6 +55,8 @@
 <script setup>
 import ItemName from './ItemName.vue'
 
+const emits = defineEmits([ 'addNew', 'toggle', 'remove', 'active' ])
+
 const props = defineProps({
   active: {
     type: [ String, null ],
@@ -71,6 +80,8 @@ const props = defineProps({
 
 <style scoped>
 .select-type-row {
+  display: flex;
+  justify-content: space-between;
   user-select: none;
   cursor: pointer;
   margin: 16px 0 0 0;

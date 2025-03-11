@@ -44,6 +44,7 @@
           :active="data.active"
           @removeItem="removeItem"
           @active="data.active = $event"
+          @addNew="addNew($event)"
         />
       </Suspense>
       <div v-if="!data.content">Loading...</div>

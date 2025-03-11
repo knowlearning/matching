@@ -12,6 +12,7 @@
         @toggle="toggleShowType(type)"
         @remove="$emit('removeItem', $event)"
         @active="$emit('active', $event)"
+        @addNew="$emit('addNew', type)"
       />
     </div>
   </div>
