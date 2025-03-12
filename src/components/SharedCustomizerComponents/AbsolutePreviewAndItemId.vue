@@ -59,20 +59,21 @@ button.preview-btn {
   left: 12px;
 }
 div.item-id-wrapper {
-  position: absolute;
+  position: fixed;
   right: 18px;
   bottom: 18px;
+  padding: 4px 10px;
   font-weight: bold;
   font-size: 0.8rem;
   font-style: italic;
-}
-.item-id {
-  pointer-events: auto;
-  padding: 4px 10px;
-  border-radius: 8px;  
-}
-.item-id:hover {
+  border: 1px solid black;
+
   background: #eee;
+  border-radius: 8px; 
+  pointer-events: auto;
+  z-index: 10000;
+}
+div.item-id-wrapper:hover {
   cursor: pointer;
   color: darkblue;
 }
