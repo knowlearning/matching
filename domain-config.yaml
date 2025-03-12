@@ -96,6 +96,7 @@ agent: |
 
   async function handleTranslatableItem(id) {
     const itemState = await TranslationAgent.state(id)
+    const itemMetadata = await TranslationAgent.metadata(id)
     itemState.translations.paths.forEach(async path => {
       const translatableTargetName = `translatable_target/${JSON.stringify([id, ...path])}`
       const translatableTargetMetadata = await TranslationAgent.metadata(translatableTargetName)
@@ -110,6 +111,7 @@ agent: |
       translatableTarget.source_language = itemState.translations.source_language
       translatableTarget.source_string = source_string || null
       translatableTarget.path = [id, ...path]
+      translatableTarget.ii = itemMetadata.ii
     })
   }
 
