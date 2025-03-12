@@ -18,6 +18,21 @@
       <template v-slot:footer><div></div></template>
     </Modal>
 
+    <Modal
+      v-if="tagContent"
+      @close="store.dispatch('tagContent', null)"
+    >
+      <template v-slot:body>
+        <TagContent
+          :key="`tag-${tagContent}`"
+          :id="tagContent"
+          @close="store.dispatch('tagContent', null)"
+        />
+      </template>
+      <template v-slot:footer><div></div></template>
+    </Modal>
+
+
     <div class="left-col">
       <div class="logo-line" @click="data.active = null">
         <div class="logo-and-name">
@@ -98,6 +113,7 @@
   import ContentBar from './components/ContentBar.vue'
   import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
+  import TagContent from './components/TagContent.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
@@ -142,6 +158,7 @@
     })
     
   const previewContent = computed(() => store.getters.previewContent())
+  const tagContent = computed(() => store.getters.tagContent())
 
   async function addNew(active_type) {
     if (!active_type) {

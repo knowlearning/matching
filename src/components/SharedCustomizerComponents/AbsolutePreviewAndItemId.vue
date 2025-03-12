@@ -8,6 +8,14 @@
         <span>{{ t('preview') }}</span>
       </v-btn>
 
+      <v-btn
+        append-icon="fa-solid fa-tag"
+        class="tag-btn"
+        @click="store.dispatch('tagContent', props.id)"
+      >
+        <span> {{ t('tags') }} </span>
+      </v-btn>
+
       <div
         @click="copyText"
         class="item-id-wrapper"
@@ -57,6 +65,12 @@ button.preview-btn {
   position: absolute;
   top: 12px;
   left: 12px;
+}
+button.tag-btn {
+  pointer-events: auto;
+  position: absolute;
+  top: 12px;
+  left: 152px;
 }
 div.item-id-wrapper {
   position: fixed;
