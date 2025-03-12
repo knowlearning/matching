@@ -168,8 +168,9 @@
     const newItemId = await Agent.create({ active_type, active })
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true } // tag as 'my-content'
     data.content = [ ...data.content, newItemId ] // optimistic update locally loaded
-    await Agent.synced()
     data.active = newItemId // make new item active
+    await Agent.synced()
+
   }
 
   async function removeItem(id) {
