@@ -161,8 +161,16 @@
     const { value: idToCopy } = await copyItemSwal(t) // validates id and type 
     if (!idToCopy) return
     const { active_type } = await Agent.metadata(idToCopy)
-    const stateToCopy = await Agent.state(idToCopy)
-    await createContent(active_type, copy(stateToCopy))
+    const stateForNewItem = copy(await Agent.state(idToCopy))
+
+    // Gross one-off for copying markdown, which has uuid for the md part that belongs to the previous owner
+    if (active_type === 'application/json;type=markdown-with-questions') {
+      const prevMdState = copy(await Agent.state(stateForNewItem.md))
+      const newMdId = await Agent.create({ active: prevMdState })
+      stateForNewItem.md = newMdId
+    }
+
+    await createContent(active_type, stateForNewItem)
   }
   async function createContent(active_type, active) {
     const newItemId = await Agent.create({ active_type, active })
