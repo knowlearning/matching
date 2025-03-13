@@ -16,6 +16,8 @@ import TrueFalseCustomizer from '../components/TrueFalse/Customizer.vue'
 import TrueFalsePlayer from '../components/TrueFalse/Player.vue'
 import FillInTheBlankCustomizer from '../components/FillInTheBlank/Customizer.vue'
 import FillInTheBlankPlayer from '../components/FillInTheBlank/Player.vue'
+import LikertCustomizer from '../components/Likert/Customizer.vue'
+import LikertPlayer from '../components/Likert/Player.vue'
 
 
 import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
@@ -26,6 +28,8 @@ import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQu
 import defaultSequence from './demo-questions/defaultSequence.js'
 import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
 import defaultFillInTheBlank from './demo-questions/defaultFillInTheBlank.js'
+import defaultLikert from './demo-questions/defaultLikert.js'
+
 
 
 const copy = x => JSON.parse(JSON.stringify(x))
@@ -102,6 +106,15 @@ const questionTypes = {
 		},
 		newItemGenerator: defaultFillInTheBlank,
 		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
+	},
+	'application/json;type=likert' : {
+		description: 'likert-question',
+		components: {
+			player: LikertPlayer,
+			customizer: LikertCustomizer
+		},
+		newItemGenerator: defaultLikert,
+		// sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
 	},
 }
 
