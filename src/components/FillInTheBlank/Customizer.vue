@@ -3,8 +3,6 @@
 
     <AbsolutePreviewAndItemId :id="props.id" />
 
-    <h2>{{ t('fill-in-the-blank-question-customizer') }}</h2>
-
     <NameAndInstructions 
       hideInstructions
       :content="state"

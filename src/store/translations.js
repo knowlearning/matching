@@ -394,5 +394,285 @@ export default {
   'feedback': {
     'en' : 'Feedback',
     'th' : 'คำติชม'
+  },
+  'tags': { 
+    'en': 'Tags', 
+    'th': 'แท็ก' 
+  },
+  'likert': { 
+    'en': 'LIKERT', 
+    'th': 'ไลเคิร์ต' 
+  },
+  'likert-question': { 
+    'en': 'Likert Question', 
+    'th': 'ไลเคิร์ต' 
+  },
+  'likert-description': { 
+    'en': 'Likert Description', 
+    'th': 'คำอธิบายไลเคิร์ต' 
+  },
+  'abstract': { 
+    'en': 'Abstract', 
+    'th': 'บทคัดย่อ' 
+  },
+  'agreement': { 
+    'en': 'Agreement', 
+    'th': 'ข้อตกลง' 
+  },
+  'frequency': { 
+    'en': 'Frequency', 
+    'th': 'ความถี่' 
+  },
+  'satisfaction': { 
+    'en': 'Satisfaction', 
+    'th': 'ความพึงพอใจ' 
+  },
+  'happiness': { 
+    'en': 'Happiness', 
+    'th': 'ความสุข' 
+  },
+  'positivity': { 
+    'en': 'Positivity', 
+    'th': 'ความเป็นบวก' 
+  },
+  'likelihood': { 
+    'en': 'Likelihood', 
+    'th': 'ความน่าจะเป็น' 
+  },
+  'poor-to-good': { 
+    'en': 'Poor to Good', 
+    'th': 'แย่ถึงดี' 
+  },
+  'terrible-to-excellent': { 
+    'en': 'Terrible to Excellent', 
+    'th': 'แย่มากถึงยอดเยี่ยม' 
+  },
+  'difficulty': { 
+    'en': 'Difficulty', 
+    'th': 'ความยาก' 
+  },
+  'speed': { 
+    'en': 'Speed', 
+    'th': 'ความเร็ว' 
+  },
+  'size': { 
+    'en': 'Size', 
+    'th': 'ขนาด' 
+  },
+  'never': { 
+    'en': 'Never', 
+    'th': 'ไม่เคย' 
+  },
+  'rarely': { 
+    'en': 'Rarely', 
+    'th': 'แทบจะไม่' 
+  },
+  'sometimes': { 
+    'en': 'Sometimes', 
+    'th': 'บางครั้ง' 
+  },
+  'often': { 
+    'en': 'Often', 
+    'th': 'บ่อยครั้ง' 
+  },
+  'always': { 
+    'en': 'Always', 
+    'th': 'เสมอ' 
+  },
+  'select-likert-category': { 
+    'en': 'Select Likert Category', 
+    'th': 'เลือกหมวดหมู่ไลเคิร์ต' 
+  },
+  'not-at-all': { 
+    'en': 'Not at all', 
+    'th': 'ไม่เลย' 
+  },
+  'slightly': { 
+    'en': 'Slightly', 
+    'th': 'เล็กน้อย' 
+  },
+  'moderately': { 
+    'en': 'Moderately', 
+    'th': 'ปานกลาง' 
+  },
+  'very': { 
+    'en': 'Very', 
+    'th': 'มาก' 
+  },
+  'extremely': { 
+    'en': 'Extremely', 
+    'th': 'อย่างยิ่ง' 
+  },
+  'strongly-disagree': { 
+    'en': 'Strongly Disagree', 
+    'th': 'ไม่เห็นด้วยอย่างยิ่ง' 
+  },
+  'disagree': { 
+    'en': 'Disagree', 
+    'th': 'ไม่เห็นด้วย' 
+  },
+  'neutral': { 
+    'en': 'Neutral', 
+    'th': 'เป็นกลาง' 
+  },
+  'agree': { 
+    'en': 'Agree', 
+    'th': 'เห็นด้วย' 
+  },
+  'strongly-agree': { 
+    'en': 'Strongly Agree', 
+    'th': 'เห็นด้วยอย่างยิ่ง' 
+  },
+  'very-dissatisfied': { 
+    'en': 'Very Dissatisfied', 
+    'th': 'ไม่พอใจมาก' 
+  },
+  'dissatisfied': { 
+    'en': 'Dissatisfied', 
+    'th': 'ไม่พอใจ' 
+  },
+  'satisfied': { 
+    'en': 'Satisfied', 
+    'th': 'พอใจ' 
+  },
+  'very-satisfied': { 
+    'en': 'Very Satisfied', 
+    'th': 'พอใจมาก' 
+  },
+  'very-unhappy': { 
+    'en': 'Very Unhappy', 
+    'th': 'ไม่มีความสุขมาก' 
+  },
+  'unhappy': { 
+    'en': 'Unhappy', 
+    'th': 'ไม่มีความสุข' 
+  },
+  'happy': { 
+    'en': 'Happy', 
+    'th': 'มีความสุข' 
+  },
+  'very-happy': { 
+    'en': 'Very Happy', 
+    'th': 'มีความสุขมาก' 
+  },
+  'very-negative': { 
+    'en': 'Very Negative', 
+    'th': 'แย่มาก' 
+  },
+  'negative': { 
+    'en': 'Negative', 
+    'th': 'แย่' 
+  },
+  'positive': { 
+    'en': 'Positive', 
+    'th': 'ดี' 
+  },
+  'very-positive': { 
+    'en': 'Very Positive', 
+    'th': 'ดีมาก' 
+  },
+  'very-unlikely': { 
+    'en': 'Very Unlikely', 
+    'th': 'ไม่น่าจะเป็นไปได้มาก' 
+  },
+  'unlikely': { 
+    'en': 'Unlikely', 
+    'th': 'ไม่น่าจะเป็นไปได้' 
+  },
+  'likely': { 
+    'en': 'Likely', 
+    'th': 'น่าจะเป็นไปได้' 
+  },
+  'very-likely': { 
+    'en': 'Very Likely', 
+    'th': 'เป็นไปได้มาก' 
+  },
+  'very-poor': { 
+    'en': 'Very Poor', 
+    'th': 'แย่มาก' 
+  },
+  'poor': { 
+    'en': 'Poor', 
+    'th': 'แย่' 
+  },
+  'fair': { 
+    'en': 'Fair', 
+    'th': 'ปานกลาง' 
+  },
+  'good': { 
+    'en': 'Good', 
+    'th': 'ดี' 
+  },
+  'very-good': { 
+    'en': 'Very Good', 
+    'th': 'ดีมาก' 
+  },
+  'terrible': { 
+    'en': 'Terrible', 
+    'th': 'แย่มาก' 
+  },
+  'bad': { 
+    'en': 'Bad', 
+    'th': 'แย่' 
+  },
+  'okay': { 
+    'en': 'Okay', 
+    'th': 'โอเค' 
+  },
+  'excellent': { 
+    'en': 'Excellent', 
+    'th': 'ยอดเยี่ยม' 
+  },
+  'very-easy': { 
+    'en': 'Very Easy', 
+    'th': 'ง่ายมาก' 
+  },
+  'easy': { 
+    'en': 'Easy', 
+    'th': 'ง่าย' 
+  },
+  'difficult': { 
+    'en': 'Difficult', 
+    'th': 'ยาก' 
+  },
+  'very-difficult': { 
+    'en': 'Very Difficult', 
+    'th': 'ยากมาก' 
+  },
+  'very-slow': { 
+    'en': 'Very Slow', 
+    'th': 'ช้ามาก' 
+  },
+  'slow': { 
+    'en': 'Slow', 
+    'th': 'ช้า' 
+  },
+  'fast': { 
+    'en': 'Fast', 
+    'th': 'เร็ว' 
+  },
+  'very-fast': { 
+    'en': 'Very Fast', 
+    'th': 'เร็วมาก' 
+  },
+  'very-small': { 
+    'en': 'Very Small', 
+    'th': 'เล็กมาก' 
+  },
+  'small': { 
+    'en': 'Small', 
+    'th': 'เล็ก' 
+  },
+  'medium': { 
+    'en': 'Medium', 
+    'th': 'กลาง' 
+  },
+  'large': { 
+    'en': 'Large', 
+    'th': 'ใหญ่' 
+  },
+  'very-large': { 
+    'en': 'Very Large', 
+    'th': 'ใหญ่มาก' 
   }
 }

@@ -12,6 +12,7 @@ export default ({ source_language = 'en' }) => ({
     translations: {
         source_language,
         paths: [
+            [ 'name' ],
             [ 'prompt' ],
             [ 'blanks', 0 ],
             [ 'blanks', 1 ],

@@ -17,9 +17,17 @@ const store = createStore({
     tagContent: state => () => state.tagContent,
     t: state => slug => {
       const lang = state.language
-      if (!state.translations[slug]) return `no slug ${slug}`
-      else if (!state.translations[slug][lang]) return `no translation for ${slug} in ${lang}`
-       else return state.translations[slug][lang]
+      if (!state.translations[slug]) {
+        const res = `no slug ${slug}`
+        console.warn(res)
+        return res
+      } else if (!state.translations[slug][lang]) {
+        const res = `no translation for ${slug} in ${lang}`
+        console.warn(res)
+        return res
+      } else {
+        return state.translations[slug][lang]
+      }
     },
   },
   mutations: {
