@@ -674,5 +674,9 @@ export default {
   'very-large': { 
     'en': 'Very Large', 
     'th': 'ใหญ่มาก' 
+  },
+  'questions': {
+    'en' : 'Questions',
+    'th' : 'คำถาม'
   }
 }

@@ -11,7 +11,7 @@
                 :color="data.tab === 'questions' ? 'teal' : ''"
                 class="ma-2"
                 @click="data.tab = 'questions'"
-            >Questions</v-btn>
+            >{{ t('questions') }}</v-btn>
         </div>
 
         <div
@@ -26,7 +26,7 @@
                 />
                 <MarkdownInput v-model="data.markdownContent.md" />
                 <div class="uuid-grab">
-                    <span>Item UUID: </span>
+                    <span>UUID:</span>
                     <span @click="copyText(props.id)">{{ props.id }}</span>
                 </div>
                 <div class="uuid-grab">
