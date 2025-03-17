@@ -91,6 +91,7 @@
 import { ref, reactive, watch } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import { UUIDImage } from '@knowlearning/agents/vue.js'
+import translateScopeId from '../../helpers/translateScopeId.js'
 import { useStore } from 'vuex'
 const store = useStore()
 const copy = x => JSON.parse(JSON.stringify(x))
@@ -103,7 +104,9 @@ const props = defineProps({
     }
 })
 
-const item = await Agent.state(props.id)
+const lang = store.getters.language()
+const item = await translateScopeId(props.id, lang)
+
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
 const initialRunstateMap = {

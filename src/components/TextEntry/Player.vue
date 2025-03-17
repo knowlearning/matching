@@ -12,10 +12,13 @@
 
 <script setup>
   import { reactive } from 'vue'
+  import translateScopeId from '../../helpers/translateScopeId.js'
 
   const props = defineProps(['id'])
-  const item = await Agent.state(props.id)  
 
+  const lang = store.getters.language()
+  const item = await translateScopeId(props.id, lang)
+  
 
   let userRunState
   if (Agent.embedded) {

@@ -89,11 +89,25 @@ const data = reactive({
 
 const state = await Agent.state(props.id)
 
-// rehab old content without feedback
+// rehab old content
 if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+if (!state.translations) updateTranslationPaths()
 
 data.content = state
 
+function updateTranslationPaths() {
+  const source_language = store.getters.language()
+  const paths = [
+    [ "name" ],
+    [ "instructions" ],
+    [ "audioId" ],
+    [ "feedback", "correct" ],
+    [ "feedback", "incorrect" ]
+  ]
+  state.fromChoices.forEach((_,i) => paths.push(["fromChoices", i, "content"]))
+  state.toChoices.forEach((_,i) => paths.push(["fromChoices", i, "content"]))
+  state.translations = { source_language, paths }
+}
 
 async function addChoice() {
   const { isConfirmed, value } = await inputSwal(t)
@@ -105,6 +119,7 @@ async function addChoice() {
       content:value,
       nodeId: uuid()
     })
+    updateTranslationPaths()
   } else { // is uuid, add type with guard if not found or not type
     const { active_type } = await Agent.metadata(value)
     let type // should 'audio' 'image', or undefined
@@ -116,6 +131,7 @@ async function addChoice() {
         nodeId: uuid(),
         content: value
       })
+      updateTranslationPaths()
     } else {
       unsupportedTypeSwal(t, value, active_type)
     }
@@ -154,7 +170,7 @@ function handleMove(nodeId, dir) {
     moveArrayElementDown(toCopy, choiceIndex)
     data.content.toChoices = toCopy
   }
-
+  updateTranslationPaths()
 }
 function moveArrayElementUp(arr, i) {
   if (i > 0 && i < arr.length) {
@@ -209,6 +225,7 @@ async function handleRemoveChoice(nodeId) {
     .filter(c => c.nodeId !== nodeId)
   removeConnectionsToId(nodeId)
   data.editChoices = false
+  updateTranslationPaths()
 }
 function removeConnectionsToId(nodeId) {
   data.content.answerConnections = copy(data.content.answerConnections)

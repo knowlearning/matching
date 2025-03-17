@@ -62,8 +62,37 @@ const props = defineProps({
 })
 
 const state = await Agent.state(props.id)
-// rehab old content without feedback
+// rehab old content
 if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+if (!state.translations) updateTranslationPaths()
+
+function updateTranslationPaths() {
+  const source_language = store.getters.language()
+  const paths = [
+    [ "name" ],
+    [ "instructions" ],
+    [ "audioId" ],
+    [ "feedback", "correct" ],
+    [ "feedback", "incorrect" ],
+    // [ "rows", 0, "audioId" ],
+    // [ "rows", 0, "choices", 0, "content" ],
+    // [ "rows", 0, "choices", 1, "content" ],
+    // [ "rows", 1, "audioId" ],
+    // [ "rows", 1, "choices", 0, "content" ],
+    // [ "rows", 1, "choices", 1, "content" ],
+    // [ "rows", 2, "audioId" ],
+    // [ "rows", 2, "choices", 0, "content" ],
+    // [ "rows", 2, "choices", 1, "content" ],
+  ]
+  state.rows.forEach((row,i) => {
+  	paths.push([ "rows", i, "audioId"])
+  	row.choices.forEach((_,j) => {
+  		paths.push([ "rows", i, "choices", j, "content"])
+  	})
+  })
+  // the payoff
+  state.translations = { source_language, paths }
+}
 
 const data = reactive({ content: state })
 
@@ -72,14 +101,17 @@ function updateRow(i,payload) {
 	const rowsCopy = copy(data.content.rows)
 	rowsCopy[i] = payload
 	data.content.rows = dataContentCopy
+	updateTranslationPaths()
 }
 function addRow() {
 	data.content.rows.push(copy(newRowSchema))
+	updateTranslationPaths()
 }
 function removeRow(i) {
 	const rowCopy = copy(data.content.rows)
 	rowCopy.splice(i,1)
 	data.content.rows = rowCopy
+	updateTranslationPaths()
 }
 </script>
 
