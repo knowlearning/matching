@@ -87,6 +87,7 @@ import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import CompetancyDashboard from './competency-dashboard.vue'
+import translateScopeId from '../../helpers/translateScopeId.js'
 
 import { useStore } from 'vuex'
 const store = useStore()
@@ -104,7 +105,8 @@ const props = defineProps({
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
 
-const sequenceDef = await Agent.state(props.id)
+const lang = store.getters.language()
+const sequenceDef = await translateScopeId(props.id, lang)
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 

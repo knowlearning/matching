@@ -28,14 +28,16 @@
   import MatchSvg from './MatchSvg/index.vue'
   import { sameConnection } from '../../helpers/mathHelpers.js'
   import { itemFeedbackSwal } from '../../helpers/swallows.js'
+  import translateScopeId from '../../helpers/translateScopeId.js'
   import { useStore } from 'vuex'
 
   const store = useStore()
   function t(slug) { return store.getters.t(slug) }
 
   const props = defineProps(['id'])
-  let item = null
-  item = await Agent.state(props.id)  
+  
+  const lang = store.getters.language()
+  const item = await translateScopeId(props.id, lang)
 
   const data = reactive({
     studentConnections: [], // each connection is [ nodeId, nodeId ]

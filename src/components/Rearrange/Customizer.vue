@@ -71,6 +71,9 @@ const copy = x => JSON.parse(JSON.stringify(x))
 const props = defineProps(['id'])
 const data = reactive({ content: null })
 
+
+console.log('got language!', store.getters.language())
+
 Agent
 	.state(props.id)
 	.then(state => {
@@ -78,6 +81,17 @@ Agent
 		if (!state.audioId) state.audioId = null
 		if (!state.images) state.images = []
 		if (!state.feedback) state.feedback = { correct: null, incorrect: null }
+		if (!state.translations) {
+			state.translations = {
+		        source_language: store.getters.language(),
+		        paths: [
+		            [ 'name' ],
+		            [ 'instructions' ],
+		            [ 'feedback', 'correct' ],
+		            [ 'feedback', 'incorrect' ]
+		        ]
+		    }
+		}
 		data.content = state
 	})
 

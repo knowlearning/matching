@@ -39,5 +39,18 @@ export default ({ source_language }) => ({
             "f93463ad-b534-4623-8bd0-20f5744e4d57",
             "634a6859-17ca-4d21-a92a-76b1a9c5158f"
         ]
-    ]
+    ],
+    translations: {
+        source_language,
+        paths: [
+            [ "name" ],
+            [ "instructions" ],
+            [ "feedback", "correct" ],
+            [ "feedback", "incorrect" ],
+            [ "fromChoices", 0, "content" ],
+            [ "fromChoices", 1, "content" ],
+            [ "toChoices", 0, "content" ],
+            [ "toChoices", 1, "content" ],
+        ]
+    }
 })

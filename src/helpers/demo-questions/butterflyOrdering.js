@@ -19,5 +19,14 @@ export default ({ source_language }) => ({
             "id": "4dd57870-f8ec-11ee-8881-b3d50f9242a3"
         }
     ],
-    "audioId": null
+    "audioId": null,
+    translations: {
+        source_language,
+        paths: [
+            [ 'name' ],
+            [ 'instructions' ],
+            [ 'feedback', 'correct' ],
+            [ 'feedback', 'incorrect' ]
+        ]
+    }
 })

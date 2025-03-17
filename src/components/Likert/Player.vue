@@ -37,6 +37,7 @@
 import likertCategories from './likertCategories.js'
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import translateScopeId from '../../helpers/translateScopeId.js'
 function t(slug) { return useStore().getters.t(slug) }
 const props = defineProps({
 	id: {
@@ -45,8 +46,11 @@ const props = defineProps({
 	}
 })
 
+const lang = store.getters.language()
+const questionDef = await translateScopeId(props.id, lang)
+
 const selectedValue = ref(null)
-const questionDef = await Agent.state(props.id)
+
 const radioOptions = computed(() => {
 	if (selectedValue === null) return null
 	const choices = likertCategories[questionDef.category]

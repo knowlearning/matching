@@ -38,6 +38,7 @@ import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import Row from './RowSelection/Player.vue'
 import AudioPlayerButton from '../AudioPlayerButton.vue'
 import { useStore } from 'vuex'
+import translateScopeId from '../../helpers/translateScopeId.js'
 
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
@@ -46,7 +47,9 @@ const props = defineProps({
 	id: { type: String, required: true }
 })
 
-const item = await Agent.state(props.id)
+const lang = store.getters.language()
+const item = await translateScopeId(props.id, lang)
+
 const rowsCorrect = reactive(item.rows.map(r => false)) // init to array of false
 
 async function handleSubmit() {

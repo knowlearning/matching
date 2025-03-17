@@ -46,5 +46,20 @@ export default ({ source_language }) => ({
                 }
             ]
         }
+    ],
+    translations: [
+        [ "name" ],
+        [ "instructions" ],
+        [ "feedback", "correct" ],
+        [ "feedback", "incorrect" ],
+        [ "rows", 0, "audioId" ],
+        [ "rows", 0, "choices", 0, "content" ],
+        [ "rows", 0, "choices", 1, "content" ],
+        [ "rows", 1, "audioId" ],
+        [ "rows", 1, "choices", 0, "content" ],
+        [ "rows", 1, "choices", 1, "content" ],
+        [ "rows", 2, "audioId" ],
+        [ "rows", 2, "choices", 0, "content" ],
+        [ "rows", 2, "choices", 1, "content" ]
     ]
 })
