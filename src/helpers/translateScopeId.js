@@ -8,16 +8,21 @@ export default async function translateScopeId(id, lang) {
             return []
         })
 
-    // will be overwritten when possible
+    console.log('found translations')
+    console.log(translations)
+
+    // fields will be progressively overwritten, when possible, the returned
     let translated = JSON.parse(JSON.stringify(await Agent.state(id)))
 
+    console.log('expected translation paths', translated.translations)
+
     translations
-    	.forEach(({ path, value }) => {
-    		let ref = translated
-    		const p = path.slice(1)
-    		while (p.length > 1 && ref[p[0]]) ref = ref[p.shift()]
-    		if (p.length === 1) ref[p[0]] = value
-    	})
+        .forEach(({ path, value }) => {
+            let ref = translated
+            const p = path.slice(1)
+            while (p.length > 1 && ref[p[0]]) ref = ref[p.shift()]
+            if (p.length === 1) ref[p[0]] = value
+        })
 
     return translated
 }

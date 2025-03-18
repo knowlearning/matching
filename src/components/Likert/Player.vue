@@ -38,7 +38,10 @@ import likertCategories from './likertCategories.js'
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import translateScopeId from '../../helpers/translateScopeId.js'
-function t(slug) { return useStore().getters.t(slug) }
+
+const store = useStore()
+function t(slug) { return  store.getters.t(slug) }
+
 const props = defineProps({
 	id: {
 		type: String,

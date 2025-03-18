@@ -2,19 +2,20 @@
     <div class="absolute-preview-and-item-id">
       <v-btn
         @click="store.dispatch('previewContent', props.id)"
+        @click.shift="store.dispatch('tagContent', props.id)"
         append-icon="fa-solid fa-eye"
         class="preview-btn"
       >
         <span>{{ t('preview') }}</span>
       </v-btn>
 
-      <v-btn
+<!--       <v-btn
         append-icon="fa-solid fa-tag"
         class="tag-btn"
         @click="store.dispatch('tagContent', props.id)"
       >
         <span> {{ t('tags') }} </span>
-      </v-btn>
+      </v-btn> -->
 
       <div
         @click="copyText"
