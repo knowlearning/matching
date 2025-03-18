@@ -12,8 +12,8 @@ importers:
         specifier: ^6.5.2
         version: 6.5.2
       '@knowlearning/agents':
-        specifier: ^0.9.168
-        version: 0.9.168
+        specifier: 0.9.159
+        version: 0.9.159
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.2.8)
@@ -216,8 +216,8 @@ packages:
   '@jridgewell/sourcemap-codec@1.4.15':
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
 
-  '@knowlearning/agents@0.9.168':
-    resolution: {integrity: sha512-WLRA53OQl2tVdWBvJMm2SgpdB1IJf38booLyhBoVjVjSRQapPwksVx7LPYxDgk75MGcodDyoaNER5cmXnXiwKQ==}
+  '@knowlearning/agents@0.9.159':
+    resolution: {integrity: sha512-TsQBWemSY97N5dxu2AFlbDVhczw27m0i4LeesgjoDQNSAzw0CCQau0F0SKweu65NkMLSsuJnqnqRbiZJc/9q1Q==}
 
   '@knowlearning/patch-proxy@1.3.4':
     resolution: {integrity: sha512-F1ay1UaPXsEJfTm6IX6NvEvorVXI3qXabQGCDeyDSu9qZmETqubgOYqx6B6wImCxGL9TgrB6ZC4QLF0tJHYwng==}
@@ -581,7 +581,7 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.4.15': {}
 
-  '@knowlearning/agents@0.9.168':
+  '@knowlearning/agents@0.9.159':
     dependencies:
       '@knowlearning/patch-proxy': 1.3.4
       fast-json-patch: 3.1.1
