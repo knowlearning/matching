@@ -7,6 +7,8 @@ export default async function translateScopeId(id, lang) {
             console.log(err)
             return []
         })
+
+    // will be overwritten when possible
     let translated = JSON.parse(JSON.stringify(await Agent.state(id)))
 
     translations

@@ -71,9 +71,6 @@ const copy = x => JSON.parse(JSON.stringify(x))
 const props = defineProps(['id'])
 const data = reactive({ content: null })
 
-
-console.log('got language!', store.getters.language())
-
 Agent
 	.state(props.id)
 	.then(state => {
