@@ -41,12 +41,6 @@
         </div>
         <div class="button-area">
           <v-btn
-            @click="addNew()"
-            icon="fa-solid fa-plus"
-            size="small"
-            class="mr-2 "
-          />
-          <v-btn
             @click="copyExisting"
             icon="fa-solid fa-copy"
             size="small"
@@ -59,7 +53,7 @@
           :active="data.active"
           @removeItem="removeItem"
           @active="data.active = $event"
-          @addNew="addNew($event)"
+          @addNew="addNew"
         />
       </Suspense>
       <div v-if="!data.content">Loading...</div>
@@ -161,16 +155,10 @@
   const tagContent = computed(() => store.getters.tagContent())
 
   async function addNew(active_type) {
-    if (!active_type) {
-      const { value, isConfirmed } = await chooseTypeSwal(t)
-      if (isConfirmed) active_type = value
-    }
-    if (!active_type) return
-    // get demo question for active language
-    const lang = store.getters.language()
+    const source_language = store.getters.language()
     await createContent(
       active_type,
-      questionTypes[active_type].newItemGenerator({})
+      questionTypes[active_type].newItemGenerator({ source_language })
     )
   }
   
