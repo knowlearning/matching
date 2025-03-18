@@ -41,16 +41,18 @@ async function translateNameFromTaskId (
     lang
 ) {
     const { name } = await Agent.state(taskId)
-    if (!name) {
-        console.warn(`task name not found for ${taskId}`)
-        return `task name not found for ${taskId}`
-    } else if (isUUID(name)) { // we're in old translation system
-        const domain = KAREL_TRANSLATION_DOMAIN
-        return await translateId(name, lang, domain)
-    } else {
-        const translatedItem = await translateScopeId(taskId, lang)
-        return translatedItem.name
-    }
+    return name
+    // TODO: Audit and Turn Back On
+    // if (!name) {
+    //     console.warn(`task name not found for ${taskId}`)
+    //     return `task name not found for ${taskId}`
+    // } else if (isUUID(name)) { // we're in old translation system
+    //     const domain = KAREL_TRANSLATION_DOMAIN
+    //     return await translateId(name, lang, domain)
+    // } else {
+    //     const translatedItem = await translateScopeId(taskId, lang)
+    //     return translatedItem.name
+    // }
 }
 
 async function translateId(id, lang, domain) {
