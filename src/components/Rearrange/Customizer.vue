@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import { v4 as uuid } from 'uuid'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
@@ -78,19 +78,28 @@ Agent
 		if (!state.audioId) state.audioId = null
 		if (!state.images) state.images = []
 		if (!state.feedback) state.feedback = { correct: null, incorrect: null }
-		if (!state.translations) {
-			state.translations = {
-		        source_language: store.getters.language(),
-		        paths: [
-		            [ 'name' ],
-		            [ 'instructions' ],
-		            [ 'feedback', 'correct' ],
-		            [ 'feedback', 'incorrect' ]
-		        ]
-		    }
-		}
+		if (!state.translations) updateTranslationPaths()
 		data.content = state
 	})
+
+function updateTranslationPaths() {
+  const source_language = store.getters.language()
+  const paths = [
+    [ "name" ],
+    [ "instructions" ],
+    [ "audioId" ],
+    [ "feedback", "correct" ],
+    [ "feedback", "incorrect" ]
+  ]
+  data.content.images.forEach((_,i) => paths.push([ "images", i, "id"]))
+  data.content.translations = { source_language, paths }
+}
+
+watch(
+	() => data.content ? data.content.images : data,
+	updateTranslationPaths,
+	{ deep: true }
+)
 
 function removeImage(id) {
 	const imagesCopy = copy(data.content.images)
