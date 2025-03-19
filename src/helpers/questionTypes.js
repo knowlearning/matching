@@ -19,16 +19,25 @@ import FillInTheBlankPlayer from '../components/FillInTheBlank/Player.vue'
 import LikertCustomizer from '../components/Likert/Customizer.vue'
 import LikertPlayer from '../components/Likert/Player.vue'
 
+import defaultFillInTheBlank from './default-item-templates/defaultFillInTheBlank.js'
+import defaultLikert from './default-item-templates/defaultLikert.js'
+import defaultMarkdownWithQuestions from './default-item-templates/defaultMarkdownWithQuestions.js'
+import defaultMatching from './default-item-templates/defaultMatching.js'
+import defaultMultipleChoice from './default-item-templates/defaultMultipleChoice.js'
+import defaultOrderItems from './default-item-templates/defaultOrderItems.js'
+import defaultSelectFromPairs from './default-item-templates/defaultSelectFromPairs.js'
+import defaultSequence from './default-item-templates/defaultSequence.js'
+import defaultTrueFalse from './default-item-templates/defaultTrueFalse.js'
 
-import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
-import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
-import butterflyOrdering from './demo-questions/butterflyOrdering.js'
-import monumentPairs from './demo-questions/monumentPairs.js'
-import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQuestions.js'
-import defaultSequence from './demo-questions/defaultSequence.js'
-import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
-import defaultFillInTheBlank from './demo-questions/defaultFillInTheBlank.js'
-import defaultLikert from './demo-questions/defaultLikert.js'
+// import mjAndKobeMatching from './demo-questions/mjAndKobeMatching.js'
+// import multipleChoiceDefault from './demo-questions/multipleChoiceDefault.js'
+// import butterflyOrdering from './demo-questions/butterflyOrdering.js'
+// import monumentPairs from './demo-questions/monumentPairs.js'
+// import defaultMarkdownWithQuestions from './demo-questions/defaultMarkdownWithQuestions.js'
+// import defaultSequence from './demo-questions/defaultSequence.js'
+// import defaultTrueFalse from './demo-questions/defaultTrueFalse.js'
+// import defaultFillInTheBlank from './demo-questions/defaultFillInTheBlank.js'
+// import defaultLikert from './demo-questions/defaultLikert.js'
 
 
 
@@ -41,7 +50,7 @@ const questionTypes = {
 			player: MatchingPlayer,
 			customizer: MatchingCustomizer
 		},
-		newItemGenerator: mjAndKobeMatching,
+		newItemGenerator: defaultMatching,
 		sample: '0c014c40-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=multiple-choice' : {
@@ -50,7 +59,7 @@ const questionTypes = {
 			player: MultipleChoicePlayer,
 			customizer: MultipleChoiceCustomizer
 		},
-		newItemGenerator: multipleChoiceDefault,
+		newItemGenerator: defaultMultipleChoice,
 		sample: '1a1c2410-3d4e-11ef-8319-adf6059912ac'
 	},
 	'application/json;type=rearrange-items' : {
@@ -59,7 +68,7 @@ const questionTypes = {
 			player: RearrangePlayer,
 			customizer: RearrangeCustomizer
 		},
-		newItemGenerator: butterflyOrdering,
+		newItemGenerator: defaultOrderItems,
 		sample: '01fd0ef0-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=select-from-pairs' : {
@@ -68,7 +77,7 @@ const questionTypes = {
 			player: SelectFromPairsPlayer,
 			customizer: SelectFromPairsCustomizer
 		},
-		newItemGenerator: monumentPairs,
+		newItemGenerator: defaultSelectFromPairs,
 		sample: '13d0f650-fb93-11ee-a57d-19b2f6cf4b58'
 	},
 	'application/json;type=markdown-with-questions' : {

@@ -54,7 +54,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { v4 as uuid } from 'uuid'
-import defaultMarkdown from '../../helpers/demo-questions/defaultMarkdown.js'
+import defaultMarkdown from '../../helpers/old-demo-questions/defaultMarkdown.js'
 import MarkdownInput from '../MarkdownHelpers/MarkdownInput.vue'
 import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
