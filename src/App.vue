@@ -23,11 +23,13 @@
       @close="store.dispatch('tagContent', null)"
     >
       <template v-slot:body>
-        <TagContent
-          :key="`tag-${tagContent}`"
-          :id="tagContent"
-          @close="store.dispatch('tagContent', null)"
-        />
+        <Suspense>
+          <TagContent
+            :key="`tag-${tagContent}`"
+            :id="tagContent"
+            @close="store.dispatch('tagContent', null)"
+          />
+        </Suspense>
       </template>
       <template v-slot:footer><div></div></template>
     </Modal>
