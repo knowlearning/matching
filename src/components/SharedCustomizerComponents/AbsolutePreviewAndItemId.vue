@@ -1,7 +1,7 @@
 <template>
     <div class="absolute-preview-and-item-id">
       <v-btn
-        @click="store.dispatch('previewContent', props.id)"
+        @click.exact="store.dispatch('previewContent', props.id)"
         @click.shift="store.dispatch('tagContent', props.id)"
         append-icon="fa-solid fa-eye"
         class="preview-btn"
