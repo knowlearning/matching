@@ -99,10 +99,6 @@ import {
     sameConnection
 } from '../../../helpers/mathHelpers.js'
 
-import { useStore } from 'vuex'
-const store = useStore()
-function t(slug) { return store.getters.t(slug) }
-
 const copy = x => JSON.parse(JSON.stringify(x))
 
 export default {
@@ -206,6 +202,9 @@ export default {
     },
 
     methods: {
+        t(slug) {
+            return this.$store.getters.t(slug)
+        },
         getComponentForChoice(choice) {
             if (choice.type === 'image') return ImageSvgChoice
             else if (choice.type === 'text') return TextChoice

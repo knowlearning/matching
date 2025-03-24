@@ -120,7 +120,6 @@
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
 
-  const userImagePath = reactive(null)
   const data = reactive({
     content: null,
     active: null,
@@ -183,9 +182,8 @@
     const newItemId = await Agent.create({ active_type, active })
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true } // tag as 'my-content'
     data.content = [ ...data.content, newItemId ] // optimistic update locally loaded
-    data.active = newItemId // make new item active
     await Agent.synced()
-
+    data.active = newItemId // make new item active
   }
 
   async function removeItem(id) {
