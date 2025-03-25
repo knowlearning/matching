@@ -180,9 +180,9 @@
   }
   async function createContent(active_type, active) {
     const newItemId = await Agent.create({ active_type, active })
+    await Agent.synced()
     data.tags[MY_CONTENT_TAG][newItemId] = { value: true } // tag as 'my-content'
     data.content = [ ...data.content, newItemId ] // optimistic update locally loaded
-    await Agent.synced()
     data.active = newItemId // make new item active
   }
 
