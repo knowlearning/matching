@@ -5,7 +5,7 @@ export default async function translateScopeId(id, lang) {
     const translations =
         await Agent.query('translate-item', [id, [lang]], TRANSLATION_DOMAIN)
         .catch(err => {
-            console.log(err)
+            console.warn(err)
             return []
         })
 

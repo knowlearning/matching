@@ -19,15 +19,15 @@
     </Modal>
 
     <Modal
-      v-if="tagContent"
-      @close="store.dispatch('tagContent', null)"
+      v-if="idToShowTagInterfaceFor"
+      @close="store.dispatch('idToShowTagInterfaceFor', null)"
     >
       <template v-slot:body>
         <Suspense>
-          <TagContent
-            :key="`tag-${tagContent}`"
-            :id="tagContent"
-            @close="store.dispatch('tagContent', null)"
+          <TagInterface
+            :key="`tag-${idToShowTagInterfaceFor}`"
+            :id="idToShowTagInterfaceFor"
+            @close="store.dispatch('idToShowTagInterfaceFor', null)"
           />
         </Suspense>
       </template>
@@ -109,7 +109,7 @@
   import ContentBar from './components/ContentBar.vue'
   import Welcome from './components/Welcome.vue'
   import PlayOrCustomizeByTypeSwitcher from './components/PlayOrCustomizeByTypeSwitcher.vue'
-  import TagContent from './components/TagContent.vue'
+  import TagInterface from './components/TagInterface/index.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
   import { useStore } from 'vuex'
@@ -153,7 +153,7 @@
     })
     
   const previewContent = computed(() => store.getters.previewContent())
-  const tagContent = computed(() => store.getters.tagContent())
+  const idToShowTagInterfaceFor = computed(() => store.getters.idToShowTagInterfaceFor())
 
   async function addNew(active_type) {
     const source_language = store.getters.language()

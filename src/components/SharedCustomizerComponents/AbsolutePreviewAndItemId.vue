@@ -2,7 +2,7 @@
     <div class="absolute-preview-and-item-id">
       <v-btn
         @click.exact="store.dispatch('previewContent', props.id)"
-        @click.shift="store.dispatch('tagContent', props.id)"
+        @click.shift="store.dispatch('idToShowTagInterfaceFor', props.id)"
         append-icon="fa-solid fa-eye"
         class="preview-btn"
       >
@@ -12,7 +12,7 @@
 <!--       <v-btn
         append-icon="fa-solid fa-tag"
         class="tag-btn"
-        @click="store.dispatch('tagContent', props.id)"
+        @click="store.dispatch('idToShowTagInterfaceFor', props.id)"
       >
         <span> {{ t('tags') }} </span>
       </v-btn> -->
