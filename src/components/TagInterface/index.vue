@@ -1,8 +1,9 @@
 <template>
 	<div class="tag-interface">
 		<h2>Tags for {{ props.id }}</h2>
-		<div v-if="loading">Loading</div>
-		<div v-else>
+		<div v-if="displayState === 'loading'">Loading</div>
+		<div v-else-if="displayState === 'error'">Error Setting Tag, Likely Insufficient Permissions</div>
+		<div v-else-if="displayState ==='loaded'">
 			<ToggleItemTag
 				v-for="tag in tagsToTagItemsWith"
 				:key="`toggle-tag-${tag}-on-item-${props.id}`"
@@ -24,7 +25,7 @@ const TAGS_TO_TAG_ITEMS_WITH = "c025ade0-0cc9-11f0-973f-1565207095e0"
 const PILA_PARTITION = 'PILA'
 
 const props = defineProps([ 'id' ])
-let loading = ref(false)
+let displayState = ref('loaded')
 
 // populates the LIST of tags that items could possibly be tagged with
 // no need for reactivity
@@ -40,14 +41,19 @@ const tagsToTagItemsWith = ( await Agent.query(
 const tags = await Agent.state('tags')
 
 async function addTagging(tag, value) {
-	loading.value = true
+	displayState.value = 'loading'
 	if (!tags[tag]) tags[tag] = {}	
 	tags[tag][props.id] = {
 		value,
 		partition: PILA_PARTITION
 	} 
 	let newVal
+	const startTime = Date.now()
 	while (newVal !== !!value) {
+		if (Date.now() - startTime > 5000) {
+			displayState.value = 'error'
+			return
+		}
 		await new Promise(r => setTimeout(r, 500))
 		newVal = await fetchIsTagged({
 			tag,
@@ -56,7 +62,7 @@ async function addTagging(tag, value) {
 			domain: TAGS_DOMAIN
 		})
 	}
-	loading.value = false
+	displayState.value = 'loaded'
 }	
 
 async function fetchIsTagged({ tag, partition, item, domain }) {
