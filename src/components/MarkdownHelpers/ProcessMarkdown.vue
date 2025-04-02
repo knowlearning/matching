@@ -129,4 +129,9 @@ async function replacer(uuid, optionsStr) {
 {
     margin: 0.65em 0 0.1em 0;
 }
+.markdown ul,
+.markdown li,
+.markdown ol {
+    padding: revert;
+}
 </style>
