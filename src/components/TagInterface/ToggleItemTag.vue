@@ -1,10 +1,12 @@
 <template>
-	<div>
+	<v-chip
+		:color="isTagged ? 'blue' : 'grey'"
+		text-color="white"
+		@click="emits('addTagging', isTagged ? null : true)"
+		class="ma-2"
+	>
 		<ItemName :id="props.tag" />
-		Is Tagged :: {{ isTagged === undefined ? 'waiting' : isTagged }}
-		<v-btn @click="emits('addTagging', true)"> Tag</v-btn>
-		<v-btn @click="emits('addTagging', null)"> Untag </v-btn>
-	</div>
+	</v-chip>
 </template>
 
 
