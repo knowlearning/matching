@@ -14,6 +14,9 @@ importers:
       '@knowlearning/agents':
         specifier: ^0.9.172
         version: 0.9.172
+      '@knowlearning/tags':
+        specifier: ^1.1.0
+        version: 1.1.0(@knowlearning/agents@0.9.172)(vue@3.4.21)(vuetify@3.5.16(vue@3.4.21))
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.2.8)
@@ -221,6 +224,13 @@ packages:
 
   '@knowlearning/patch-proxy@1.3.4':
     resolution: {integrity: sha512-F1ay1UaPXsEJfTm6IX6NvEvorVXI3qXabQGCDeyDSu9qZmETqubgOYqx6B6wImCxGL9TgrB6ZC4QLF0tJHYwng==}
+
+  '@knowlearning/tags@1.1.0':
+    resolution: {integrity: sha512-uPLthvzzWc5wk4xRqiYOn+iK1XQd+7zv+u6S5sKWxWCeISvcBt3DD4VwnBSCOTkQOEd8P+3iD9r2toUNhojMfA==}
+    peerDependencies:
+      '@knowlearning/agents': 0.x
+      vue: 3.x
+      vuetify: 3.x
 
   '@rollup/rollup-android-arm-eabi@4.14.1':
     resolution: {integrity: sha512-fH8/o8nSUek8ceQnT7K4EQbSiV7jgkHq81m9lWZFIXjJ7lJzpWXbQFpT/Zh6OZYnpFykvzC3fbEvEAFZu03dPA==}
@@ -588,6 +598,12 @@ snapshots:
       uuid: 8.3.2
 
   '@knowlearning/patch-proxy@1.3.4': {}
+
+  '@knowlearning/tags@1.1.0(@knowlearning/agents@0.9.172)(vue@3.4.21)(vuetify@3.5.16(vue@3.4.21))':
+    dependencies:
+      '@knowlearning/agents': 0.9.172
+      vue: 3.4.21
+      vuetify: 3.5.16(vue@3.4.21)
 
   '@rollup/rollup-android-arm-eabi@4.14.1':
     optional: true

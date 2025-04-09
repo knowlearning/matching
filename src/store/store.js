@@ -8,13 +8,13 @@ const store = createStore({
     language: matchNavigatorLanguage(),
     languages: [matchNavigatorLanguage()],
     previewContent: null, // null or id to preview, used for modal
-    tagContent: null, // null or id to tag, used for modal
+    idToShowTagInterfaceFor: null, // null or id to tag, used for modal
   },
    getters: {
     language: state => () => state.language,
     languages: state => () => state.languages,
     previewContent: state => () => state.previewContent,
-    tagContent: state => () => state.tagContent,
+    idToShowTagInterfaceFor: state => () => state.idToShowTagInterfaceFor,
     t: state => slug => {
       const lang = state.language
       if (!state.translations[slug]) {
@@ -34,7 +34,7 @@ const store = createStore({
     language: (state, value) => state.language = value,
     languages: (state, value) => state.languages = value,
     previewContent: (state, value) => state.previewContent = value,
-    tagContent: (state, value) => state.tagContent = value
+    idToShowTagInterfaceFor: (state, value) => state.idToShowTagInterfaceFor = value
   },
   actions: {
     language: async ({ commit, getters }, value) => {
@@ -53,7 +53,7 @@ const store = createStore({
       })
     },
     previewContent: ({ commit }, value) => commit('previewContent', value),
-    tagContent: ({ commit }, value) => commit('tagContent', value),
+    idToShowTagInterfaceFor: ({ commit }, value) => commit('idToShowTagInterfaceFor', value),
   },
 
 })
