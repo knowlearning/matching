@@ -1,15 +1,25 @@
 <template>
 	<div class="tag-interface">
-		<h2>Tags for {{ props.id }}</h2>
-		<div v-if="displayState === 'loading'">Loading</div>
-		<div v-else-if="displayState === 'error'">Error Setting Tag, Likely Insufficient Permissions</div>
+		<h2>
+			Tags for
+			<ItemName :id="props.id" />
+		</h2>
+
+		<div v-if="displayState === 'loading'">
+			Loading
+		</div>
+
+		<div v-else-if="displayState === 'error'">
+			Error Setting Tag, Likely Insufficient Permissions
+		</div>
+
 		<div v-else-if="displayState ==='loaded'">
 			<ToggleItemTag
 				v-for="tag in tagsToTagItemsWith"
 				:key="`toggle-tag-${tag}-on-item-${props.id}`"
 				:item="props.id"
 				:tag="tag"
-				:partition="PILA_PARTITION"
+				:partition="PUBLIC_TAGS_PARTITION"
 				:domain="TAGS_DOMAIN"
 				@addTagging="addTagging(tag, $event)"
 			/>
@@ -19,10 +29,13 @@
 
 <script setup>
 import { ref } from 'vue'
+import ItemName from '../ItemName.vue'
 import ToggleItemTag from './ToggleItemTag.vue'
 const TAGS_DOMAIN = 'tags.knowlearning.systems'
 const TAGS_TO_TAG_ITEMS_WITH = "c025ade0-0cc9-11f0-973f-1565207095e0"
 const PILA_PARTITION = 'PILA'
+const PUBLIC_TAGS_PARTITION = 'Public Tags'
+
 
 const props = defineProps([ 'id' ])
 let displayState = ref('loaded')
@@ -45,7 +58,7 @@ async function addTagging(tag, value) {
 	if (!tags[tag]) tags[tag] = {}	
 	tags[tag][props.id] = {
 		value,
-		partition: PILA_PARTITION
+		partition: PUBLIC_TAGS_PARTITION
 	} 
 	let newVal
 	const startTime = Date.now()
@@ -57,7 +70,7 @@ async function addTagging(tag, value) {
 		await new Promise(r => setTimeout(r, 500))
 		newVal = await fetchIsTagged({
 			tag,
-			partition: PILA_PARTITION,
+			partition: PUBLIC_TAGS_PARTITION,
 			item: props.id,
 			domain: TAGS_DOMAIN
 		})
