@@ -1,10 +1,10 @@
 <template>
-	<div class="tag-interface">
+	<div class="tag-interface" style="text-align: left; padding: 30px;">
 		<h2>
 			Tags for
 			<ItemName :id="props.id" />
 		</h2>
-		<TagFilters
+		<TagMenu
 			v-model="selectedTags"
 			:partition="PILA_PARTITION"
 			:roots="[TAGS_TO_TAG_ITEMS_WITH]"
@@ -17,7 +17,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import ItemName from '../ItemName.vue'
-import { Filters as TagFilters } from '@knowlearning/tags'
+import TagTranslation from './TagTranslation.vue'
+import { TagMenu } from '@knowlearning/tags'
 
 const TAGS_DOMAIN = 'tags.knowlearning.systems'
 const TAGS_TO_TAG_ITEMS_WITH = "c025ade0-0cc9-11f0-973f-1565207095e0"
