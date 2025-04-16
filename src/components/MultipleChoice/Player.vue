@@ -51,7 +51,7 @@ const item = await translateScopeId(props.id, lang)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 const initialRunstateMap = {
-    lastSubmissionCorrect: () => null,
+    // xapi: () => ({}),
     currentlyCorrect: () => null,
     // userSelect ->  v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
     userSelect: () => item.selectMultiple ? [] : false
@@ -84,13 +84,18 @@ function determineCorrect() {
 }
 
 async function handleSubmit() {
-    const correct = runstate.currentlyCorrect
-    runstate.lastSubmissionCorrect = correct
-    if (Agent.embedded) Agent.close({
-        success: correct,
-        message: getMessage(correct)
-    })
-    else await itemFeedbackSwal(t, correct, getMessage(correct))
+    const success = runstate.currentlyCorrect
+    if (!Agent.embedded) {
+        await itemFeedbackSwal(t, success, getMessage(success))
+    }
+    runstate.xapi = {
+        verb: 'submitted',
+        object: props.id,
+        result: { success },
+        extensions: {
+            message: getMessage(success)
+        }
+    }
 }
 
 function getMessage(isCorrect) {

@@ -17,7 +17,7 @@
 		>
 			<vueEmbedComponent
 				v-if="i === data.activeItemIndex"
-				@mutate="fetchXapiIfNeeded"
+				@mutate="handleXapiChanges(i,$event)"
 				:style="{
 					position: 'absolute',
 					top: '0',
@@ -195,39 +195,39 @@ function previous() {
 }
 async function handleItemSubmit(i, info={}) {
 
-	const {
-		success = null,
-		message = null
-	} = info
+	// const {
+	// 	success = null,
+	// 	message = null
+	// } = info
 
-	const key = `${i}/${sequenceDef.items[i].id}`
-	if (info.competencies) {
-		competencyDashboardData.value = info.competencies
-		showCompetencyDashboard.value = true
-		//  TODO: compute correctness based on competencies
-		const runWasSuccessful = competencySuccess(info.competencies)
-		data.itemInfo[key].correct = data.itemInfo[key].correct || runWasSuccessful
-		if (runWasSuccessful) {
-			// wait until competency dashboard toggles off, then trigger next
-			const unwatch = watch(
-				showCompetencyDashboard,
-				() => {
-					unwatch()
-					next()
-				}
-			)
-		}
-	}
-	else {
-		if (sequenceDef.quizMode) {
-			next()
-		} else { // normal learn mode
-				await itemFeedbackSwal(t, success, message)
-				if (success) next()
-		}
-		// both learn and quiz mode
-		data.itemInfo[key].correct = success
-	}
+	// const key = `${i}/${sequenceDef.items[i].id}`
+	// if (info.competencies) {
+	// 	competencyDashboardData.value = info.competencies
+	// 	showCompetencyDashboard.value = true
+	// 	//  TODO: compute correctness based on competencies
+	// 	const runWasSuccessful = competencySuccess(info.competencies)
+	// 	data.itemInfo[key].correct = data.itemInfo[key].correct || runWasSuccessful
+	// 	if (runWasSuccessful) {
+	// 		// wait until competency dashboard toggles off, then trigger next
+	// 		const unwatch = watch(
+	// 			showCompetencyDashboard,
+	// 			() => {
+	// 				unwatch()
+	// 				next()
+	// 			}
+	// 		)
+	// 	}
+	// }
+	// else {
+	// 	if (sequenceDef.quizMode) {
+	// 		next()
+	// 	} else { // normal learn mode
+	// 			await itemFeedbackSwal(t, success, message)
+	// 			if (success) next()
+	// 	}
+	// 	// both learn and quiz mode
+	// 	data.itemInfo[key].correct = success
+	// }
 }
 function handleClose() {
 	Agent.close()
@@ -252,8 +252,25 @@ async function sendEnvironment(e) {
 	return Agent.environment(e)
 }
 
-function fetchXapiIfNeeded(e) {
-	console.log(e.patch)
+async function handleXapiChanges(i, e) {
+	if (e.patch[0].path[0] === 'xapi') {
+		const { verb, result, extensions } = e.patch[0].value
+		const success = result?.success
+		const message = extensions?.message
+
+		const key = `${i}/${sequenceDef.items[i].id}`
+
+		if (verb === 'submitted') {
+			if (sequenceDef.quizMode) {
+				console.log('getting here?')
+				next()
+			} else { // normal learn mode
+					await itemFeedbackSwal(t, success, message)
+					if (success) next()
+			}
+			data.itemInfo[key].correct = success
+		}
+	}
 }
 
 </script>
