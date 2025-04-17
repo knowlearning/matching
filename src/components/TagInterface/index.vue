@@ -35,8 +35,7 @@ try {
 		'taggings-for-tag',
 		[ PILA_PARTITION, TAGS_TO_TAG_ITEMS_WITH ],
 		TAGS_DOMAIN
-	)).filter(res => res.value)
-	.map(res => res.target)
+	)).map(res => res.target)
 } catch (err) {
 	console.error('Error fetching second-level tags:', err)
 }
