@@ -122,8 +122,16 @@ agent: |
 
   async function isTranslatableItem(id) {
     const state = await Agent.state(id)
-    //  TODO: validate schema
-    return !!state.translations
+    const translations = state.translations
+
+    if (!translations) return false
+    const { source_language, paths } = translations
+    if (!source_language) return false
+    if (!paths) return false
+  
+    const validSourceLang = typeof source_language === 'string' && source_language.length >= 2
+    const validPaths = Array.isArray(paths) && paths.every(p => Array.isArray(p))
+    return validSourceLang && validPaths
   }
  
   // HANDLER AND DEFS FOR TAGS
