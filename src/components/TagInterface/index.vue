@@ -7,7 +7,7 @@
 		<TagMenu
 			v-model="selectedTags"
 			:partition="PILA_PARTITION"
-			:roots="[TAGS_TO_TAG_ITEMS_WITH]"
+			:roots="secondLevelTags"
 			select-leaves-only
 			:LabelComponent="TagTranslation"
 		/>
@@ -28,6 +28,19 @@ const PUBLIC_TAGS_PARTITION = 'Public Tags'
 const props = defineProps([ 'id' ])
 
 const tags = await Agent.state('tags')
+
+let secondLevelTags = []
+try {
+	secondLevelTags = (await Agent.query(
+		'taggings-for-tag',
+		[ PILA_PARTITION, TAGS_TO_TAG_ITEMS_WITH ],
+		TAGS_DOMAIN
+	)).filter(res => res.value)
+	.map(res => res.target)
+} catch (err) {
+	console.error('Error fetching second-level tags:', err)
+}
+
 
 const tagsForId = ref(
 	await Agent.query(
