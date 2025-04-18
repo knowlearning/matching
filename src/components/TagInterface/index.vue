@@ -1,9 +1,18 @@
 <template>
-	<div class="tag-interface" style="text-align: left; padding: 30px;">
+	<div class="tag-interface">
 		<h2>
 			Tags for
 			<ItemName :id="props.id" />
 		</h2>
+		<v-chip v-for="tag in selectedTags" :key="`tagging-for-${tag}`"
+			class="deletable-chip ma-1"
+			color="blue"
+			closable
+			text-color="white"
+			@click="addTagging(tag, null)"
+		>
+			<ItemName :id="tag" />
+		</v-chip>
 		<TagMenu
 			v-model="selectedTags"
 			:partition="PILA_PARTITION"
@@ -88,3 +97,18 @@ async function addTagging(tag, value) {
 }
 
 </script>
+
+<style scoped>
+.tag-interface {
+	text-align: left;
+	padding: 30px;
+}
+.deletable-chip {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+.deletable-chip:hover {
+  background-color: #ffebee; /* light red background to indicate delete */
+}
+</style>
+
