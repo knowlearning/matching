@@ -46,12 +46,16 @@ const props = defineProps({
     }
 })
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 const initialRunstateMap = {
-    // xapi: () => ({}),
+    xapi: () => ({
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }),
     currentlyCorrect: () => null,
     // userSelect ->  v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
     userSelect: () => item.selectMultiple ? [] : false
@@ -94,7 +98,7 @@ async function handleSubmit() {
         result: { success },
         extensions: {
             message: getMessage(success)
-        }
+        },
     }
 }
 

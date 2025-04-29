@@ -18,8 +18,9 @@
 					'always-grey' : props.quizMode,
 					'fa-circle-check': isCorrect || (props.quizMode && isCorrect !== null),
 					'fa-circle-minus': !isCorrect,
-					'correct': isCorrect,
+					'correct': isCorrect === true,
 					'incorrect': isCorrect === false,
+					'completed': isCorrect === 'completed',
 					'active' : props.activeItemIndex === i
 				}"
 			/>
@@ -118,6 +119,9 @@ i.correct {
 }
 i.incorrect {
 	color: orangered;
+}
+i.completed {
+	color: dodgerblue;
 }
 i.always-grey.correct,
 i.always-grey.incorrect {

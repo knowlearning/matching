@@ -91,12 +91,20 @@ const props = defineProps({
 
 const isBottomVisible = ref(false)
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
 const markdownContent = await Agent.state(item.md)
 const data = reactive(await Agent.state(`markdown-${props.id}`))
 data.activeItemIndex = 0
+
+if (!data.xapi) { // initialize on first take
+    data.xapi = {
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
+}
 
 const numberOfItems = computed( () => item.items.length )
 
@@ -110,10 +118,13 @@ const itemNumberDisplayString = computed(() => {
 })
 
 async function handleSubmit() {
-    if (Agent.embedded) {
-        Agent.close({ success: true })
-    } else {
+    if (!Agent.embedded) {
         await itemFeedbackSwal(t, true)
+    } else {
+        data.xapi = {
+            verb: 'completed',
+            object: props.id
+        }
     }
 }
 </script>
