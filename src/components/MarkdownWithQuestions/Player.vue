@@ -9,7 +9,7 @@
                 }"
             >
                 <ProcessMarkdown v-if="markdownContent?.md" :userInput="markdownContent.md" />
-                <v-btn color="green" @click="handleSubmit">
+                <v-btn v-if="!hideNextButton" color="green" @click="handleNextButton">
                     {{ t('next') }}
                 </v-btn>
                 <button
@@ -36,9 +36,19 @@
             >
                 <vueEmbedComponent
                     v-show="i === data.activeItemIndex"
-                :key="`play-item-embedded-${i}`"
+                    :key="`play-item-embedded-${i}`"
+                    @mutate="handleXapiChanges(i,$event)"
+                    :namespace="{
+                        prefix: `markdown-${id}-item-${i}`,
+                        allow: [
+                            'pila/competencies',
+                            'pila/latest_competencies',
+                            'my-' //  TODO: Disable!
+                        ]
+                    }"
                     style="position: absolute; top: 0; left: 0;"
                     :id="item.id"
+                    :environmentProxy="sendEnvironment"
                     allow="camera;microphone;fullscreen"
                 />
             </div>
@@ -89,16 +99,28 @@ const props = defineProps({
     }
 })
 
+
 const isBottomVisible = ref(false)
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
 
-const markdownContent = await Agent.state(item.md)
-const data = reactive(await Agent.state(`markdown-${props.id}`))
-data.activeItemIndex = 0
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
 const numberOfItems = computed( () => item.items.length )
+const hideNextButton = ref(numberOfItems.value === 1)
+
+const markdownContent = await Agent.state(item.md)
+const data = reactive(await Agent.state(`runstate-${props.id}`))
+data.activeItemIndex = 0
+
+if (!data.xapi) { // initialize on first take
+    data.xapi = {
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
+}
+
 
 const itemNumberDisplayString = computed(() => {
     if (data.activeItemIndex === null || data.activeItemIndex === undefined) return ''
@@ -109,13 +131,31 @@ const itemNumberDisplayString = computed(() => {
     return `${active}/${total}`
 })
 
-async function handleSubmit() {
-    if (Agent.embedded) {
-        Agent.close({ success: true })
-    } else {
+async function handleNextButton() {
+    if (!Agent.embedded) {
         await itemFeedbackSwal(t, true)
+    } else {
+        data.xapi = {
+            verb: 'completed',
+            object: props.id
+        }
     }
 }
+
+async function handleXapiChanges(i, e) {
+    if (numberOfItems.value !== 1) return // zero or multipe handled by next buttons xapi write
+        
+    if (e.patch[0].path[0] === 'xapi') {
+        const { verb, object, result, extensions } = e.patch[0].value
+        // data scope name is 'runstate-....' for sequence handling differently
+        data.xapi = { verb, object, result, extensions }
+    }
+}
+
+async function sendEnvironment(e) {
+    return Agent.environment(e)
+}
+
 </script>
 
 <style scoped>

@@ -17,7 +17,8 @@
 		>
 			<vueEmbedComponent
 				v-if="i === data.activeItemIndex"
-				@mutate="fetchXapiIfNeeded"
+				@mutate="handleXapiChanges(i,$event)"
+				@close="handleItemSubmit(i, $event)"
 				:style="{
 					position: 'absolute',
 					top: '0',
@@ -25,7 +26,6 @@
 					'pointer-events': data.quizFinished ? 'none' : 'auto'
 				}"
 				:id="item.id"
-				@close="handleItemSubmit(i, $event)"
 				:namespace="{
 					prefix: `sequence-${id}-item-${i}`,
 					allow: [
@@ -105,21 +105,26 @@ const props = defineProps({
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
 
-const lang = store.getters.language()
-const sequenceDef = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const sequenceDef = await translateScopeId(props.id, language)
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 
 if (!data.itemInfo) { // bellwether for first init
 	Object.assign(data, {
-	  activeItemIndex: 0,
-	  itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
-	  totalTime: 0,
-	  quizFinished: null
+		activeItemIndex: 0,
+		itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
+		totalTime: 0,
+		quizFinished: null,
+		xapi: { // intialization of sequence, not item. Item init done by self
+			verb: 'initialized',
+			object: props.id,
+			extensions: { language }
+		}
 	})
 } else { // if reattaching add any needed new keys
 	data.activeItemIndex = 0
- 	Object.entries(initialItemInfo())
+	Object.entries(initialItemInfo())
  		.filter(([key, info]) => !data.itemInfo[key])
  		.forEach(([key, info]) => data.itemInfo[key] = info )
 }
@@ -226,9 +231,34 @@ async function handleItemSubmit(i, info={}) {
 				if (success) next()
 		}
 		// both learn and quiz mode
+	 // key below is of form `${index}/${itemId}``
 		data.itemInfo[key].correct = success
 	}
 }
+
+watch(
+	() => data.activeItemIndex,
+	(newIndex, oldIndex) => {
+		const prevItemId = (oldIndex != null) ? sequenceDef.items[oldIndex] : null
+		const currItemId = (newIndex != null) ? sequenceDef.items[newIndex] : null
+		if (prevItemId) {
+			data.xapi = {
+				verb: 'suspended',
+				object: prevItemId,
+				extensions: { language }
+			}
+		}
+		if (currItemId) {
+			data.xapi = {
+				verb: 'resumed',
+				object: currItemId,
+				extensions: { language }
+			}
+		}
+	},
+	{ immediate: true }
+)
+
 function handleClose() {
 	Agent.close()
 	emits('close')
@@ -252,8 +282,34 @@ async function sendEnvironment(e) {
 	return Agent.environment(e)
 }
 
-function fetchXapiIfNeeded(e) {
-	console.log(e.patch)
+async function handleXapiChanges(i, e) {
+
+	if (e.patch[0].path[0] === 'xapi') {
+		// only handle xapi from immediate children
+		// other wrappers won't have 'runstate' as next string
+		if (!e.scope?.startsWith(`sequence-${props.id}-item-${i}/runstate`)) return
+
+		const { verb, object, result, extensions } = e.patch[0].value
+		const success = result?.success
+		const message = extensions?.message
+
+		const key = `${i}/${sequenceDef.items[i].id}`
+
+		if (verb === 'submitted') {
+			if (sequenceDef.quizMode) {
+				next()
+			} else { // normal learn mode
+					await itemFeedbackSwal(t, success, message)
+					if (success) next()
+			}
+			data.itemInfo[key].correct = success
+		}
+		if (verb === 'completed') {
+			next()
+			data.itemInfo[key].correct = 'completed' // this is hacky, correct as t/f/'completed', but this correctness is only for this display
+		}
+
+	}
 }
 
 </script>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
@@ -17,7 +17,12 @@ const props = defineProps({
 const lang = store.getters.language()
 const questionDef = await translateScopeId(props.id, lang)
 
-const userAnswers = ref(Array(questionDef.blanks.length).fill(""))
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+
+if (!runstate.answers || runstate.answers.length !== questionDef.blanks.length) {
+  runstate.answers = Array(questionDef.blanks.length).fill("")
+}
+
 const parsedPrompt = ref( questionDef.prompt.split(/(_+)/g) )
 
 const areUnderscores = (str) => /^_+$/.test(str)
@@ -32,18 +37,23 @@ const mapSegmentIndexToAnswerIndex = (i) => {
 }
 
 async function handleSubmit() {
-  const correct = userAnswers.value.every((ans, i) => {
+  const success = runstate.answers.every((ans, i) => {
     return questionDef.blanks[i]
       .split("|") // Split the pipe-delimited string into individual answers
       .map(ans => ans.trim().toLowerCase())
       .some( validAnswer => validAnswer === ans.trim().toLowerCase() )
   })
 
-  if (Agent.embedded) Agent.close({
-      success: correct,
-      message: getMessage(correct)
-  })
-  else await itemFeedbackSwal(t, correct, getMessage(correct))
+  const message = getMessage(success)
+
+  if (!Agent.embedded) await itemFeedbackSwal(t, success, message)
+
+  runstate.xapi = {
+    verb: 'submitted',
+    object: props.id,
+    result: { success },
+    extensions: { message }
+  }
 }
 
 function getMessage(isCorrect) {
@@ -61,7 +71,7 @@ function getMessage(isCorrect) {
         <span v-if="!areUnderscores(seg)">{{ seg }}</span>
         <input v-else class="blank-input"
           :placeholder="t('blank')"
-          v-model="userAnswers[mapSegmentIndexToAnswerIndex(i)]"
+          v-model="runstate.answers[mapSegmentIndexToAnswerIndex(i)]"
         />
       </span>
     </p>

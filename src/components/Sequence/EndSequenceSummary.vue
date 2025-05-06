@@ -25,8 +25,9 @@
 							:class="{
 								'fas': true,
 								'fa-check-circle': true,
-								'correct': props.isCorrectArray[i],
+								'correct': props.isCorrectArray[i] === true,
 								'incorrect': props.isCorrectArray[i] === false,
+								'completed': props.isCorrectArray[i] === 'completed'
 							}"
 						/>
 					</td>
@@ -109,5 +110,8 @@ i.fa-check-circle.correct {
 }
 i.fa-check-circle.incorrect {
 	color: orangered;
+}
+i.fa-check-circle.completed {
+	color: dodgerblue;
 }
 </style>

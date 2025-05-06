@@ -61,13 +61,8 @@ onUpdated(() => {
         document
             .getElementsByClassName(className)
             .forEach(iframe => {
-                console.log('Got stuff??', className, id, iframe)
                 const embedding = Agent.embed({ id, mode: 'bla', namespace: undefined }, iframe)
                 embedding.on('environment', e => Agent.environment(e)) // not sure if necessary, but gives a hook to modify child environment if desired
-                embedding.on('state', e => console.log('state', e))
-                embedding.on('mutate', e => console.log('mutate', e))
-                embedding.on('close', e => console.log('close', e))
-
                 embeddings.push(embedding)
             })
     }
