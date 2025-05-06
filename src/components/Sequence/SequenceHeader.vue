@@ -3,6 +3,7 @@
 		<div class="left">
 			<i
 				@click="$emit('close')"
+				v-if="props.showBackOrCloseArrow"
 				class="exit fas fa-arrow-left"
 			/>	
 			<ItemName :id="sequenceId" />
@@ -70,6 +71,11 @@ const props = defineProps({
   	type: Boolean,
   	required: false,
 	  default: false
+  },
+  showBackOrCloseArrow: {
+  	type: Boolean,
+  	required: false,
+  	default: false
   }
 })
 
