@@ -21,7 +21,7 @@
 				class="fas fa-chart-bar"
 			></i>
 			<v-btn
-				v-if="props.quizMode && !props.quizFinished"
+				v-if="props.quizMode && !props.quizFinished && props.activeItemIndex === numberItems - 1"
 				@click="guardFinished"
 				compact
 				class="ml-2"
