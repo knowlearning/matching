@@ -283,8 +283,12 @@ async function sendEnvironment(e) {
 }
 
 async function handleXapiChanges(i, e) {
+
 	if (e.patch[0].path[0] === 'xapi') {
-		console.log('handling xapi change in sequence wrapper')
+		// only handle xapi from immediate children
+		// other wrappers won't have 'runstate' as next string
+		if (!e.scope?.startsWith(`sequence-${props.id}-item-${i}/runstate`)) return
+
 		const { verb, object, result, extensions } = e.patch[0].value
 		const success = result?.success
 		const message = extensions?.message

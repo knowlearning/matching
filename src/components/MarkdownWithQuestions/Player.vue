@@ -37,8 +37,18 @@
                 <vueEmbedComponent
                     v-show="i === data.activeItemIndex"
                     :key="`play-item-embedded-${i}`"
+                    @mutate="handleXapiChanges(i,$event)"
+                    :namespace="{
+                        prefix: `markdown-${id}-item-${i}`,
+                        allow: [
+                            'pila/competencies',
+                            'pila/latest_competencies',
+                            'my-' //  TODO: Disable!
+                        ]
+                    }"
                     style="position: absolute; top: 0; left: 0;"
                     :id="item.id"
+                    :environmentProxy="sendEnvironment"
                     allow="camera;microphone;fullscreen"
                 />
             </div>
@@ -100,7 +110,7 @@ const numberOfItems = computed( () => item.items.length )
 const hideNextButton = ref(numberOfItems.value === 1)
 
 const markdownContent = await Agent.state(item.md)
-const data = reactive(await Agent.state(`markdown-${props.id}`))
+const data = reactive(await Agent.state(`runstate-${props.id}`))
 data.activeItemIndex = 0
 
 if (!data.xapi) { // initialize on first take
@@ -131,6 +141,21 @@ async function handleNextButton() {
         }
     }
 }
+
+async function handleXapiChanges(i, e) {
+    if (numberOfItems.value !== 1) return // zero or multipe handled by next buttons xapi write
+        
+    if (e.patch[0].path[0] === 'xapi') {
+        const { verb, object, result, extensions } = e.patch[0].value
+        // data scope name is 'runstate-....' for sequence handling differently
+        data.xapi = { verb, object, result, extensions }
+    }
+}
+
+async function sendEnvironment(e) {
+    return Agent.environment(e)
+}
+
 </script>
 
 <style scoped>
