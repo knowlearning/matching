@@ -284,6 +284,7 @@ async function sendEnvironment(e) {
 
 async function handleXapiChanges(i, e) {
 	if (e.patch[0].path[0] === 'xapi') {
+		console.log('handling xapi change in sequence wrapper')
 		const { verb, object, result, extensions } = e.patch[0].value
 		const success = result?.success
 		const message = extensions?.message

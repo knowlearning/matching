@@ -9,7 +9,7 @@
                 }"
             >
                 <ProcessMarkdown v-if="markdownContent?.md" :userInput="markdownContent.md" />
-                <v-btn color="green" @click="handleSubmit">
+                <v-btn v-if="!hideNextButton" color="green" @click="handleNextButton">
                     {{ t('next') }}
                 </v-btn>
                 <button
@@ -36,7 +36,7 @@
             >
                 <vueEmbedComponent
                     v-show="i === data.activeItemIndex"
-                :key="`play-item-embedded-${i}`"
+                    :key="`play-item-embedded-${i}`"
                     style="position: absolute; top: 0; left: 0;"
                     :id="item.id"
                     allow="camera;microphone;fullscreen"
@@ -89,10 +89,15 @@ const props = defineProps({
     }
 })
 
+
 const isBottomVisible = ref(false)
+
 
 const language = store.getters.language()
 const item = await translateScopeId(props.id, language)
+
+const numberOfItems = computed( () => item.items.length )
+const hideNextButton = ref(numberOfItems.value === 1)
 
 const markdownContent = await Agent.state(item.md)
 const data = reactive(await Agent.state(`markdown-${props.id}`))
@@ -106,7 +111,6 @@ if (!data.xapi) { // initialize on first take
     }
 }
 
-const numberOfItems = computed( () => item.items.length )
 
 const itemNumberDisplayString = computed(() => {
     if (data.activeItemIndex === null || data.activeItemIndex === undefined) return ''
@@ -117,7 +121,7 @@ const itemNumberDisplayString = computed(() => {
     return `${active}/${total}`
 })
 
-async function handleSubmit() {
+async function handleNextButton() {
     if (!Agent.embedded) {
         await itemFeedbackSwal(t, true)
     } else {
