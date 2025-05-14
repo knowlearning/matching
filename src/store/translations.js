@@ -687,4 +687,8 @@ export default {
     'en' : 'Loading....',
     'th' : 'กำลังโหลด...'
   },
+  'add-by-id' : {
+    'en' : 'ADD BY ID',
+    'th' : 'เพิ่มโดยรหัส'
+  },
 }

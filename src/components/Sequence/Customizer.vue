@@ -12,7 +12,11 @@
 			:items="data.content.items"
 			@updateItems="data.content.items = $event"
 		/>
-
+		<v-btn
+			class="ma-1"
+			@click="addById"
+			:text="t('add-by-id')"
+		/>
 		<v-checkbox
 			v-model="data.content.quizMode"
 			:label="t('quiz-mode')"
@@ -30,6 +34,8 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { copyItemSwal } from '../../helpers/swallows.js'
+
 import AbsolutePreviewAndItemId from '../SharedCustomizerComponents/AbsolutePreviewAndItemId.vue'
 import NameAndInstructions from '../SharedCustomizerComponents/NameAndInstructions.vue'
 import ItemListCustomizer from './ItemListCustomizer.vue'
@@ -50,6 +56,12 @@ const props = defineProps(['id'])
 
 const state = await Agent.state(props.id)
 
+
+async function addById() {
+	const { value: id } = await copyItemSwal(t) // validates id and type 
+	const itemsCopy = JSON.parse(JSON.stringify(data.content.items))
+	if (id) data.content.items =  [ ...itemsCopy, { id } ]
+}
 
 let showImageArea = ref(false)
 
