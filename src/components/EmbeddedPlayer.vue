@@ -1,9 +1,19 @@
 <template>
 	<Suspense>
-		<PlayOrCustomizeByTypeSwitcher
-			:id="id"
-			mode="player"
-		/>
+		<div
+			style="
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100vw;
+				height: 100vh;
+			"
+		>
+			<PlayOrCustomizeByTypeSwitcher
+				:id="id"
+				mode="player"
+			/>
+		</div>
 	</Suspense>
 </template>
 
