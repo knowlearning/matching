@@ -57,8 +57,8 @@ const initialLoad = async () => {
         const url = new URL(window.location.href)
         const { pathname } = url
         const route = pathname.slice(1)
-        if (route === '') {
-            createApp(App)
+        if (route === '' || route === 'sequence-builder') {
+            createApp(App, { route })
                 .use(store)
                 .use(vuetify)
                 .mount('#app')

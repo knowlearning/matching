@@ -127,6 +127,7 @@
   const store = useStore()
   const t = slug => store.getters.t(slug)
 
+  const props = defineProps(['route'])
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
@@ -136,7 +137,7 @@
     active: null,
     tags: null,
     userAvatarPath: null,
-    showOnlySequences: true
+    showOnlySequences: props.route === 'sequence-builder'
   })
 
   async function fetchMyContentAndUserInfo() {
