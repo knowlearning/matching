@@ -678,5 +678,13 @@ export default {
   'questions': {
     'en' : 'Questions',
     'th' : 'คำถาม'
-  }
+  },
+  'show-all-types' : {
+    'en' : 'Show All Types',
+    'th' : 'แสดงทุกประเภท'
+  },
+  'loading' : {
+    'en' : 'Loading....',
+    'th' : 'กำลังโหลด...'
+  },
 }

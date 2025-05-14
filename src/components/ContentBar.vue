@@ -3,13 +3,13 @@
     <h3>{{ t('customize-items') }}</h3>
     <div class="native-items-folders-wrapper"> 
       <ExpandableFolderForType
-        v-for="type,i in nativeQuestionTypes"
+        v-for="type,i in typesToShow"
         :key="`folder-rows-${type}`"
         :displayName="t(type.split('=')[1])"
         :active="props.active"
         :items="itemsForType(type)"
-        :show="typesToShow.includes(type)"
-        @toggle="toggleShowType(type)"
+        :show="typesWithExpandedFolders.includes(type)"
+        @toggle="expandFolder(type)"
         @remove="$emit('removeItem', $event)"
         @active="$emit('active', $event)"
         @addNew="$emit('addNew', type)"
@@ -20,14 +20,12 @@
 
 <script setup>
 import ExpandableFolderForType from './ExpandableFolderForType.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import questionTypes from '../helpers/questionTypes.js'
 
 import { useStore } from 'vuex'
 const store = useStore()
 const t = slug => store.getters.t(slug)
-
-const nativeQuestionTypes = Object.keys(questionTypes)
 
 const props = defineProps({
   items: {
@@ -37,10 +35,27 @@ const props = defineProps({
   active: {
     type: [ String, null ],
     required: true
+  },
+  showOnlySequences: {
+    type: Boolean,
+    required: true
   }
 })
 
-let typesToShow = ref([])
+const typesToShow = computed(() => Object.keys(questionTypes)
+  .filter(type => {
+    return type.includes('sequence') || !props.showOnlySequences
+  })
+  .sort((a,b) => {
+    const aHas = a.includes('sequence')
+    const bHas = b.includes('sequence')
+    if (aHas && !bHas) return -1
+    if (!aHas && bHas) return 1
+    return 0
+  })
+)
+
+let typesWithExpandedFolders = ref([])
 
 let metadata = reactive({}) // { [id]: { name, type }, ... }
 
@@ -72,16 +87,16 @@ watch(
 )
 async function openFolderByContentId(id) {
   const { active_type: type } = await Agent.metadata(id)
-  if (!typesToShow.value.includes(type)) typesToShow.value.push(type)
+  if (!typesWithExpandedFolders.value.includes(type)) typesWithExpandedFolders.value.push(type)
 }
 
 function itemsForType(type) {
   return props.items.filter(id => metadata?.[id]?.type === type)
 }
-function toggleShowType(type) {
-  const wasActive = typesToShow.value.includes(type)
-  if (wasActive) typesToShow.value = typesToShow.value.filter(t => t !== type)
-  else typesToShow.value.push(type)
+function expandFolder(type) {
+  const wasActive = typesWithExpandedFolders.value.includes(type)
+  if (wasActive) typesWithExpandedFolders.value = typesWithExpandedFolders.value.filter(t => t !== type)
+  else typesWithExpandedFolders.value.push(type)
 }
 
 </script>

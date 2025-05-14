@@ -8,7 +8,7 @@
 
           cols="12"
           sm="12" md="6" lg="6" 
-          v-for="type in Object.keys(questionTypes)"
+          v-for="type in typesToShow"
           :key="`card-for-type-${type}`"
         >
           <v-card
@@ -47,11 +47,29 @@
 
 <script setup>
 import questionTypes from '../helpers/questionTypes.js'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
-
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 const emit = defineEmits(['addNew'])
+const props = defineProps({
+  showOnlySequences: {
+    type: Boolean,
+    required: false,
+    default: false
+  }
+})
+
+const typesToShow = computed(() => Object.keys(questionTypes)
+  .filter(type => type.includes('sequence') || !props.showOnlySequences)
+  .sort((a,b) => {
+    const aHas = a.includes('sequence')
+    const bHas = b.includes('sequence')
+    if (aHas && !bHas) return -1
+    if (!aHas && bHas) return 1
+    return 0
+  })
+)
 
 function previewType(type) {
   const idToPreview = questionTypes[type].sample

@@ -1,6 +1,5 @@
 <template>
   <div class="main-wrapper">
-    
     <Modal
       v-if="previewContent"
       @close="store.dispatch('previewContent', null)"
@@ -53,16 +52,25 @@
         <ContentBar v-if="data.content"
           :items="data.content"
           :active="data.active"
+          :showOnlySequences="data.showOnlySequences"
           @removeItem="removeItem"
           @active="data.active = $event"
           @addNew="addNew"
         />
       </Suspense>
-      <div v-if="!data.content">Loading...</div>
+      <div v-if="!data.content">{{ t('loading') }}</div>
 
     </div>
     <div class="right-col">
       <div class="header">
+        <v-btn v-show="data.showOnlySequences"
+          @click="data.showOnlySequences = !data.showOnlySequences"
+          class="mr-auto ml-1"
+          size="small"
+          append-icon="fa-solid fa-sign-out-alt"
+        >
+          <span>{{ t('show-all-types') }}</span>
+        </v-btn>
         <v-btn
           @click="logout"
           size="small"
@@ -96,7 +104,10 @@
         </Suspense>
       </div>
       <div class="right-inner" v-else>
-        <Welcome @addNew="addNew" />
+        <Welcome
+          :showOnlySequences="data.showOnlySequences"
+          @addNew="addNew"
+        />
       </div>
     </div>
 
@@ -124,7 +135,8 @@
     content: null,
     active: null,
     tags: null,
-    userAvatarPath: null
+    userAvatarPath: null,
+    showOnlySequences: true
   })
 
   async function fetchMyContentAndUserInfo() {
