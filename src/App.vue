@@ -215,14 +215,14 @@
 <style scoped>
 .main-wrapper {
   width: 100%;
-  height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
   display: grid;
   grid-template-columns: 330px 1fr;
 }
 .left-col, .right-col {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
   overflow: scroll;
 }
 .left-col {
