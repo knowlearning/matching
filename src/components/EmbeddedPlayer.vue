@@ -1,11 +1,9 @@
 <template>
 	<Suspense>
-		<div class="embed-wrapper">
-			<PlayOrCustomizeByTypeSwitcher
-				:id="id"
-				mode="player"
-			/>
-		</div>
+		<PlayOrCustomizeByTypeSwitcher
+			:id="id"
+			mode="player"
+		/>
 	</Suspense>
 </template>
 
@@ -22,22 +20,3 @@ export default {
 	}
 }
 </script>
-
-<style scoped>
-
-	.embed-wrapper {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100vw;
-		height: 100vh;
-	}
-
-	@supports (height: 100dvh) {
-		.embed-wrapper {
-			width: 100dvw;
-			height: 100dvh;
-		}
-	}
-
-</style>
