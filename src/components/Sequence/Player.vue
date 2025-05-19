@@ -6,7 +6,7 @@
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
 			:time="data.totalTime"
-			@select="data.activeItemIndex = $event"
+			@select="index => moveInSequence(index, 'user')"
 			@close="handleClose"
 		/>
 		<div
@@ -52,13 +52,13 @@
 			:isCorrectArray="isCorrectArray"
 			:timeOnTasks="timeOnTasks"
 			@close="handleClose"
-			@select="data.activeItemIndex = $event"
+			@select="index => moveInSequence(index, 'user')"
 		/>
 
 		<SequenceFooter class="footer"
-			@previous="previous"
-			@next="next"
-			@goToSummary="data.activeItemIndex = null"
+			@previous="previous('user')"
+			@next="next('user')"
+			@goToSummary="moveInSequence(null, 'user')"
 			@quizFinished="handleQuizFinished"
 			:activeItemIndex="data.activeItemIndex"
 			:quizMode="sequenceDef.quizMode"
@@ -107,6 +107,7 @@ const showCompetencyDashboard= ref(false)
 
 const language = store.getters.language()
 const sequenceDef = await translateScopeId(props.id, language)
+const { auth: { user } } = await Agent.environment()
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 
@@ -117,13 +118,24 @@ if (!data.itemInfo) { // bellwether for first init
 		totalTime: 0,
 		quizFinished: null,
 		xapi: { // intialization of sequence, not item. Item init done by self
+			actor: user,
 			verb: 'initialized',
 			object: props.id,
+			authority: user,
 			extensions: { language }
 		}
 	})
-} else { // if reattaching add any needed new keys
-	data.activeItemIndex = 0
+} else {
+	data.xapi = {
+		actor: user,
+		verb: 'resumed',
+		object: props.id,
+		authority: user,
+		extensions: { language }
+	}
+	// in case items removed from sequence
+	data.activeItemIndex = Math.min(data.activeItemIndex, sequenceDef.items.length-1)
+  // if reattaching add any needed new keys
 	Object.entries(initialItemInfo())
  		.filter(([key, info]) => !data.itemInfo[key])
  		.forEach(([key, info]) => data.itemInfo[key] = info )
@@ -161,9 +173,11 @@ if (!data.quizFinished) {
 	intervalId = setInterval(updateTimeTracking, 1000)
 }
 
+moveInSequence(data.activeItemIndex, 'sequence')
+
 function handleQuizFinished() {
 	data.quizFinished = true
-	data.activeItemIndex = null
+	moveInSequence(null, 'sequence')
 	clearInterval(intervalId)
 }
 
@@ -177,7 +191,7 @@ function updateTimeTracking() {
 		data.itemInfo[key].time ++
 	}
 }
-function next() {
+function next(actor) {
 	const i = data.activeItemIndex
 	if (i === null) return // if on dashboard, do nothing. already at 'end'
 
@@ -187,16 +201,20 @@ function next() {
 	if (onLastItem && activeQuiz) {
 		return // no dashboard yet
 	} else if (onLastItem && !activeQuiz) {
-		data.activeItemIndex = null // to dashboard
+		moveInSequence(null, actor)
 	} else {
-		data.activeItemIndex ++
+		moveInSequence(data.activeItemIndex+1, actor)
 	}
 }
 
-function previous() {
+function previous(actor) {
 	const i = data.activeItemIndex
-	if (i === null) data.activeItemIndex = sequenceDef.items.length - 1
-	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
+	if (i === null) {
+		moveInSequence(sequenceDef.items.length-1, actor)
+	}
+	else {
+		moveInSequence((i <= 0) ? 0 : i - 1, actor)
+	}
 }
 async function handleItemSubmit(i, info={}) {
 
@@ -218,17 +236,17 @@ async function handleItemSubmit(i, info={}) {
 				showCompetencyDashboard,
 				() => {
 					unwatch()
-					next()
+					next('sequence')
 				}
 			)
 		}
 	}
 	else {
 		if (sequenceDef.quizMode) {
-			next()
+			next('sequence')
 		} else { // normal learn mode
 				await itemFeedbackSwal(t, success, message)
-				if (success) next()
+				if (success) next('sequence')
 		}
 		// both learn and quiz mode
 	 // key below is of form `${index}/${itemId}``
@@ -236,28 +254,29 @@ async function handleItemSubmit(i, info={}) {
 	}
 }
 
-watch(
-	() => data.activeItemIndex,
-	(newIndex, oldIndex) => {
-		const prevItemId = (oldIndex != null) ? sequenceDef.items[oldIndex] : null
-		const currItemId = (newIndex != null) ? sequenceDef.items[newIndex] : null
-		if (prevItemId) {
-			data.xapi = {
-				verb: 'suspended',
-				object: prevItemId,
-				extensions: { language }
-			}
-		}
-		if (currItemId) {
-			data.xapi = {
-				verb: 'resumed',
-				object: currItemId,
-				extensions: { language }
-			}
-		}
-	},
-	{ immediate: true }
-)
+function moveInSequence(toIndex, source) {
+	const i = data.activeItemIndex
+	const prevItemId = i != null ? sequenceDef.items[i] : null
+	const currItemId = toIndex != null ? sequenceDef.items[toIndex] : null
+
+	data.activeItemIndex = toIndex
+
+	data.xapi = {
+		actor: source === 'user' ? user : props.id,
+		verb: 'suspended',
+		object: prevItemId,
+		authority: user,
+		extensions: { language }
+	}
+
+	data.xapi = {
+		actor: source === 'user' ? user : props.id,
+		verb: 'resumed',
+		object: currItemId,
+		authority: user,
+		extensions: { language }
+	}
+}
 
 function handleClose() {
 	Agent.close()
@@ -297,15 +316,15 @@ async function handleXapiChanges(i, e) {
 
 		if (verb === 'submitted') {
 			if (sequenceDef.quizMode) {
-				next()
+				next('sequence')
 			} else { // normal learn mode
 					await itemFeedbackSwal(t, success, message)
-					if (success) next()
+					if (success) next('sequence')
 			}
 			data.itemInfo[key].correct = success
 		}
 		if (verb === 'completed') {
-			next()
+			next('sequence')
 			data.itemInfo[key].correct = 'completed' // this is hacky, correct as t/f/'completed', but this correctness is only for this display
 		}
 
