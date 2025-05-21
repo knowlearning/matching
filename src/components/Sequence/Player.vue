@@ -254,25 +254,31 @@ async function handleItemSubmit(i, info={}) {
 	}
 }
 
-function moveInSequence(toIndex, source) {
+async function moveInSequence(toIndex, source) {
 	const i = data.activeItemIndex
-	const prevItemId = i != null ? sequenceDef.items[i] : null
-	const currItemId = toIndex != null ? sequenceDef.items[toIndex] : null
+	const prevItem = i != null ? sequenceDef.items[i] : null
+	const currItem = toIndex != null ? sequenceDef.items[toIndex] : null
 
 	data.activeItemIndex = toIndex
+
+	console.log('ABOUT TO WRITE SOME XAPI STATEMENTS.....')
+
+  await new Promise(r => setTimeout(r, 1))
 
 	data.xapi = {
 		actor: source === 'user' ? user : props.id,
 		verb: 'suspended',
-		object: prevItemId,
+		object: prevItem?.id || 'dashboard',
 		authority: user,
 		extensions: { language }
 	}
 
+  await new Promise(r => setTimeout(r, 1))
+
 	data.xapi = {
 		actor: source === 'user' ? user : props.id,
 		verb: 'resumed',
-		object: currItemId,
+		object: currItem?.id || 'dashboard',
 		authority: user,
 		extensions: { language }
 	}
