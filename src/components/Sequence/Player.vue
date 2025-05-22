@@ -173,7 +173,14 @@ if (!data.quizFinished) {
 	intervalId = setInterval(updateTimeTracking, 1000)
 }
 
-moveInSequence(data.activeItemIndex, 'sequence')
+const currentItemId = computed(() => sequenceDef.items[data.activeItemIndex]?.id)
+
+data.xapi = {
+	actor: props.id,
+	verb: 'resumed',
+	object: currentItemId.value,
+	authority: user
+}
 
 function handleQuizFinished() {
 	data.quizFinished = true
@@ -261,16 +268,13 @@ async function moveInSequence(toIndex, source) {
 
 	data.activeItemIndex = toIndex
 
-	console.log('ABOUT TO WRITE SOME XAPI STATEMENTS.....')
-
   await new Promise(r => setTimeout(r, 1))
 
 	data.xapi = {
 		actor: source === 'user' ? user : props.id,
 		verb: 'suspended',
 		object: prevItem?.id || 'dashboard',
-		authority: user,
-		extensions: { language }
+		authority: user
 	}
 
   await new Promise(r => setTimeout(r, 1))
@@ -279,8 +283,7 @@ async function moveInSequence(toIndex, source) {
 		actor: source === 'user' ? user : props.id,
 		verb: 'resumed',
 		object: currItem?.id || 'dashboard',
-		authority: user,
-		extensions: { language }
+		authority: user
 	}
 }
 
