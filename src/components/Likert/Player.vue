@@ -21,13 +21,19 @@
 				<!-- one on each side, 5 of width 2 in the middle -->
 				<v-col cols="2" v-for="(option, i) in radioOptions" :key="`option-${i}`">
 					<v-radio
-						v-model="selectedValue"
+						v-model="runstate.selectedValue"
 						style="justify-content: center;"
 						:value="option.value"
-						@focus="selectedValue = $event.target.value"
+						@focus="runstate.selectedValue = $event.target.value"
 					/>
 				</v-col>
 				<v-col cols="1" />
+			</v-row>
+
+			<v-row>
+				<v-btn color="green" @click="handleNext" class="mx-auto">
+					{{ t('next') }}
+				</v-btn>
 			</v-row>
 	</v-container>
 </template>
@@ -35,10 +41,11 @@
 
 <script setup>
 import likertCategories from './likertCategories.js'
-import { ref, computed } from 'vue'
+import { ref, computed, watch, reactive } from 'vue'
 import { useStore } from 'vuex'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
+const { auth: { user} } = await Agent.environment()
 const store = useStore()
 function t(slug) { return  store.getters.t(slug) }
 
@@ -52,14 +59,47 @@ const props = defineProps({
 const lang = store.getters.language()
 const questionDef = await translateScopeId(props.id, lang)
 
-const selectedValue = ref(null)
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+runstate.selectedValue = null
+
+if (!runstate.xapi) runstate.xapi = {
+	actor: props.id,
+	authority: user,
+	verb: 'initialized',
+	object: props.id
+}
+
+watch(runstate.selectedValue, val => {
+	if (val !== null) {
+		runstate.xapi = {
+			actor: user,
+			authority: user,
+			verb: 'answered',
+			object: props.id,
+			result: {
+				response: val
+			}
+		}
+	}
+})
 
 const radioOptions = computed(() => {
-	if (selectedValue === null) return null
 	const choices = likertCategories[questionDef.category]
 	return choices.map((el,i) => ({
 		label: t(el),
 		value: i + 1
 	}))
 })
+
+function handleNext() {
+	runstate.xapi = {
+		actor: user,
+		authority: user,
+		verb: 'completed',
+		object: props.id,
+		result: {
+			response: runstate.selectedValue
+		}
+	}
+}
 </script>

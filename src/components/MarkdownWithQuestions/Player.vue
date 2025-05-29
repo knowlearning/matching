@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import ProcessMarkdown from '../MarkdownHelpers/ProcessMarkdown.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
@@ -92,6 +92,8 @@ const store = useStore()
 const copy = x => JSON.parse(JSON.stringify(x))
 function t(slug) { return store.getters.t(slug) }
 
+const { auth: { user } } = await Agent.environment()
+
 const props = defineProps({
     id: {
         type: String,
@@ -101,7 +103,6 @@ const props = defineProps({
 
 
 const isBottomVisible = ref(false)
-
 
 const language = store.getters.language()
 const item = await translateScopeId(props.id, language)
@@ -115,12 +116,19 @@ data.activeItemIndex = 0
 
 if (!data.xapi) { // initialize on first take
     data.xapi = {
+        actor: props.id,
         verb: 'initialized',
         object: props.id,
         extensions: { language }
     }
 }
-
+onMounted(() => {
+    data.xapi = {
+        actor: props.id,
+        verb: 'loaded',
+        object: props.id
+    }
+})
 
 const itemNumberDisplayString = computed(() => {
     if (data.activeItemIndex === null || data.activeItemIndex === undefined) return ''
@@ -136,6 +144,7 @@ async function handleNextButton() {
         await itemFeedbackSwal(t, true)
     } else {
         data.xapi = {
+            actor: user,
             verb: 'completed',
             object: props.id
         }
