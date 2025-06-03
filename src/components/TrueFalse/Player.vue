@@ -6,7 +6,7 @@
         
         <div class="choices-wrapper">
             <v-radio-group
-                v-model="userSelect"
+                v-model="runstate.userSelect"
                 hide-details
             >
                 <v-radio 
@@ -42,22 +42,46 @@ const props = defineProps({
     }
 })
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
-let userSelect = ref(null)
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+const initialRunstateMap = {
+    xapi: () => ({
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }),
+    userSelect: () => null,
+}
+
+Object.entries(initialRunstateMap).forEach(([key, fn]) => {
+    if (runstate[key] === undefined) runstate[key] = fn()
+})
 
 function isCorrect() {
-    return userSelect.value === item.answer
+    return runstate.userSelect.value === item.answer
 }
 
 async function handleSubmit() {
     const correct = isCorrect()
-    if (Agent.embedded) Agent.close({
-        success: correct,
-        message: getMessage(correct)
-    })
-    else await itemFeedbackSwal(t, correct, getMessage(correct))
+    if (Agent.embedded) {
+        Agent.close({
+            success: correct,
+            message: getMessage(correct)
+        })
+    } else {
+        await itemFeedbackSwal(t, correct, getMessage(correct))
+    }
+
+    runstate.xapi = {
+        verb: 'submitted',
+        object: props.id,
+        result: { success: correct },
+        extensions: {
+            message: getMessage(correct)
+        }
+    }
 }
 function getMessage(isCorrect) {
     if (isCorrect && item.feedback?.correct) return item.feedback.correct 
