@@ -26,7 +26,7 @@
 </template>
     
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
