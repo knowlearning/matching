@@ -47,8 +47,8 @@ const props = defineProps({
 	id: { type: String, required: true }
 })
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
 const rowsCorrect = reactive(item.rows.map(r => false)) // init to array of false
 

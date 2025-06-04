@@ -47,17 +47,23 @@ const item = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 const initialRunstateMap = {
-    xapi: () => ({
-        verb: 'initialized',
-        object: props.id,
-        extensions: { language }
-    }),
     userSelect: () => null,
 }
 
 Object.entries(initialRunstateMap).forEach(([key, fn]) => {
     if (runstate[key] === undefined) runstate[key] = fn()
 })
+
+
+setTimeout(() => {
+    runstate.xapi = {
+        actor: props.id,
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
+})
+
 
 function isCorrect() {
     return runstate.userSelect.value === item.answer

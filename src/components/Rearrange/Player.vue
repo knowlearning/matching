@@ -104,8 +104,8 @@ const props = defineProps({
     }
 })
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
@@ -135,6 +135,16 @@ watch(  // set currently correct, if changed, on each run-state edit
 )
 
 let audio = null
+
+
+setTimeout(() => {
+    runstate.xapi = {
+          actor: props.id,
+          verb: 'initialized',
+          object: props.id,
+          extensions: { language }
+    }
+})
 
 function shuffle(arr) {
     const arrCopy = copy(arr)

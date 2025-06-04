@@ -10,9 +10,9 @@
     <MatchSvg
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
-      :connections="data.studentConnections"
+      :connections="runstate.studentConnections"
       :textIsPlayable="item.textIsPlayable"
-      @updateConnections="data.studentConnections = $event"
+      @updateConnections="runstate.studentConnections = $event"
     />
     <v-btn
       color="green"
@@ -36,11 +36,19 @@
 
   const props = defineProps(['id'])
   
-  const lang = store.getters.language()
-  const item = await translateScopeId(props.id, lang)
+  const language = store.getters.language()
+  const item = await translateScopeId(props.id, language)
 
-  const data = reactive({
-    studentConnections: [], // each connection is [ nodeId, nodeId ]
+  const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+  if (!runstate.studentConnections) runstate.studentConnections = [] // each connection is [ nodeId, nodeId ]
+
+  setTimeout(() => {
+    runstate.xapi = {
+      actor: props.id,
+      verb: 'initialized',
+      object: props.id,
+      extensions: { language }
+    }
   })
 
   async function handleSubmit() {
@@ -55,8 +63,8 @@
   }
 
   function isCorrect() {
-    const every = data.studentConnections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
-    const only = item.answerConnections.every(c1 => data.studentConnections.some(c2 => sameConnection(c1, c2)))
+    const every = runstate.studentConnections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
+    const only = item.answerConnections.every(c1 => runstate.studentConnections.some(c2 => sameConnection(c1, c2)))
     return every && only
   }
   function getMessage(isCorrect) {

@@ -32,10 +32,10 @@
                 v-for="item,i in item.items"
                 :key="`play-item-wrapper-${i}`"
                 class="embedded-question-wrapper"
-                v-show="i === data.activeItemIndex"
+                v-show="i === runstate.activeItemIndex"
             >
                 <vueEmbedComponent
-                    v-show="i === data.activeItemIndex"
+                    v-show="i === runstate.activeItemIndex"
                     :key="`play-item-embedded-${i}`"
                     @mutate="handleXapiChanges(i,$event)"
                     :namespace="{
@@ -59,14 +59,14 @@
                 }"
             >
                 <v-btn
-                    @click="data.activeItemIndex = Math.max(data.activeItemIndex - 1, 0)"
+                    @click="runstate.activeItemIndex = Math.max(runstate.activeItemIndex - 1, 0)"
                     icon="fa-solid fa-arrow-left"
                     size="x-small"
                     class="ml-2"
                 />
                 <span>{{ itemNumberDisplayString }}</span>
                 <v-btn
-                    @click="data.activeItemIndex = Math.min(data.activeItemIndex + 1, item.items.length - 1)"
+                    @click="runstate.activeItemIndex = Math.min(runstate.activeItemIndex + 1, item.items.length - 1)"
                     icon="fa-solid fa-arrow-right"
                     size="x-small"
                     class="mr-2"
@@ -101,7 +101,6 @@ const props = defineProps({
     }
 })
 
-
 const isBottomVisible = ref(false)
 
 const language = store.getters.language()
@@ -111,28 +110,21 @@ const numberOfItems = computed( () => item.items.length )
 const hideNextButton = ref(numberOfItems.value === 1)
 
 const markdownContent = await Agent.state(item.md)
-const data = reactive(await Agent.state(`runstate-${props.id}`))
-data.activeItemIndex = 0
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+runstate.activeItemIndex = 0
 
-if (!data.xapi) { // initialize on first take
-    data.xapi = {
+setTimeout(() => {
+    runstate.xapi = {
         actor: props.id,
         verb: 'initialized',
         object: props.id,
         extensions: { language }
     }
-}
-onMounted(() => {
-    data.xapi = {
-        actor: props.id,
-        verb: 'loaded',
-        object: props.id
-    }
 })
 
 const itemNumberDisplayString = computed(() => {
-    if (data.activeItemIndex === null || data.activeItemIndex === undefined) return ''
-    let active = data.activeItemIndex + 1
+    if (runstate.activeItemIndex === null || runstate.activeItemIndex === undefined) return ''
+    let active = runstate.activeItemIndex + 1
     if (active < 10) active = '0' + active
     let total = item.items.length
     if (total < 10) total = '0' + total
@@ -143,7 +135,7 @@ async function handleNextButton() {
     if (!Agent.embedded) {
         await itemFeedbackSwal(t, true)
     } else {
-        data.xapi = {
+        runstate.xapi = {
             actor: user,
             verb: 'completed',
             object: props.id
@@ -156,8 +148,8 @@ async function handleXapiChanges(i, e) {
         
     if (e.patch[0].path[0] === 'xapi') {
         const { verb, object, result, extensions } = e.patch[0].value
-        // data scope name is 'runstate-....' for sequence handling differently
-        data.xapi = { verb, object, result, extensions }
+        // runstate scope name is 'runstate-....' for sequence handling differently
+        runstate.xapi = { verb, object, result, extensions }
     }
 }
 

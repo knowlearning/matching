@@ -56,18 +56,11 @@ const props = defineProps({
 	}
 })
 
-const lang = store.getters.language()
-const questionDef = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const questionDef = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 runstate.selectedValue = null
-
-if (!runstate.xapi) runstate.xapi = {
-	actor: props.id,
-	authority: user,
-	verb: 'initialized',
-	object: props.id
-}
 
 watch(runstate.selectedValue, val => {
 	if (val !== null) {
@@ -89,6 +82,15 @@ const radioOptions = computed(() => {
 		label: t(el),
 		value: i + 1
 	}))
+})
+
+setTimeout(() => {
+    runstate.xapi = {
+        actor: props.id,
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
 })
 
 function handleNext() {
