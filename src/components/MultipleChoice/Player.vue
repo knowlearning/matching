@@ -51,11 +51,6 @@ const item = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 const initialRunstateMap = {
-    xapi: () => ({
-        verb: 'initialized',
-        object: props.id,
-        extensions: { language }
-    }),
     currentlyCorrect: () => null,
     // userSelect ->  v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
     userSelect: () => item.selectMultiple ? [] : false
@@ -72,6 +67,15 @@ watch(  // set currently correct, if changed, on each run-state edit
 
 Object.entries(initialRunstateMap).forEach(([key, fn]) => {
     if (runstate[key] === undefined) runstate[key] = fn()
+})
+
+setTimeout(() => {
+    runstate.xapi = {
+        actor: props.id,
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
 })
 
 function determineCorrect() {

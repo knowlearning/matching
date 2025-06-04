@@ -116,23 +116,9 @@ if (!data.itemInfo) { // bellwether for first init
 		activeItemIndex: 0,
 		itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
 		totalTime: 0,
-		quizFinished: null,
-		xapi: { // intialization of sequence, not item. Item init done by self
-			actor: user,
-			verb: 'initialized',
-			object: props.id,
-			authority: user,
-			extensions: { language }
-		}
+		quizFinished: null
 	})
 } else {
-	data.xapi = {
-		actor: user,
-		verb: 'resumed',
-		object: props.id,
-		authority: user,
-		extensions: { language }
-	}
 	// in case items removed from sequence
 	data.activeItemIndex = Math.min(data.activeItemIndex, sequenceDef.items.length-1)
   // if reattaching add any needed new keys
@@ -141,17 +127,6 @@ if (!data.itemInfo) { // bellwether for first init
  		.forEach(([key, info]) => data.itemInfo[key] = info )
 }
 
-function initialItemInfo() {
-	return sequenceDef.items
-		.reduce((acc, cur, i) => {
-			return { ...acc, [`${i}/${cur.id}`] : { time: 0, correct: null } }
-		}, {})	
-}
-
-function keyIsActive(key) {
-	const [ i, id ] = key.split('/')
-	return id && id === sequenceDef.items[i]?.id
-}
 const activeItemInfo = computed(() => {
 	return Object.entries(data.itemInfo)
 		.reduce((acc, cur) => {
@@ -175,11 +150,37 @@ if (!data.quizFinished) {
 
 const currentItemId = computed(() => sequenceDef.items[data.activeItemIndex]?.id)
 
-data.xapi = {
-	actor: props.id,
-	verb: 'resumed',
-	object: currentItemId.value,
-	authority: user
+setTimeout(() => {
+	data.xapi = {
+		actor: props.id,
+		verb: 'initialized',
+		object: props.id,
+		authority: user,
+		extensions: { language }
+	}
+})
+
+setTimeout(() => {
+	data.xapi = {
+		actor: props.id,
+		verb: 'initialized',
+		object: currentItemId.value,
+		authority: user
+	}
+})
+
+onBeforeUnmount(() => clearInterval(intervalId) )
+
+function initialItemInfo() {
+	return sequenceDef.items
+		.reduce((acc, cur, i) => {
+			return { ...acc, [`${i}/${cur.id}`] : { time: 0, correct: null } }
+		}, {})
+}
+
+function keyIsActive(key) {
+	const [ i, id ] = key.split('/')
+	return id && id === sequenceDef.items[i]?.id
 }
 
 function handleQuizFinished() {
@@ -187,8 +188,6 @@ function handleQuizFinished() {
 	moveInSequence(null, 'sequence')
 	clearInterval(intervalId)
 }
-
-onBeforeUnmount(() => clearInterval(intervalId) )
 
 function updateTimeTracking() {
 	const i = data.activeItemIndex
