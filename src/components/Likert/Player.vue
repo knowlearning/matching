@@ -24,7 +24,7 @@
 						v-model="runstate.selectedValue"
 						style="justify-content: center;"
 						:value="option.value"
-						@focus="runstate.selectedValue = $event.target.value"
+						@focus="runstate.selectedValue = parseInt($event.target.value)"
 					/>
 				</v-col>
 				<v-col cols="1" />
@@ -60,6 +60,7 @@ const language = store.getters.language()
 const questionDef = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+
 if (runstate.selectedValue === undefined) runstate.selectedValue = null
 
 watch(() => runstate.selectedValue, val => {
