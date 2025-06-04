@@ -16,7 +16,11 @@
             :label="choice.value"
             :value="i"
             :multiple="item.selectMultiple"
-            v-model="runstate.userSelect"
+            :model-value="runstate.userSelect"
+            @update:model-value="value => {
+                runstate.userSelect = value
+                runstate.currentlyCorrect = determineCorrect()
+            }"
             hide-details
         />
     </div>
@@ -55,15 +59,6 @@ const initialRunstateMap = {
     // userSelect ->  v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
     userSelect: () => item.selectMultiple ? [] : false
 }
-
-watch(  // set currently correct, if changed, on each run-state edit
-    runstate,
-    () => {
-        const correct = determineCorrect()
-        if (runstate.currentlyCorrect !== correct) runstate.currentlyCorrect = correct
-    },
-    { deep: true }
-)
 
 Object.entries(initialRunstateMap).forEach(([key, fn]) => {
     if (runstate[key] === undefined) runstate[key] = fn()
