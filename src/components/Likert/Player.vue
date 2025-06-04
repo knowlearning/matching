@@ -104,7 +104,11 @@ function handleNext() {
 		verb: 'completed',
 		object: props.id,
 		result: {
-			response: runstate.selectedValue
+			score: {
+				min: 1,
+				max: 5,
+				raw: runstate.selectedValue
+			}
 		}
 	}
 }
