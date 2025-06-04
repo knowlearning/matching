@@ -280,7 +280,7 @@ async function moveInSequence(toIndex, source) {
 
 	data.xapi = {
 		actor: source === 'user' ? user : props.id,
-		verb: 'resumed',
+		verb: 'initialized',
 		object: currItem?.id || 'dashboard',
 		authority: user
 	}
