@@ -24,7 +24,23 @@
 						v-model="runstate.selectedValue"
 						style="justify-content: center;"
 						:value="option.value"
-						@focus="runstate.selectedValue = parseInt($event.target.value)"
+						@focus="event => {
+							const value = parseInt(event.target.value)
+							runstate.xapi = {
+								actor: user,
+								authority: user,
+								verb: 'answered',
+								object: props.id,
+								result: {
+									score: {
+										min: 1,
+										max: 5,
+										raw: value
+									}
+								}
+							}
+							runstate.selectedValue = value
+						}"
 					/>
 				</v-col>
 				<v-col cols="1" />
@@ -62,24 +78,6 @@ const questionDef = await translateScopeId(props.id, language)
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
 if (runstate.selectedValue === undefined) runstate.selectedValue = null
-
-watch(() => runstate.selectedValue, val => {
-	if (val !== null) {
-		runstate.xapi = {
-			actor: user,
-			authority: user,
-			verb: 'answered',
-			object: props.id,
-			result: {
-				score: {
-					min: 1,
-					max: 5,
-					raw: val
-				}
-			}
-		}
-	}
-})
 
 const radioOptions = computed(() => {
 	const choices = likertCategories[questionDef.category]
