@@ -169,7 +169,7 @@ agent: |
               const x = await xApiAgent.state(`xapi/${Agent.uuid()}`)
               Object.assign(x, {
                   ...patch[0].value,
-                  origin: id,
+                  source: id,
                   context
               })
           }
