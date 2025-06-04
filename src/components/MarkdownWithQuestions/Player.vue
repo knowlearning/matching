@@ -145,11 +145,11 @@ async function handleNextButton() {
 
 async function handleXapiChanges(i, e) {
     if (numberOfItems.value !== 1) return // zero or multipe handled by next buttons xapi write
-        
+
     if (e.patch[0].path[0] === 'xapi') {
         const { verb, object, result, extensions } = e.patch[0].value
         // runstate scope name is 'runstate-....' for sequence handling differently
-        runstate.xapi = { verb, object, result, extensions }
+        runstate.xapi = { actor: props.id, verb, object, result, extensions }
     }
 }
 
