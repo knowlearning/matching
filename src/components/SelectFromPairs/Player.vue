@@ -20,7 +20,7 @@
 			v-bind="r"
 			:rowIndex="i"
 			:wideItemArea="wideItemArea()"
-			@entryIsCorrect="rowsCorrect[i] = $event"
+			@entryIsCorrect="runstate.rowsCorrect[i] = $event"
 		/>
 		<v-btn
 			@click="handleSubmit"
@@ -50,10 +50,23 @@ const props = defineProps({
 const language = store.getters.language()
 const item = await translateScopeId(props.id, language)
 
-const rowsCorrect = reactive(item.rows.map(r => false)) // init to array of false
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+
+if (runstate.rowsCorrect === undefined || runstate.rowsCorrect.length !== item.rows.length) {
+	runstate.rowsCorrect = item.rows.map(r => false)
+}
+
+setTimeout(() => {
+  runstate.xapi = {
+    actor: props.id,
+    verb: 'initialized',
+    object: props.id,
+    extensions: { language }
+  }
+})
 
 async function handleSubmit() {
-	const isCorrect = rowsCorrect.every(el => el)
+	const isCorrect = runstate.rowsCorrect.every(el => el)
   if (Agent.embedded) {
     Agent.close({
     	success: isCorrect,
