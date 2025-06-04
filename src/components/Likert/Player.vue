@@ -70,7 +70,11 @@ watch(() => runstate.selectedValue, val => {
 			verb: 'answered',
 			object: props.id,
 			result: {
-				response: val
+				score: {
+					min: 1,
+					max: 5,
+					raw: val
+				}
 			}
 		}
 	}
