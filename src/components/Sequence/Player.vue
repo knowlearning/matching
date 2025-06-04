@@ -158,15 +158,14 @@ setTimeout(() => {
 		authority: user,
 		extensions: { language }
 	}
-})
-
-setTimeout(() => {
-	data.xapi = {
-		actor: props.id,
-		verb: 'initialized',
-		object: currentItemId.value,
-		authority: user
-	}
+	setTimeout(() => {
+		data.xapi = {
+			actor: props.id,
+			verb: 'initialized',
+			object: currentItemId.value,
+			authority: user
+		}
+	})
 })
 
 onBeforeUnmount(() => clearInterval(intervalId) )
