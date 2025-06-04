@@ -62,7 +62,7 @@ const questionDef = await translateScopeId(props.id, language)
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 runstate.selectedValue = null
 
-watch(runstate.selectedValue, val => {
+watch(() => runstate.selectedValue, val => {
 	if (val !== null) {
 		runstate.xapi = {
 			actor: user,
