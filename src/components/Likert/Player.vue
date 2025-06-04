@@ -60,7 +60,7 @@ const language = store.getters.language()
 const questionDef = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
-runstate.selectedValue = null
+if (runstate.selectedValue === undefined) runstate.selectedValue = null
 
 watch(() => runstate.selectedValue, val => {
 	if (val !== null) {
