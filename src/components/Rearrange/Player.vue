@@ -106,6 +106,7 @@ const props = defineProps({
 
 const language = store.getters.language()
 const item = await translateScopeId(props.id, language)
+const { auth: { user } } = await Agent.environment()
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
@@ -200,17 +201,22 @@ function dropImage(index, targetArray) {
 }
 
 async function handleSubmit() {
-    const correct = runstate.currentlyCorrect
-    runstate.lastSubmissionCorrect = correct
+    const success = runstate.currentlyCorrect
+    const message = getMessage(success)
 
     if (Agent.embedded) {
-        Agent.close({
-            success: correct,
-            message: getMessage(correct)
-        })
+        runstate.xapi = {
+            actor: user,
+            authority: user,
+            verb: 'submitted',
+            object: props.id,
+            result: { success },
+            extensions: { message }
+        }
     } else {
-        await itemFeedbackSwal(t, correct, getMessage(correct))
+        await itemFeedbackSwal(t, success, message)
     }
+    runstate.lastSubmissionCorrect = success
 }
 
 function arraysDeepEqual(arr1, arr2) {
