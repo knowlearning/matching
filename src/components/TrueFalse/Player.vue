@@ -66,27 +66,22 @@ setTimeout(() => {
 
 
 function isCorrect() {
-    return runstate.userSelect.value === item.answer
+    return runstate.userSelect === item.answer
 }
 
 async function handleSubmit() {
-    const correct = isCorrect()
-    if (Agent.embedded) {
-        Agent.close({
-            success: correct,
-            message: getMessage(correct)
-        })
-    } else {
-        await itemFeedbackSwal(t, correct, getMessage(correct))
-    }
+    const success = isCorrect()
+    const message = getMessage(success)
 
-    runstate.xapi = {
-        verb: 'submitted',
-        object: props.id,
-        result: { success: correct },
-        extensions: {
-            message: getMessage(correct)
+    if (Agent.embedded) {
+        runstate.xapi = {
+            verb: 'submitted',
+            object: props.id,
+            result: { success },
+            extensions: { message }
         }
+    } else {
+        await itemFeedbackSwal(t, success, message)
     }
 }
 function getMessage(isCorrect) {
