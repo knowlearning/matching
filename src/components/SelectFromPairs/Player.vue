@@ -49,6 +49,7 @@ const props = defineProps({
 
 const language = store.getters.language()
 const item = await translateScopeId(props.id, language)
+const { auth: { user } } = await Agent.environment()
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
@@ -66,14 +67,19 @@ setTimeout(() => {
 })
 
 async function handleSubmit() {
-	const isCorrect = runstate.rowsCorrect.every(el => el)
+  const success = runstate.rowsCorrect.every(el => el)
+  const message = getMessage(success)
   if (Agent.embedded) {
-    Agent.close({
-    	success: isCorrect,
-    	message: getMessage(isCorrect)
-    })
+    runstate.xapi = {
+      actor: user,
+      authority: user,
+      verb: 'submitted',
+      object: props.id,
+      result: { success },
+      extensions: { message }
+    }
   } else {
-    await itemFeedbackSwal(t, isCorrect, getMessage(isCorrect))
+    await itemFeedbackSwal(t, success, message)
   }
 }
 
