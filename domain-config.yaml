@@ -123,11 +123,12 @@ agent: |
   // hack to ignore too many session state requests
   const sessions = {}
   async function isTranslatableItem(id) {
+    if (sessions[id]) return false
+
     const state = await Agent.state(id)
     const { name } = await Agent.metadata(id)
 
     if (name === 'sessions') sessions[id] = true
-    if (sessions[id]) return false
 
     const translations = state.translations
 
