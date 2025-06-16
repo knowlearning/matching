@@ -26,8 +26,6 @@ postgres:
       domains:
         - app.pilaproject.org
         - thailand.pilaproject.org
-        - cambodia.pilaproject.org
-        - poland-rct-2025.pilaproject.org
         - f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:9898
       body: |
         SELECT
@@ -122,8 +120,16 @@ agent: |
       return value
     }
 
+  // hack to ignore too many session state requests
+  const sessions = {}
   async function isTranslatableItem(id) {
+    if (sessions[id]) return false
+
     const state = await Agent.state(id)
+    const { name } = await Agent.metadata(id)
+
+    if (name === 'sessions') sessions[id] = true
+
     const translations = state.translations
 
     if (!translations) return false
@@ -171,7 +177,7 @@ agent: |
               const x = await xApiAgent.state(`xapi/${Agent.uuid()}`)
               Object.assign(x, {
                   ...patch[0].value,
-                  origin: id,
+                  source: id,
                   context
               })
           }
