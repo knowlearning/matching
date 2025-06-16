@@ -90,6 +90,9 @@ import CompetancyDashboard from './competency-dashboard.vue'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
 import { useStore } from 'vuex'
+
+const XAPI_HEARTBEAT_INTERVAL = 20000
+
 const store = useStore()
 const t = slug =>store.getters.t(slug)
 
@@ -142,11 +145,26 @@ const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correc
 const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
 const activeItemId = computed(() => sequenceDef.items[data.activeItemIndex].id)
 
-// start timer, but only if not already locked
-let intervalId = undefined
+// For non-XAPI Heartbeat --- start timer, but only if not already locked
+let oldIntervalId = undefined
 if (!data.quizFinished) {
-	intervalId = setInterval(updateTimeTracking, 1000)
+	oldIntervalId = setInterval(updateOldTimeTracking, 1000)
 }
+
+// For xapi sequence heartbeat. This gives us an "upper-guard" for analyzing the sequence xapi data.  If we haven't seen an xapi log in more than the interval duration, we know it's inactive
+let heartbeatPulsing = true
+function xApiHeartbeat() {
+	setTimeout(() => {
+		data.xapi = {
+			actor: props.id,
+			verb: 'heartbeat',
+			object: props.id,
+			authority: user
+		}
+		if (heartbeatPulsing) xApiHeartbeat()
+	}, XAPI_HEARTBEAT_INTERVAL)
+}
+xApiHeartbeat()
 
 const currentItemId = computed(() => sequenceDef.items[data.activeItemIndex]?.id)
 
@@ -168,7 +186,12 @@ setTimeout(() => {
 	})
 })
 
-onBeforeUnmount(() => clearInterval(intervalId) )
+onBeforeUnmount(() => {
+	// for old dashboard heartbeat
+	clearInterval(oldIntervalId)
+	// for xapi heartbeat
+	heartbeatPulsing = false
+})
 
 function initialItemInfo() {
 	return sequenceDef.items
@@ -185,10 +208,13 @@ function keyIsActive(key) {
 function handleQuizFinished() {
 	data.quizFinished = true
 	moveInSequence(null, 'sequence')
-	clearInterval(intervalId)
+	// for old timing
+	clearInterval(oldIntervalId)
+	// for xapi timing
+	heartbeatPulsing = false
 }
 
-function updateTimeTracking() {
+function updateOldTimeTracking() {
 	const i = data.activeItemIndex
 	data.totalTime ++
 	if (Number.isInteger(i)) {
