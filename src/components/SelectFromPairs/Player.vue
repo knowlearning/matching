@@ -78,9 +78,10 @@ async function handleSubmit() {
       result: { success },
       extensions: { message }
     }
-  } else {
-    await itemFeedbackSwal(t, success, message)
   }
+
+  const notInWrapper = (await Agent.environment()).context.length === 1
+  if (notInWrapper) await itemFeedbackSwal(t, success, message)
 }
 
 function wideItemArea() {

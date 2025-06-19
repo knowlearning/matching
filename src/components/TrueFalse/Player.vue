@@ -64,7 +64,6 @@ setTimeout(() => {
     }
 })
 
-
 function isCorrect() {
     return runstate.userSelect === item.answer
 }
@@ -80,10 +79,12 @@ async function handleSubmit() {
             result: { success },
             extensions: { message }
         }
-    } else {
-        await itemFeedbackSwal(t, success, message)
     }
+
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, message)
 }
+
 function getMessage(isCorrect) {
     if (isCorrect && item.feedback?.correct) return item.feedback.correct 
     else if (!isCorrect && item.feedback?.incorrect) return item.feedback.incorrect
