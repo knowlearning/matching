@@ -1,4 +1,12 @@
 <template>
+	<div
+		v-for="(el,i) in data.sequenceXapiLogMirror"
+		:key="`row-${i}`"
+		class="temp"
+		style="white-space: nowrap; align-self: flex-start; font-size: 0.6em;"
+	>{{i+1}}. {{ el }}</div>
+
+
 	<div class="sequence-player">
 		<SequenceHeader class="header"
 			:sequenceId="props.id"
@@ -119,7 +127,8 @@ if (!data.itemInfo) { // bellwether for first init
 		activeItemIndex: 0,
 		itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
 		totalTime: 0,
-		quizFinished: null
+		quizFinished: null,
+		sequenceXapiLogMirror: [] // for results of polling xapi on seq and sub items
 	})
 } else {
 	// in case items removed from sequence
@@ -152,7 +161,7 @@ if (!data.quizFinished) {
 }
 
 // For xapi sequence heartbeat. This gives us an "upper-guard" for analyzing the sequence xapi data.  If we haven't seen an xapi log in more than the interval duration, we know it's inactive
-let heartbeatPulsing = true
+let sequenceTimerHeartbeatPulsing = true
 function xApiHeartbeat() {
 	setTimeout(() => {
 		data.xapi = {
@@ -161,7 +170,7 @@ function xApiHeartbeat() {
 			object: props.id,
 			authority: user
 		}
-		if (heartbeatPulsing) xApiHeartbeat()
+		if (sequenceTimerHeartbeatPulsing) xApiHeartbeat()
 	}, XAPI_HEARTBEAT_INTERVAL)
 }
 xApiHeartbeat()
@@ -190,7 +199,7 @@ onBeforeUnmount(() => {
 	// for old dashboard heartbeat
 	clearInterval(oldIntervalId)
 	// for xapi heartbeat
-	heartbeatPulsing = false
+	sequenceTimerHeartbeatPulsing = false
 })
 
 function initialItemInfo() {
@@ -211,7 +220,7 @@ function handleQuizFinished() {
 	// for old timing
 	clearInterval(oldIntervalId)
 	// for xapi timing
-	heartbeatPulsing = false
+	sequenceTimerHeartbeatPulsing = false
 }
 
 function updateOldTimeTracking() {
@@ -363,6 +372,41 @@ async function handleXapiChanges(i, e) {
 
 	}
 }
+
+// START XAPI LOG POLLING
+// data.sequenceXapiLogMirror is initialized with other data.whatever up above
+let xapiLogPolling = true
+let xapiPollTimeoutId
+
+pollXapi( [user] , [props.id] )
+
+async function pollXapi(users, empath) {
+
+	if (!xapiLogPolling) return
+	try {
+		const newXapi = await fetchXapi(users, empath)
+		const prev = data.sequenceXapiLogMirror
+		// Append only new items
+		if (newXapi.length > prev.length) {
+			const delta = newXapi.slice(prev.length)
+			data.sequenceXapiLogMirror.push(...delta)
+		}
+	}
+	catch (err) { console.error('Failed to fetch xAPI data:', err.message) }
+	xapiPollTimeoutId = setTimeout(() => pollXapi( users, empath), 2000)
+}
+
+async function fetchXapi(users, empath) {
+	return await Agent.query('statements', [users, empath], 'xapi.knowlearning.systems')
+}
+
+onBeforeUnmount(() => {
+	xapiLogPolling = false
+	clearTimeout(xapiPollTimeoutId)
+})
+
+// END XAPI LOG POLLING
+
 
 </script>
 
