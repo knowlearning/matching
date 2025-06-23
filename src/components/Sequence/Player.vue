@@ -1,10 +1,13 @@
 <template>
+
+	<div>{{ sequenceDef }}</div>
 	<div
 		v-for="(el,i) in data.sequenceXapiLogMirror"
 		:key="`row-${i}`"
 		class="temp"
 		style="white-space: nowrap; align-self: flex-start; font-size: 0.6em;"
 	>{{i+1}}. {{ el }}</div>
+
 
 
 	<div class="sequence-player">
@@ -162,17 +165,17 @@ if (!data.quizFinished) {
 
 // For xapi sequence heartbeat. This gives us an "upper-guard" for analyzing the sequence xapi data.  If we haven't seen an xapi log in more than the interval duration, we know it's inactive
 let sequenceTimerHeartbeatPulsing = true
-function xApiHeartbeat() {
-	setTimeout(() => {
-		data.xapi = {
-			actor: props.id,
-			verb: 'heartbeat',
-			object: props.id,
-			authority: user
-		}
-		if (sequenceTimerHeartbeatPulsing) xApiHeartbeat()
-	}, XAPI_HEARTBEAT_INTERVAL)
+
+async function xApiHeartbeat() {
+	await new Promise(res => setTimeout(res, XAPI_HEARTBEAT_INTERVAL))
+	data.xapi = {
+		actor: props.id,
+		verb: 'heartbeat',
+		object: props.id
+	}
+	if (sequenceTimerHeartbeatPulsing) xApiHeartbeat()
 }
+
 xApiHeartbeat()
 
 const currentItemId = computed(() => sequenceDef.items[data.activeItemIndex]?.id)
