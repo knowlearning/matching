@@ -74,33 +74,16 @@ const headers = computed(() => {
 });
 </script>
 
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
+<style>
 .elite-terminal-container {
-  background-color: #000;
-  color: #00ff88;
-  font-family: 'Share Tech Mono', monospace;
-  padding: 2rem;
-  border: 2px solid #00ff88;
-  border-radius: 0.75rem;
-  box-shadow: 0 0 30px #00ff8840;
+  background-color: #ffffff;
+  color: #333;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
   position: relative;
-}
-
-.elite-terminal-container::after {
-  content: '';
-  pointer-events: none;
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(
-    rgba(0, 255, 136, 0.05) 1px,
-    transparent 1px
-  );
-  background-size: 100% 16px;
-  mix-blend-mode: overlay;
-  opacity: 0.15;
 }
 
 .elite-table {
@@ -108,45 +91,47 @@ const headers = computed(() => {
   border-collapse: collapse;
   text-align: left;
   table-layout: auto;
+  font-size: 0.7rem;
+  color: #222;
 }
 
 .elite-table thead {
-  background-color: #001d13;
-  border-bottom: 2px solid #00ff88;
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ddd;
 }
 
 .elite-table th {
   padding: 0.75rem;
-  color: #00ffaa;
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  border-right: 1px solid #00ff88;
+  color: #555;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  border-right: 1px solid #eee;
+  font-size: 0.65rem;
 }
 
 .elite-table td {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.6rem;
-  border-top: 1px solid #00ff8844;
-  border-right: 1px solid #00ff8822;
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid #eee;
+  border-right: 1px solid #f9f9f9;
   white-space: nowrap;
 }
 
-/* New row effect */
 .just-arrived {
-  background-color: rgba(0, 255, 136, 0.15) !important;
+  background-color: #e0f7f1 !important;
   animation: flashIn 0.4s ease-out, fadeOut 1.1s ease-out 0.4s forwards;
 }
 
 @keyframes flashIn {
   0% {
-    transform: translateX(-10px) scaleX(0.98);
+    transform: translateY(-6px);
     opacity: 0;
-    filter: drop-shadow(0 0 5px #00ff88);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   }
   100% {
     transform: none;
     opacity: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
   }
 }
 
