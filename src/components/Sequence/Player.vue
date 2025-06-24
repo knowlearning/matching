@@ -1,16 +1,12 @@
 <template>
+	<XapiTable
+		v-show="showXapiLog"
+		:data="[...data.sequenceXapiLogMirror].reverse()"
+		:showOnlyTheseKeys="[ 'actor', 'verb', 'object', 'source', 'stored', 'success', 'embed_path' ]"
+		@close="showXapiLog = !showXapiLog"
+	/>
 
-	<div>{{ sequenceDef }}</div>
-	<div
-		v-for="(el,i) in data.sequenceXapiLogMirror"
-		:key="`row-${i}`"
-		class="temp"
-		style="white-space: nowrap; align-self: flex-start; font-size: 0.6em;"
-	>{{i+1}}. {{ el }}</div>
-
-
-
-	<div class="sequence-player">
+	<div class="sequence-player" v-show="!showXapiLog">
 		<SequenceHeader class="header"
 			:sequenceId="props.id"
 			:quizMode="sequenceDef.quizMode"
@@ -19,6 +15,7 @@
 			:time="data.totalTime"
 			@select="index => moveInSequence(index, 'user')"
 			@close="handleClose"
+			@click.shift.meta="showXapiLog = !showXapiLog"
 		/>
 		<div
 			v-for="item,i in sequenceDef.items"
@@ -98,6 +95,7 @@ import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import CompetancyDashboard from './competency-dashboard.vue'
+import XapiTable from './XapiTable.vue'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
 import { useStore } from 'vuex'
@@ -115,6 +113,7 @@ const props = defineProps({
 		required: true
 	}
 })
+const showXapiLog = ref(false)
 
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
