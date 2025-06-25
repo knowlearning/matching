@@ -127,7 +127,18 @@ const props = defineProps({
 
 const showLLMChat = ref(false)
 const questionContexts = { // question id to useful context for ai agent
-	
+  "8ddfcda9-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcda8-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdb0-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdad-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcda7-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdac-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdab-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdaa-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdaf-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcda6-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdae-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
+  "8ddfcdb1-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`
 }
 
 const competencyDashboardData = ref(null)
