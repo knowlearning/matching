@@ -111,8 +111,11 @@ import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import CompetancyDashboard from './competency-dashboard.vue'
 import translateScopeId from '../../helpers/translateScopeId.js'
-
+import questionContexts from './questionContexts.js'
+import questionContextShared from './questionContextShared.js'
 import { useStore } from 'vuex'
+
+
 const store = useStore()
 const t = slug =>store.getters.t(slug)
 
@@ -125,27 +128,35 @@ const props = defineProps({
 	}
 })
 
-const showLLMChat = ref(false)
-const questionContexts = { // question id to useful context for ai agent
-  "8ddfcda9-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcda8-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdb0-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdad-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcda7-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdac-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdab-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdaa-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdaf-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcda6-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdae-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`,
-  "8ddfcdb1-4e20-11f0-b336-01c0e8c53df5": `This is a math problem.`
-}
-
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
+const showLLMChat = ref(false)
 
 const language = store.getters.language()
+
+// Get translated sequence and sub-item definitions
 const sequenceDef = await translateScopeId(props.id, language)
+
+const subItemIds = sequenceDef.items.map(el => el.id)
+const res = await Promise.all(subItemIds.map(id => translateScopeId(id, language)))
+const subItemDefs = Object.fromEntries(
+  subItemIds.map((id, i) => [id, res[i]])
+)
+
+const localQuestionContexts = JSON.parse(JSON.stringify(questionContexts))
+Object.entries(subItemDefs).forEach(([id, { testAiItemPrompt }]) => {
+  if (testAiItemPrompt) {
+    if (localQuestionContexts[id]) {
+      localQuestionContexts[id] += `\n${testAiItemPrompt}`
+    } else {
+      localQuestionContexts[id] = testAiItemPrompt
+    }
+  }
+})
+
+Object.entries(localQuestionContexts).forEach(([id, prompt]) => {
+	localQuestionContexts[id] = questionContextShared + prompt
+})
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 
@@ -293,7 +304,7 @@ watch(
 				object: currItemId,
 				extensions: { language }
 			}
-			if (questionContexts[currItemId.id]) {
+			if (localQuestionContexts[currItemId.id]) {
 				Agent
 				  .state('chat')
 				  .then(chat => chat.aiSystemMessage = questionContexts[currItemId.id])
