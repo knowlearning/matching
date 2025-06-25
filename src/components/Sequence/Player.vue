@@ -293,10 +293,10 @@ watch(
 				object: currItemId,
 				extensions: { language }
 			}
-			if (questionContexts[currItemId]) {
+			if (questionContexts[currItemId.id]) {
 				Agent
 				  .state('chat')
-				  .then(chat => chat.aiSystemMessage = questionContexts[currItemId])
+				  .then(chat => chat.aiSystemMessage = questionContexts[currItemId.id])
 			}
 		}
 	},
