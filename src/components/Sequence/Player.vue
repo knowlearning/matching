@@ -126,6 +126,9 @@ const props = defineProps({
 })
 
 const showLLMChat = ref(false)
+const questionContexts = { // question id to useful context for ai agent
+	
+}
 
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
@@ -278,6 +281,11 @@ watch(
 				verb: 'resumed',
 				object: currItemId,
 				extensions: { language }
+			}
+			if (questionContexts[currItemId]) {
+				Agent
+				  .state('chat')
+				  .then(chat => chat.aiSystemMessage = questionContexts[currItemId])
 			}
 		}
 	},
