@@ -1,12 +1,19 @@
 <template>
-	<XapiTable
+	<xapi-table
 		v-show="showXapiLog"
 		:data="[...data.sequenceXapiLogMirror].reverse()"
 		:showOnlyTheseKeys="[ 'actor', 'verb', 'object', 'source', 'stored', 'success', 'embed_path' ]"
 		@close="showXapiLog = !showXapiLog"
 	/>
-
-	<div class="sequence-player" v-show="!showXapiLog">
+	<data-viewer
+		v-show="showSeqAndSubItemDefs"
+		:items="[
+			{ name: 'Sequence Definition', data: sequenceDef },
+			{ name: 'Sequece Def Repeated', data: sequenceDef }
+		]"
+		@close="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
+	/>
+	<div class="sequence-player" v-show="!showXapiLog && !showSeqAndSubItemDefs">
 		<SequenceHeader class="header"
 			:sequenceId="props.id"
 			:quizMode="sequenceDef.quizMode"
@@ -15,7 +22,8 @@
 			:time="data.totalTime"
 			@select="index => moveInSequence(index, 'user')"
 			@close="handleClose"
-			@click.shift.meta="showXapiLog = !showXapiLog"
+			@click.shift.meta.exact="showXapiLog = !showXapiLog"
+			@click.shift.alt.exact="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
 		/>
 		<div
 			v-for="item,i in sequenceDef.items"
@@ -96,6 +104,7 @@ import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import CompetancyDashboard from './competency-dashboard.vue'
 import XapiTable from './XapiTable.vue'
+import DataViewer from './DataViewer.vue'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
 import { useStore } from 'vuex'
@@ -114,6 +123,7 @@ const props = defineProps({
 	}
 })
 const showXapiLog = ref(false)
+const showSeqAndSubItemDefs = ref(false)
 
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
