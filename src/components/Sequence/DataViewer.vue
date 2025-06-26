@@ -10,7 +10,8 @@
           :key="index"
           :value="index"
         >
-          {{ item.name }}
+          <ItemName v-if="isUUID(item.id)" :id="item.id" />
+          <span v-else>{{ item.id }}</span>
         </option>
       </select>
     </div>
@@ -23,6 +24,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { validate as isUUID } from 'uuid'
+import ItemName from '../ItemName.vue'
+
 const emits = defineEmits(['close'])
 const props = defineProps({
   items: {

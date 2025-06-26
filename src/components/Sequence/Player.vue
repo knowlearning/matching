@@ -8,8 +8,8 @@
 	<data-viewer
 		v-show="showSeqAndSubItemDefs"
 		:items="[
-			{ name: 'Sequence Definition', data: sequenceDef },
-			...Object.entries(subItemDefs).map(([id, data]) => ({ name: id, data }))
+			{ id: props.id, data: sequenceDef },
+			...Object.entries(subItemDefs).map(([id, data]) => ({ id, data }))
 		]"
 		@close="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
 	/>
