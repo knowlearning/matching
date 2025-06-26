@@ -307,7 +307,7 @@ watch(
 			if (localQuestionContexts[currItemId.id]) {
 				Agent
 				  .state('chat')
-				  .then(chat => chat.aiSystemMessage = questionContexts[currItemId.id])
+				  .then(chat => chat.aiSystemMessage = localQuestionContexts[currItemId.id])
 			}
 		}
 	},
