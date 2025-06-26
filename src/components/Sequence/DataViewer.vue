@@ -2,15 +2,17 @@
   <div class="data-viewer">
     <button style="display: inline-block;" @click="emits('close')">Close</button>
 
-    <div class="tabs">
-      <button
-        v-for="(item, index) in items"
-        :key="index"
-        @click="selectedIndex = index"
-        :class="['tab', { active: selectedIndex === index }]"
-      >
-        {{ item.name }}
-      </button>
+    <div class="dropdown">
+      <label for="item-select">Select item:</label>
+      <select id="item-select" v-model="selectedIndex">
+        <option
+          v-for="(item, index) in items"
+          :key="index"
+          :value="index"
+        >
+          {{ item.name }}
+        </option>
+      </select>
     </div>
 
     <div class="object-viewer">
@@ -21,7 +23,7 @@
 
 <script setup>
 import { ref } from 'vue'
-const emits = defineEmits([ 'close' ])
+const emits = defineEmits(['close'])
 const props = defineProps({
   items: {
     type: Array,
@@ -70,32 +72,24 @@ function prettyPrint(data) {
   background-color: #ddd;
 }
 
-.tabs {
+.dropdown {
   flex-grow: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.tab {
-  all: unset;
-  padding: 0.5rem 1rem;
-  background-color: #ddd;
-  border: 1px solid #ccc;
+.dropdown select {
+  padding: 0.5rem;
+  font-size: 14px;
   border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
   cursor: pointer;
-  font-weight: bold;
-  color: #333;
 }
 
-.tab.active {
-  background-color: #333;
-  color: white;
-}
 .object-viewer {
-	flex-grow: 1;
+  flex-grow: 1;
 }
+
 .object-viewer pre {
   height: 100%;
   background-color: #f4f4f4;

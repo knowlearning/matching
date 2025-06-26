@@ -9,7 +9,7 @@
 		v-show="showSeqAndSubItemDefs"
 		:items="[
 			{ name: 'Sequence Definition', data: sequenceDef },
-			{ name: 'Sequece Def Repeated', data: sequenceDef }
+			...Object.entries(subItemDefs).map(([id, data]) => ({ name: id, data }))
 		]"
 		@close="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
 	/>
@@ -128,9 +128,18 @@ const showSeqAndSubItemDefs = ref(false)
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
 
-const language = store.getters.language()
-const sequenceDef = await translateScopeId(props.id, language)
 const { auth: { user } } = await Agent.environment()
+
+const language = store.getters.language()
+
+// sequence and sub-item definitions
+const subItemDefs = ref({}) // to be populated below
+const sequenceDef = await translateScopeId(props.id, language)
+const subItemIds = sequenceDef.items.map(el => el.id)
+const res = await Promise.all(subItemIds.map(id => translateScopeId(id, language)))
+subItemDefs.value = Object.fromEntries(
+  subItemIds.map((id, i) => [id, res[i]])
+)
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
 
