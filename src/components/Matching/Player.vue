@@ -10,9 +10,9 @@
     <MatchSvg
       :toChoices="item.toChoices"
       :fromChoices="item.fromChoices"
-      :connections="data.studentConnections"
+      :connections="runstate.studentConnections"
       :textIsPlayable="item.textIsPlayable"
-      @updateConnections="data.studentConnections = $event"
+      @updateConnections="runstate.studentConnections = $event"
     />
     <v-btn
       color="green"
@@ -36,27 +36,43 @@
 
   const props = defineProps(['id'])
   
-  const lang = store.getters.language()
-  const item = await translateScopeId(props.id, lang)
+  const language = store.getters.language()
+  const item = await translateScopeId(props.id, language)
+  const { auth: { user } } = await Agent.environment()
 
-  const data = reactive({
-    studentConnections: [], // each connection is [ nodeId, nodeId ]
+  const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+  if (!runstate.studentConnections) runstate.studentConnections = [] // each connection is [ nodeId, nodeId ]
+
+  setTimeout(() => {
+    runstate.xapi = {
+      actor: props.id,
+      verb: 'initialized',
+      object: props.id,
+      extensions: { language }
+    }
   })
 
   async function handleSubmit() {
+    const success = isCorrect()
+    const message = getMessage(success)
     if (Agent.embedded) {
-      Agent.close({
-        success: isCorrect(),
-        message: getMessage(isCorrect())
-      })
-    } else {
-      await itemFeedbackSwal(t, isCorrect(), getMessage(isCorrect()))
+      runstate.xapi = {
+        actor: user,
+        authority: user,
+        verb: 'submitted',
+        object: props.id,
+        result: { success },
+        extensions: { message }
+      }
     }
+
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, message)
   }
 
   function isCorrect() {
-    const every = data.studentConnections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
-    const only = item.answerConnections.every(c1 => data.studentConnections.some(c2 => sameConnection(c1, c2)))
+    const every = runstate.studentConnections.every(c1 => item.answerConnections.some(c2 => sameConnection(c1, c2)))
+    const only = item.answerConnections.every(c1 => runstate.studentConnections.some(c2 => sameConnection(c1, c2)))
     return every && only
   }
   function getMessage(isCorrect) {

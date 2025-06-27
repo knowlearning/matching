@@ -14,8 +14,8 @@ const props = defineProps({
         required: true
     }
 })
-const lang = store.getters.language()
-const questionDef = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const questionDef = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 
@@ -24,6 +24,15 @@ if (!runstate.answers || runstate.answers.length !== questionDef.blanks.length) 
 }
 
 const parsedPrompt = ref( questionDef.prompt.split(/(_+)/g) )
+
+setTimeout(() => {
+    runstate.xapi = {
+        actor: props.id,
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
+})
 
 const areUnderscores = (str) => /^_+$/.test(str)
 const mapSegmentIndexToAnswerIndex = (i) => {
@@ -46,14 +55,16 @@ async function handleSubmit() {
 
   const message = getMessage(success)
 
-  if (!Agent.embedded) await itemFeedbackSwal(t, success, message)
-
   runstate.xapi = {
     verb: 'submitted',
     object: props.id,
     result: { success },
     extensions: { message }
   }
+
+  const notInWrapper = (await Agent.environment()).context.length === 1
+  if (notInWrapper) await itemFeedbackSwal(t, success, message)
+
 }
 
 function getMessage(isCorrect) {

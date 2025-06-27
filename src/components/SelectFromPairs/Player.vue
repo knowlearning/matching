@@ -20,7 +20,7 @@
 			v-bind="r"
 			:rowIndex="i"
 			:wideItemArea="wideItemArea()"
-			@entryIsCorrect="rowsCorrect[i] = $event"
+			@entryIsCorrect="runstate.rowsCorrect[i] = $event"
 		/>
 		<v-btn
 			@click="handleSubmit"
@@ -47,21 +47,41 @@ const props = defineProps({
 	id: { type: String, required: true }
 })
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
+const { auth: { user } } = await Agent.environment()
 
-const rowsCorrect = reactive(item.rows.map(r => false)) // init to array of false
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+
+if (runstate.rowsCorrect === undefined || runstate.rowsCorrect.length !== item.rows.length) {
+	runstate.rowsCorrect = item.rows.map(r => false)
+}
+
+setTimeout(() => {
+  runstate.xapi = {
+    actor: props.id,
+    verb: 'initialized',
+    object: props.id,
+    extensions: { language }
+  }
+})
 
 async function handleSubmit() {
-	const isCorrect = rowsCorrect.every(el => el)
+  const success = runstate.rowsCorrect.every(el => el)
+  const message = getMessage(success)
   if (Agent.embedded) {
-    Agent.close({
-    	success: isCorrect,
-    	message: getMessage(isCorrect)
-    })
-  } else {
-    await itemFeedbackSwal(t, isCorrect, getMessage(isCorrect))
+    runstate.xapi = {
+      actor: user,
+      authority: user,
+      verb: 'submitted',
+      object: props.id,
+      result: { success },
+      extensions: { message }
+    }
   }
+
+  const notInWrapper = (await Agent.environment()).context.length === 1
+  if (notInWrapper) await itemFeedbackSwal(t, success, message)
 }
 
 function wideItemArea() {

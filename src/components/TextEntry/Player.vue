@@ -16,19 +16,20 @@
 
   const props = defineProps(['id'])
 
-  const lang = store.getters.language()
-  const item = await translateScopeId(props.id, lang)
+  const language = store.getters.language()
+  const item = await translateScopeId(props.id, language)
   
+  const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+  if (!runstate.userInput) runstate.userInput = ''
 
-  let userRunState
-  if (Agent.embedded) {
-    userRunState = await Agent.state(`play-${props.id}`)
-    if (!userRunState.userInput) userRunState.userInput = ''
-  } else {
-    userRunState = { userInput: '' }
-  }
-
-  const data = reactive(userRunState)
+  setTimeout(() => {
+      runstate.xapi = {
+          actor: props.id,
+          verb: 'initialized',
+          object: props.id,
+          extensions: { language }
+      }
+  })
 
   function handleSubmit() {
     window.alert( isCorrect() ? 'woo' : 'boo' )

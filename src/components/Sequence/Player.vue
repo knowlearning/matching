@@ -1,13 +1,29 @@
 <template>
-	<div class="sequence-player">
+	<xapi-table
+		v-show="showXapiLog"
+		:data="[...data.sequenceXapiLogMirror].reverse()"
+		:showOnlyTheseKeys="[ 'actor', 'verb', 'object', 'source', 'stored', 'success', 'embed_path' ]"
+		@close="showXapiLog = !showXapiLog"
+	/>
+	<data-viewer
+		v-show="showSeqAndSubItemDefs"
+		:items="[
+			{ id: props.id, data: sequenceDef },
+			...Object.entries(subItemDefs).map(([id, data]) => ({ id, data }))
+		]"
+		@close="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
+	/>
+	<div class="sequence-player" v-show="!showXapiLog && !showSeqAndSubItemDefs">
 		<SequenceHeader class="header"
 			:sequenceId="props.id"
 			:quizMode="sequenceDef.quizMode"
 			:activeItemIndex="data.activeItemIndex"
 			:isCorrectArray="isCorrectArray"
 			:time="data.totalTime"
-			@select="data.activeItemIndex = $event"
+			@select="index => moveInSequence(index, 'user')"
 			@close="handleClose"
+			@click.shift.meta.exact="showXapiLog = !showXapiLog"
+			@click.shift.alt.exact="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
 		/>
 		<div
 			v-for="item,i in sequenceDef.items"
@@ -74,13 +90,13 @@
 			:isCorrectArray="isCorrectArray"
 			:timeOnTasks="timeOnTasks"
 			@close="handleClose"
-			@select="data.activeItemIndex = $event"
+			@select="index => moveInSequence(index, 'user')"
 		/>
 
 		<SequenceFooter class="footer"
-			@previous="previous"
-			@next="next"
-			@goToSummary="data.activeItemIndex = null"
+			@previous="previous('user')"
+			@next="next('user')"
+			@goToSummary="moveInSequence(null, 'user')"
 			@quizFinished="handleQuizFinished"
 			:activeItemIndex="data.activeItemIndex"
 			:quizMode="sequenceDef.quizMode"
@@ -110,11 +126,14 @@ import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import CompetancyDashboard from './competency-dashboard.vue'
+import XapiTable from './XapiTable.vue'
+import DataViewer from './DataViewer.vue'
 import translateScopeId from '../../helpers/translateScopeId.js'
 import questionContexts from './questionContexts.js'
 import questionContextShared from './questionContextShared.js'
 import { useStore } from 'vuex'
 
+const XAPI_HEARTBEAT_INTERVAL = 20000
 
 const store = useStore()
 const t = slug =>store.getters.t(slug)
@@ -127,16 +146,19 @@ const props = defineProps({
 		required: true
 	}
 })
+const showXapiLog = ref(false)
+const showSeqAndSubItemDefs = ref(false)
 
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
 const showLLMChat = ref(false)
 
+const { auth: { user } } = await Agent.environment()
+
 const language = store.getters.language()
 
 // Get translated sequence and sub-item definitions
 const sequenceDef = await translateScopeId(props.id, language)
-
 const subItemIds = sequenceDef.items.map(el => el.id)
 const res = await Promise.all(subItemIds.map(id => translateScopeId(id, language)))
 const subItemDefs = Object.fromEntries(
@@ -159,6 +181,7 @@ Object.entries(localQuestionContexts).forEach(([id, prompt]) => {
 })
 
 const data = reactive(await Agent.state(`sequence-${props.id}`))
+const chat = await Agent.state('chat')
 
 if (!data.itemInfo) { // bellwether for first init
 	Object.assign(data, {
@@ -166,30 +189,21 @@ if (!data.itemInfo) { // bellwether for first init
 		itemInfo: initialItemInfo(),  // { 'index/itemId' : { time, correct }, ... }
 		totalTime: 0,
 		quizFinished: null,
-		xapi: { // intialization of sequence, not item. Item init done by self
-			verb: 'initialized',
-			object: props.id,
-			extensions: { language }
-		}
+		sequenceXapiLogMirror: [] // for results of polling xapi on seq and sub items
 	})
-} else { // if reattaching add any needed new keys
-	data.activeItemIndex = 0
+}
+else if (!data.sequenceXapiLogMirror) {
+	data.sequenceXapiLogMirror = []
+}
+else {
+	// in case items removed from sequence
+	data.activeItemIndex = Math.min(data.activeItemIndex, sequenceDef.items.length-1)
+  // if reattaching add any needed new keys
 	Object.entries(initialItemInfo())
  		.filter(([key, info]) => !data.itemInfo[key])
  		.forEach(([key, info]) => data.itemInfo[key] = info )
 }
 
-function initialItemInfo() {
-	return sequenceDef.items
-		.reduce((acc, cur, i) => {
-			return { ...acc, [`${i}/${cur.id}`] : { time: 0, correct: null } }
-		}, {})	
-}
-
-function keyIsActive(key) {
-	const [ i, id ] = key.split('/')
-	return id && id === sequenceDef.items[i]?.id
-}
 const activeItemInfo = computed(() => {
 	return Object.entries(data.itemInfo)
 		.reduce((acc, cur) => {
@@ -205,21 +219,76 @@ const isCorrectArray = computed(() => activeItemInfo.value.map(obj => obj.correc
 const timeOnTasks    = computed(() => activeItemInfo.value.map(obj => obj.time) )
 const activeItemId = computed(() => sequenceDef.items[data.activeItemIndex].id)
 
-// start timer, but only if not already locked
-let intervalId = undefined
+// For non-XAPI Heartbeat --- start timer, but only if not already locked
+let oldIntervalId = undefined
 if (!data.quizFinished) {
-	intervalId = setInterval(updateTimeTracking, 1000)
+	oldIntervalId = setInterval(updateOldTimeTracking, 1000)
+}
+
+// For xapi sequence heartbeat. This gives us an "upper-guard" for analyzing the sequence xapi data.  If we haven't seen an xapi log in more than the interval duration, we know it's inactive
+let sequenceTimerHeartbeatPulsing = true
+
+async function xApiHeartbeat() {
+	await new Promise(res => setTimeout(res, XAPI_HEARTBEAT_INTERVAL))
+	data.xapi = {
+		actor: props.id,
+		verb: 'heartbeat',
+		object: props.id
+	}
+	if (sequenceTimerHeartbeatPulsing) xApiHeartbeat()
+}
+
+xApiHeartbeat()
+
+const currentItemId = computed(() => sequenceDef.items[data.activeItemIndex]?.id)
+
+setTimeout(() => {
+	data.xapi = {
+		actor: props.id,
+		verb: 'initialized',
+		object: props.id,
+		authority: user,
+		extensions: { language }
+	}
+	setTimeout(() => {
+		data.xapi = {
+			actor: props.id,
+			verb: 'initialized',
+			object: currentItemId.value,
+			authority: user
+		}
+	})
+})
+
+onBeforeUnmount(() => {
+	// for old dashboard heartbeat
+	clearInterval(oldIntervalId)
+	// for xapi heartbeat
+	sequenceTimerHeartbeatPulsing = false
+})
+
+function initialItemInfo() {
+	return sequenceDef.items
+		.reduce((acc, cur, i) => {
+			return { ...acc, [`${i}/${cur.id}`] : { time: 0, correct: null } }
+		}, {})
+}
+
+function keyIsActive(key) {
+	const [ i, id ] = key.split('/')
+	return id && id === sequenceDef.items[i]?.id
 }
 
 function handleQuizFinished() {
 	data.quizFinished = true
-	data.activeItemIndex = null
-	clearInterval(intervalId)
+	moveInSequence(null, 'sequence')
+	// for old timing
+	clearInterval(oldIntervalId)
+	// for xapi timing
+	sequenceTimerHeartbeatPulsing = false
 }
 
-onBeforeUnmount(() => clearInterval(intervalId) )
-
-function updateTimeTracking() {
+function updateOldTimeTracking() {
 	const i = data.activeItemIndex
 	data.totalTime ++
 	if (Number.isInteger(i)) {
@@ -227,7 +296,7 @@ function updateTimeTracking() {
 		data.itemInfo[key].time ++
 	}
 }
-function next() {
+function next(actor) {
 	const i = data.activeItemIndex
 	if (i === null) return // if on dashboard, do nothing. already at 'end'
 
@@ -237,16 +306,20 @@ function next() {
 	if (onLastItem && activeQuiz) {
 		return // no dashboard yet
 	} else if (onLastItem && !activeQuiz) {
-		data.activeItemIndex = null // to dashboard
+		moveInSequence(null, actor)
 	} else {
-		data.activeItemIndex ++
+		moveInSequence(data.activeItemIndex+1, actor)
 	}
 }
 
-function previous() {
+function previous(actor) {
 	const i = data.activeItemIndex
-	if (i === null) data.activeItemIndex = sequenceDef.items.length - 1
-	else data.activeItemIndex = (i <= 0) ? 0 : i - 1
+	if (i === null) {
+		moveInSequence(sequenceDef.items.length-1, actor)
+	}
+	else {
+		moveInSequence((i <= 0) ? 0 : i - 1, actor)
+	}
 }
 async function handleItemSubmit(i, info={}) {
 
@@ -268,17 +341,17 @@ async function handleItemSubmit(i, info={}) {
 				showCompetencyDashboard,
 				() => {
 					unwatch()
-					next()
+					next('sequence')
 				}
 			)
 		}
 	}
 	else {
 		if (sequenceDef.quizMode) {
-			next()
+			next('sequence')
 		} else { // normal learn mode
 				await itemFeedbackSwal(t, success, message)
-				if (success) next()
+				if (success) next('sequence')
 		}
 		// both learn and quiz mode
 	 // key below is of form `${index}/${itemId}``
@@ -286,33 +359,35 @@ async function handleItemSubmit(i, info={}) {
 	}
 }
 
-watch(
-	() => data.activeItemIndex,
-	(newIndex, oldIndex) => {
-		const prevItemId = (oldIndex != null) ? sequenceDef.items[oldIndex] : null
-		const currItemId = (newIndex != null) ? sequenceDef.items[newIndex] : null
-		if (prevItemId) {
-			data.xapi = {
-				verb: 'suspended',
-				object: prevItemId,
-				extensions: { language }
-			}
-		}
-		if (currItemId) {
-			data.xapi = {
-				verb: 'resumed',
-				object: currItemId,
-				extensions: { language }
-			}
-			if (localQuestionContexts[currItemId.id]) {
-				Agent
-				  .state('chat')
-				  .then(chat => chat.aiSystemMessage = localQuestionContexts[currItemId.id])
-			}
-		}
-	},
-	{ immediate: true }
-)
+async function moveInSequence(toIndex, source) {
+	const i = data.activeItemIndex
+	const prevItem = i != null ? sequenceDef.items[i] : null
+	const currItem = toIndex != null ? sequenceDef.items[toIndex] : null
+
+	data.activeItemIndex = toIndex
+
+  await new Promise(r => setTimeout(r, 1))
+
+	data.xapi = {
+		actor: source === 'user' ? user : props.id,
+		verb: 'suspended',
+		object: prevItem?.id || 'dashboard',
+		authority: user
+	}
+
+  await new Promise(r => setTimeout(r, 1))
+
+	data.xapi = {
+		actor: source === 'user' ? user : props.id,
+		verb: 'initialized',
+		object: currItem?.id || 'dashboard',
+		authority: user
+	}
+
+  if (localQuestionContexts[currItem?.id]) {
+    chat.aiSystemMessage = localQuestionContexts[currItem.id]
+  }
+}
 
 function handleClose() {
 	Agent.close()
@@ -352,20 +427,55 @@ async function handleXapiChanges(i, e) {
 
 		if (verb === 'submitted') {
 			if (sequenceDef.quizMode) {
-				next()
+				next('sequence')
 			} else { // normal learn mode
 					await itemFeedbackSwal(t, success, message)
-					if (success) next()
+					if (success) next('sequence')
 			}
 			data.itemInfo[key].correct = success
 		}
 		if (verb === 'completed') {
-			next()
+			next('sequence')
 			data.itemInfo[key].correct = 'completed' // this is hacky, correct as t/f/'completed', but this correctness is only for this display
 		}
 
 	}
 }
+
+// START XAPI LOG POLLING
+// data.sequenceXapiLogMirror is initialized with other data.whatever up above
+let xapiLogPolling = true
+let xapiPollTimeoutId
+
+pollXapi( [user] , [props.id] )
+
+async function pollXapi(users, empath) {
+
+	if (!xapiLogPolling) return
+	try {
+		const newXapi = await fetchXapi(users, empath)
+		const prev = data.sequenceXapiLogMirror
+		// Append only new items
+		if (newXapi.length > prev.length) {
+			const delta = newXapi.slice(prev.length)
+			data.sequenceXapiLogMirror.push(...delta)
+		}
+	}
+	catch (err) { console.error('Failed to fetch xAPI data:', err.message) }
+	xapiPollTimeoutId = setTimeout(() => pollXapi( users, empath), 2000)
+}
+
+async function fetchXapi(users, empath) {
+	return await Agent.query('statements', [users, empath], 'xapi.knowlearning.systems')
+}
+
+onBeforeUnmount(() => {
+	xapiLogPolling = false
+	clearTimeout(xapiPollTimeoutId)
+})
+
+// END XAPI LOG POLLING
+
 
 </script>
 

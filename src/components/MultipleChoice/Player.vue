@@ -16,7 +16,11 @@
             :label="choice.value"
             :value="i"
             :multiple="item.selectMultiple"
-            v-model="runstate.userSelect"
+            :model-value="runstate.userSelect"
+            @update:model-value="value => {
+                runstate.userSelect = value
+                runstate.currentlyCorrect = determineCorrect()
+            }"
             hide-details
         />
     </div>
@@ -51,27 +55,22 @@ const item = await translateScopeId(props.id, language)
 
 const runstate = reactive(await Agent.state(`runstate-${props.id}`))
 const initialRunstateMap = {
-    xapi: () => ({
-        verb: 'initialized',
-        object: props.id,
-        extensions: { language }
-    }),
     currentlyCorrect: () => null,
     // userSelect ->  v-checkbox models either a value (in my case, the selected index) or an array of values depending on "multiple" attribute.
     userSelect: () => item.selectMultiple ? [] : false
 }
 
-watch(  // set currently correct, if changed, on each run-state edit
-    runstate,
-    () => {
-        const correct = determineCorrect()
-        if (runstate.currentlyCorrect !== correct) runstate.currentlyCorrect = correct
-    },
-    { deep: true }
-)
-
 Object.entries(initialRunstateMap).forEach(([key, fn]) => {
     if (runstate[key] === undefined) runstate[key] = fn()
+})
+
+setTimeout(() => {
+    runstate.xapi = {
+        actor: props.id,
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
 })
 
 function determineCorrect() {
@@ -89,9 +88,7 @@ function determineCorrect() {
 
 async function handleSubmit() {
     const success = runstate.currentlyCorrect
-    if (!Agent.embedded) {
-        await itemFeedbackSwal(t, success, getMessage(success))
-    }
+
     runstate.xapi = {
         verb: 'submitted',
         object: props.id,
@@ -100,6 +97,9 @@ async function handleSubmit() {
             message: getMessage(success)
         },
     }
+
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, getMessage(success))
 }
 
 function getMessage(isCorrect) {

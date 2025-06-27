@@ -6,10 +6,8 @@
     >
       <template v-slot:body>
         <Suspense>
-          <PlayOrCustomizeByTypeSwitcher
-            :key="`preview-${previewContent}`"
+          <vueEmbedComponent
             :id="previewContent"
-            mode="player"
             @close="store.dispatch('previewContent', null)"
           />
         </Suspense>
@@ -115,6 +113,7 @@
 </template>
 
 <script setup>
+  import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
   import { reactive, computed } from 'vue'
   import Modal from './components/Modal.vue'
   import ContentBar from './components/ContentBar.vue'
@@ -131,6 +130,8 @@
 
   const copy = x => JSON.parse(JSON.stringify(x))
   const MY_CONTENT_TAG = '8e6cb070-ec84-11ee-825b-edbc0a87ecf3'
+
+  const { embedded } = Agent
 
   const data = reactive({
     content: null,

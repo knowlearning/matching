@@ -6,7 +6,7 @@
         
         <div class="choices-wrapper">
             <v-radio-group
-                v-model="userSelect"
+                v-model="runstate.userSelect"
                 hide-details
             >
                 <v-radio 
@@ -26,7 +26,7 @@
 </template>
     
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
 import translateScopeId from '../../helpers/translateScopeId.js'
 
@@ -42,23 +42,49 @@ const props = defineProps({
     }
 })
 
-const lang = store.getters.language()
-const item = await translateScopeId(props.id, lang)
+const language = store.getters.language()
+const item = await translateScopeId(props.id, language)
 
-let userSelect = ref(null)
+const runstate = reactive(await Agent.state(`runstate-${props.id}`))
+const initialRunstateMap = {
+    userSelect: () => null,
+}
+
+Object.entries(initialRunstateMap).forEach(([key, fn]) => {
+    if (runstate[key] === undefined) runstate[key] = fn()
+})
+
+
+setTimeout(() => {
+    runstate.xapi = {
+        actor: props.id,
+        verb: 'initialized',
+        object: props.id,
+        extensions: { language }
+    }
+})
 
 function isCorrect() {
-    return userSelect.value === item.answer
+    return runstate.userSelect === item.answer
 }
 
 async function handleSubmit() {
-    const correct = isCorrect()
-    if (Agent.embedded) Agent.close({
-        success: correct,
-        message: getMessage(correct)
-    })
-    else await itemFeedbackSwal(t, correct, getMessage(correct))
+    const success = isCorrect()
+    const message = getMessage(success)
+
+    if (Agent.embedded) {
+        runstate.xapi = {
+            verb: 'submitted',
+            object: props.id,
+            result: { success },
+            extensions: { message }
+        }
+    }
+
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, message)
 }
+
 function getMessage(isCorrect) {
     if (isCorrect && item.feedback?.correct) return item.feedback.correct 
     else if (!isCorrect && item.feedback?.incorrect) return item.feedback.incorrect
