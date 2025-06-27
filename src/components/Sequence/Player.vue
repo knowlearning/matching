@@ -191,7 +191,11 @@ if (!data.itemInfo) { // bellwether for first init
 		quizFinished: null,
 		sequenceXapiLogMirror: [] // for results of polling xapi on seq and sub items
 	})
-} else {
+}
+else if (!data.sequenceXapiLogMirror) {
+	data.sequenceXapiLogMirror = []
+}
+else {
 	// in case items removed from sequence
 	data.activeItemIndex = Math.min(data.activeItemIndex, sequenceDef.items.length-1)
   // if reattaching add any needed new keys
@@ -380,8 +384,8 @@ async function moveInSequence(toIndex, source) {
 		authority: user
 	}
 
-  if (localQuestionContexts[currItemId.id]) {
-    chat.aiSystemMessage = localQuestionContexts[currItemId.id]
+  if (localQuestionContexts[currItem?.id]) {
+    chat.aiSystemMessage = localQuestionContexts[currItem.id]
   }
 }
 
