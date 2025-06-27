@@ -31,28 +31,50 @@
 			class="embedded-question-wrapper"
 			v-show="i === data.activeItemIndex"
 		>
-			<vueEmbedComponent
+			<div
 				v-if="i === data.activeItemIndex"
-				@mutate="handleXapiChanges(i,$event)"
-				@close="handleItemSubmit(i, $event)"
-				:style="{
-					position: 'absolute',
-					top: '0',
-					left: '0',
-					'pointer-events': data.quizFinished ? 'none' : 'auto'
-				}"
-				:id="item.id"
-				:namespace="{
-					prefix: `sequence-${id}-item-${i}`,
-					allow: [
-						'pila/competencies',
-						'pila/latest_competencies',
-						'my-' //  TODO: Disable!
-					]
-				}"
-				:environmentProxy="sendEnvironment"
-				allow="camera;microphone;fullscreen"
-			/>
+				class="embed-wrapper"
+			>
+			  <div
+			    style="
+			      position: relative;
+			      flex-grow: 1;
+			    "
+			  >
+					<vueEmbedComponent
+						@mutate="handleXapiChanges(i,$event)"
+						@close="handleItemSubmit(i, $event)"
+						:style="{
+							position: 'absolute',
+							top: '0',
+							left: '0',
+							'pointer-events': data.quizFinished ? 'none' : 'auto'
+						}"
+						:id="item.id"
+						:namespace="{
+							prefix: `sequence-${id}-item-${i}`,
+							allow: [
+								'pila/competencies',
+								'pila/latest_competencies',
+								'my-' //  TODO: Disable!
+							]
+						}"
+						:environmentProxy="sendEnvironment"
+						allow="camera;microphone;fullscreen"
+					/>
+				</div>
+				<div
+				  v-if="showLLMChat"
+				  style="
+				    width: 33vw;
+				    border-left: 1px solid #BBB;
+				  "
+				>
+					<vueEmbedComponent
+					  id="https://ornate-heliotrope-39a730.netlify.app"
+					/>
+				</div>
+			</div>
 			<div
 				v-if="sequenceDef.quizMode && data.quizFinished"
 				style="position: absolute; bottom: 2px; right: 6px;"
@@ -81,6 +103,7 @@
 			:quizFinished="data.quizFinished"
 			:isCorrectArray="isCorrectArray"
 			:time="data.totalTime"
+			@dblclick.shift="showLLMChat = !showLLMChat"
 		/>
 	</div>
 	<v-overlay
@@ -106,7 +129,8 @@ import CompetancyDashboard from './competency-dashboard.vue'
 import XapiTable from './XapiTable.vue'
 import DataViewer from './DataViewer.vue'
 import translateScopeId from '../../helpers/translateScopeId.js'
-
+import questionContexts from './questionContexts.js'
+import questionContextShared from './questionContextShared.js'
 import { useStore } from 'vuex'
 
 const XAPI_HEARTBEAT_INTERVAL = 20000
@@ -127,21 +151,37 @@ const showSeqAndSubItemDefs = ref(false)
 
 const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
+const showLLMChat = ref(false)
 
 const { auth: { user } } = await Agent.environment()
 
 const language = store.getters.language()
 
-// sequence and sub-item definitions
-const subItemDefs = ref({}) // to be populated below
+// Get translated sequence and sub-item definitions
 const sequenceDef = await translateScopeId(props.id, language)
 const subItemIds = sequenceDef.items.map(el => el.id)
 const res = await Promise.all(subItemIds.map(id => translateScopeId(id, language)))
-subItemDefs.value = Object.fromEntries(
+const subItemDefs = Object.fromEntries(
   subItemIds.map((id, i) => [id, res[i]])
 )
 
+const localQuestionContexts = JSON.parse(JSON.stringify(questionContexts))
+Object.entries(subItemDefs).forEach(([id, { testAiItemPrompt }]) => {
+  if (testAiItemPrompt) {
+    if (localQuestionContexts[id]) {
+      localQuestionContexts[id] += `\n${testAiItemPrompt}`
+    } else {
+      localQuestionContexts[id] = testAiItemPrompt
+    }
+  }
+})
+
+Object.entries(localQuestionContexts).forEach(([id, prompt]) => {
+	localQuestionContexts[id] = questionContextShared + prompt
+})
+
 const data = reactive(await Agent.state(`sequence-${props.id}`))
+const chat = await Agent.state('chat')
 
 if (!data.itemInfo) { // bellwether for first init
 	Object.assign(data, {
@@ -339,6 +379,10 @@ async function moveInSequence(toIndex, source) {
 		object: currItem?.id || 'dashboard',
 		authority: user
 	}
+
+  if (localQuestionContexts[currItemId.id]) {
+    chat.aiSystemMessage = localQuestionContexts[currItemId.id]
+  }
 }
 
 function handleClose() {
@@ -458,6 +502,15 @@ onBeforeUnmount(() => {
   z-index: 1000;
 }
 .header { top: 0; }
-.footer { bottom: 0; }
+.footer {
+	bottom: 0;
+	user-select: none;
+}
+
+.embed-wrapper {
+	width: 100%;
+	height: 100%;
+	display: flex;
+}
 </style>
 
