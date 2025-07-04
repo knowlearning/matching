@@ -72,6 +72,9 @@ async function handleSubmit() {
     const success = isCorrect()
     const message = getMessage(success)
 
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, message)
+
     if (Agent.embedded) {
         runstate.xapi = {
             verb: 'submitted',
@@ -80,9 +83,6 @@ async function handleSubmit() {
             extensions: { message }
         }
     }
-
-    const notInWrapper = (await Agent.environment()).context.length === 1
-    if (notInWrapper) await itemFeedbackSwal(t, success, message)
 }
 
 function getMessage(isCorrect) {

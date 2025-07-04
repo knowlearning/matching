@@ -89,17 +89,15 @@ function determineCorrect() {
 async function handleSubmit() {
     const success = runstate.currentlyCorrect
 
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, getMessage(success))
+
     runstate.xapi = {
         verb: 'submitted',
         object: props.id,
         result: { success },
-        extensions: {
-            message: getMessage(success)
-        },
+        extensions: { message: getMessage(success) }
     }
-
-    const notInWrapper = (await Agent.environment()).context.length === 1
-    if (notInWrapper) await itemFeedbackSwal(t, success, getMessage(success))
 }
 
 function getMessage(isCorrect) {

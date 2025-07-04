@@ -69,6 +69,10 @@ setTimeout(() => {
 async function handleSubmit() {
   const success = runstate.rowsCorrect.every(el => el)
   const message = getMessage(success)
+
+  const notInWrapper = (await Agent.environment()).context.length === 1
+  if (notInWrapper) await itemFeedbackSwal(t, success, message)
+
   if (Agent.embedded) {
     runstate.xapi = {
       actor: user,
@@ -79,9 +83,7 @@ async function handleSubmit() {
       extensions: { message }
     }
   }
-
-  const notInWrapper = (await Agent.environment()).context.length === 1
-  if (notInWrapper) await itemFeedbackSwal(t, success, message)
+  	
 }
 
 function wideItemArea() {
