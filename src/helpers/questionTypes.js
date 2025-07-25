@@ -60,7 +60,7 @@ const questionTypes = {
 			customizer: MultipleChoiceCustomizer
 		},
 		newItemGenerator: defaultMultipleChoice,
-		sample: '1a1c2410-3d4e-11ef-8319-adf6059912ac'
+		sample: '04b0b150-6989-11f0-bbf4-7771fd844dfc'
 	},
 	'application/json;type=rearrange-items' : {
 		description: 'rearrange-question',
@@ -96,7 +96,7 @@ const questionTypes = {
 			customizer: TrueFalseCustomizer
 		},
 		newItemGenerator: defaultTrueFalse,
-		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
+		sample: '612472a0-6989-11f0-bbf4-7771fd844dfc'
 	},
 	'application/json;type=sequence' : {
 		description: 'sequence-builder',
@@ -105,7 +105,7 @@ const questionTypes = {
 			customizer: SequenceCustomizer
 		},
 		newItemGenerator: defaultSequence,
-		sample: '92719c10-026b-11ef-8b1d-b914e5d38307'
+		sample: 'd352cd50-0354-11ef-93e9-2d92a5e8a142'
 	},
 	'application/json;type=fill-in-the-blank' : {
 		description: 'fill-in-the-blank-question',
@@ -114,7 +114,7 @@ const questionTypes = {
 			customizer: FillInTheBlankCustomizer
 		},
 		newItemGenerator: defaultFillInTheBlank,
-		sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
+		sample: '7506ab20-698a-11f0-bbf4-7771fd844dfc'
 	},
 	'application/json;type=likert' : {
 		description: 'likert-question',
@@ -123,7 +123,7 @@ const questionTypes = {
 			customizer: LikertCustomizer
 		},
 		newItemGenerator: defaultLikert,
-		// sample: 'def97450-3ece-11ef-812b-ebc8865fd329'
+		sample: '8eeaef10-698a-11f0-bbf4-7771fd844dfc'
 	},
 }
 
