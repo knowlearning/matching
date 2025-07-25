@@ -204,6 +204,11 @@ async function handleSubmit() {
     const success = runstate.currentlyCorrect
     const message = getMessage(success)
 
+    const notInWrapper = (await Agent.environment()).context.length === 1
+    if (notInWrapper) await itemFeedbackSwal(t, success, message)
+
+    runstate.lastSubmissionCorrect = success
+
     if (Agent.embedded) {
         runstate.xapi = {
             actor: user,
@@ -214,11 +219,6 @@ async function handleSubmit() {
             extensions: { message }
         }
     }
-
-    const notInWrapper = (await Agent.environment()).context.length === 1
-    if (notInWrapper) await itemFeedbackSwal(t, success, message)
-
-    runstate.lastSubmissionCorrect = success
 }
 
 function arraysDeepEqual(arr1, arr2) {

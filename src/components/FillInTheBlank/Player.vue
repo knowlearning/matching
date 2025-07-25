@@ -55,15 +55,15 @@ async function handleSubmit() {
 
   const message = getMessage(success)
 
+  const notInWrapper = (await Agent.environment()).context.length === 1
+  if (notInWrapper) await itemFeedbackSwal(t, success, message)
+
   runstate.xapi = {
     verb: 'submitted',
     object: props.id,
     result: { success },
     extensions: { message }
   }
-
-  const notInWrapper = (await Agent.environment()).context.length === 1
-  if (notInWrapper) await itemFeedbackSwal(t, success, message)
 
 }
 

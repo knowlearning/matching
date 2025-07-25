@@ -43,7 +43,7 @@
         >
           <vueEmbedComponent
             @mutate="handleXapiChanges(i,$event)"
-            @close="handleItemSubmit(i, $event)"
+            @close="handleItemSubmitViaClose(i, $event)"
             :style="{
               position: 'absolute',
               top: '0',
@@ -321,15 +321,15 @@ function previous(actor) {
     moveInSequence((i <= 0) ? 0 : i - 1, actor)
   }
 }
-async function handleItemSubmit(i, info={}) {
-
+async function handleItemSubmitViaClose(i, info={}) {
+  // if basic/old items use close (no xapi), also sequence writes the xapi row for that sub-item
   const {
     success = null,
     message = null
   } = info
 
   const key = `${i}/${sequenceDef.items[i].id}`
-  if (info.competencies) {
+  if (info.competencies) { // TODO: Rehab Candli Competencies for xAPI. info.competencies is bellwether
     competencyDashboardData.value = info.competencies
     showCompetencyDashboard.value = true
     // TODO: compute correctness based on competencies
@@ -346,7 +346,7 @@ async function handleItemSubmit(i, info={}) {
       )
     }
   }
-  else {
+  else { // normal, non-Candli close flow
     if (sequenceDef.quizMode) {
       next('sequence')
     } else { // normal learn mode
@@ -356,6 +356,12 @@ async function handleItemSubmit(i, info={}) {
     // both learn and quiz mode
     // key below is of form `${index}/${itemId}``
     data.itemInfo[key].correct = success
+    data.xapi = {
+      verb: 'submitted',
+      object: sequenceDef.items[i].id, // sub-item id
+      result: { success },
+      extensions: { message },
+    }
   }
 }
 
