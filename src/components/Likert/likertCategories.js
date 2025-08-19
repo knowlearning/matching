@@ -2,7 +2,7 @@ export default  {
   'abstract': [ 'not-at-all', 'slightly', 'moderately', 'very', 'extremely' ],
   'agreement': [ 'strongly-disagree', 'disagree', 'neutral', 'agree', 'strongly-agree' ],
   'frequency': [ 'never', 'rarely', 'sometimes', 'often', 'always' ],
-  'satisfaction': [ 'very dissatisfied', 'dissatisfied', 'neutral', 'satisfied', 'very-satisfied' ],
+  'satisfaction': [ 'very-dissatisfied', 'dissatisfied', 'neutral', 'satisfied', 'very-satisfied' ],
   'happiness': [ 'very-unhappy', 'unhappy', 'neutral', 'happy', 'very-happy' ],
   'positivity': [ 'very-negative', 'negative', 'neutral', 'positive', 'very-positive' ],
   'likelihood': [ 'very-unlikely', 'unlikely', 'neutral', 'likely', 'very-likely' ],
