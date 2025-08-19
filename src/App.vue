@@ -86,7 +86,7 @@
           density="compact"
           hide-details
           bg-color="white"
-          :items="['en','th']"
+          :items="supportedLanguages"
           :model-value="store.getters.language()"
           @update:model-value="store.dispatch('language', $event)"
           style="max-width: 100px;"
@@ -122,6 +122,8 @@
   import TagInterface from './components/TagInterface/index.vue'
   import { chooseTypeSwal, copyItemSwal, areYouSureSwal } from './helpers/swallows.js'
   import questionTypes from './helpers/questionTypes.js'
+  import supportedLanguages from './store/supportedLanguages.js'
+
   import { useStore } from 'vuex'
   const store = useStore()
   const t = slug => store.getters.t(slug)
