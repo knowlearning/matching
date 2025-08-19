@@ -4,8 +4,7 @@ const supportedLanguages = [
 	'pl',
 	'fr',
 	'pt',
-	'km',
-	'pl'
+	'km'
 ]
 
 export default supportedLanguages
