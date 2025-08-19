@@ -6,7 +6,6 @@ import translations from './translations.js'
 const store = createStore({
   state: {
     translations,
-    // both language and languages may be superceded by env LANGUAGES, see main.js and dispatch('languageS')
     language: matchNavigatorLanguage(supportedLanguages),
     languages: supportedLanguages,
     previewContent: null, // null or id to preview, used for modal
@@ -34,26 +33,11 @@ const store = createStore({
   },
   mutations: {
     language: (state, value) => state.language = value,
-    languages: (state, value) => state.languages = value,
     previewContent: (state, value) => state.previewContent = value,
     idToShowTagInterfaceFor: (state, value) => state.idToShowTagInterfaceFor = value
   },
   actions: {
-    language: async ({ commit, getters }, value) => {
-      const languages = pullToFront(getters.languages(), value)
-      commit('language', value)
-      commit('languages', languages)
-      await Agent.environment().then(env => {
-        env.variables.LANGUAGES = languages
-      })
-    },
-    languages: async ({ commit }, languagesArray) => {
-      commit('languages', languagesArray)
-      commit('language', matchNavigatorLanguage(languagesArray))
-      await Agent.environment().then(env => {
-        env.variables.LANGUAGES = languagesArray
-      })
-    },
+    language: ({ commit, getters }, value) => commit('language', value),
     previewContent: ({ commit }, value) => commit('previewContent', value),
     idToShowTagInterfaceFor: ({ commit }, value) => commit('idToShowTagInterfaceFor', value),
   },
@@ -61,11 +45,3 @@ const store = createStore({
 })
 
 export default store
-
-function pullToFront(arr, str) {
-  const a = [...arr]
-  const i = a.indexOf(str)
-  if (i > -1) a.splice(i, 1)
-  a.unshift(str)
-  return a
-}
