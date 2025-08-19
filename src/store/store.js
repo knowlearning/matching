@@ -6,8 +6,9 @@ import translations from './translations.js'
 const store = createStore({
   state: {
     translations,
+    // both language and languages may be superceded by env LANGUAGES, see main.js and dispatch('languageS')
     language: matchNavigatorLanguage(supportedLanguages),
-    languages: supportedLanguages, // may be superceded by env LANGUAGES, see main.js
+    languages: supportedLanguages,
     previewContent: null, // null or id to preview, used for modal
     idToShowTagInterfaceFor: null, // null or id to tag, used for modal
   },
