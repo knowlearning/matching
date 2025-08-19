@@ -1,12 +1,14 @@
 import { createStore } from 'vuex'
 import matchNavigatorLanguage from './matchNavigatorLanguage.js'
+import supportedLanguages from './supportedLanguages.js'
 import translations from './translations.js'
 
 const store = createStore({
   state: {
     translations,
-    language: matchNavigatorLanguage(),
-    languages: [matchNavigatorLanguage()],
+    // both language and languages may be superceded by env LANGUAGES, see main.js and dispatch('languageS')
+    language: matchNavigatorLanguage(supportedLanguages),
+    languages: supportedLanguages,
     previewContent: null, // null or id to preview, used for modal
     idToShowTagInterfaceFor: null, // null or id to tag, used for modal
   },
@@ -45,11 +47,11 @@ const store = createStore({
         env.variables.LANGUAGES = languages
       })
     },
-    languages: async ({ commit }, value) => {
-      commit('languages', value)
-      commit('language', value[0])
+    languages: async ({ commit }, languagesArray) => {
+      commit('languages', languagesArray)
+      commit('language', matchNavigatorLanguage(languagesArray))
       await Agent.environment().then(env => {
-        env.variables.LANGUAGES = value
+        env.variables.LANGUAGES = languagesArray
       })
     },
     previewContent: ({ commit }, value) => commit('previewContent', value),
