@@ -1,4 +1,4 @@
-export default function matchNavigatorLanguage(incomingChoices = ['en', 'th']) {
+export default function matchNavigatorLanguage(incomingChoices = [ 'en' ]) {
     const shortChoices = incomingChoices.map(lang => lang.split('-')[0])
     const shortenedNav = navigator.languages.map(lang => lang.split('-')[0])
     const firstMatch = shortenedNav.find(lang => shortChoices.includes(lang))

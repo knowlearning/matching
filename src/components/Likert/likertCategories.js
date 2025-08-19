@@ -12,4 +12,3 @@ export default  {
   'speed': [ 'very-slow', 'slow', 'neutral', 'fast', 'very-fast' ],
   'size': [ 'very-small', 'small', 'medium', 'large', 'very-large' ]
 }
-
