@@ -129,8 +129,8 @@ const questionTypes = {
 
 let sequenceImportableTypes = Object.keys(questionTypes)
 	.filter(item => !item.includes('sequence'))
-sequenceImportableTypes.push('application/json;type=karel-task&version=1.0.1')
-// note not including karel maps
+sequenceImportableTypes.push('application/json;type=karel-task&version=1.0.1') // karel maps not included
+sequenceImportableTypes.push('application/json;type=kl-json-form&version=1.0.1')
 
 export { sequenceImportableTypes }
 export default questionTypes

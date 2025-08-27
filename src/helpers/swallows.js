@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'
 import { validate as isUUID } from 'uuid'
-import questionTypes from './questionTypes.js'
+import questionTypes, { sequenceImportableTypes } from './questionTypes.js'
 
 export function itemFeedbackSwal(t, isCorrect, message) {
 	return isCorrect ?  itemCorrectSwal(t, message) : itemIncorrectSwal(t, message)
@@ -97,7 +97,10 @@ export function chooseTypeSwal(t) {
 	})
 }
 
-export function copyItemSwal(t) {
+export function copyItemSwal(t, attemptingSequenceAdd = false) {
+	// hacky... we're essentially using this as a type checker, and i don't want to refactor.
+	// if we're attempting to copy sth, should be of type editable by this app.
+	// if we're attempting to add an id to a sequence, we have a bigger list of types
 	return Swal.fire({
 		title: t('enter-id-of-item-to-copy'),
 		input: 'text',
@@ -108,7 +111,11 @@ export function copyItemSwal(t) {
 		inputValidator: async (id) => {
 			if (!isUUID(id)) return t('input-is-not-a-valid-uuid')
 			const { active_type } = await Agent.metadata(id)
-			if (!active_type || !Object.keys(questionTypes).includes(active_type)) {
+			if (
+				!active_type
+				|| (attemptingSequenceAdd && !sequenceImportableTypes.includes(active_type))
+				|| (!attemptingSequenceAdd && !Object.keys(questionTypes).includes(active_type))
+			) {
 				return t('input-is-not-of-valid-type')
 			}
 		}

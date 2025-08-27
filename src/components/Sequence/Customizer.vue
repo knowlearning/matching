@@ -58,7 +58,7 @@ const state = await Agent.state(props.id)
 
 
 async function addById() {
-	const { value: id } = await copyItemSwal(t) // validates id and type 
+	const { value: id } = await copyItemSwal(t, true) // validates id and type, 2nd param is hacky for sequence only items
 	const itemsCopy = JSON.parse(JSON.stringify(data.content.items))
 	if (id) data.content.items =  [ ...itemsCopy, { id } ]
 }
