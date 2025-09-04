@@ -1,10 +1,12 @@
 <template>
+  <!--
   <xapi-table
     v-show="showXapiLog"
     :data="[...data.sequenceXapiLogMirror].reverse()"
     :showOnlyTheseKeys="[ 'actor', 'verb', 'object', 'source', 'stored', 'success', 'embed_path' ]"
     @close="showXapiLog = !showXapiLog"
   />
+  -->
   <data-viewer
     v-show="showSeqAndSubItemDefs"
     :items="[
@@ -448,6 +450,7 @@ async function handleXapiChanges(i, e) {
   }
 }
 
+/*
 // START XAPI LOG POLLING
 // data.sequenceXapiLogMirror is initialized with other data.whatever up above
 let xapiLogPolling = true
@@ -481,6 +484,7 @@ onBeforeUnmount(() => {
 })
 
 // END XAPI LOG POLLING
+*/
 
 
 </script>
