@@ -1,9 +1,11 @@
 <template>
   <div class="elite-terminal-container">
-    <button
-      style="position: absolute; left: 30%;"
-      @click="emits('close')"
-    >Close</button>
+
+    <div class="buttons-wrapper">
+      <button @click="emits('close')">Close</button>
+      <button @click="downloadXapiAsCSV">Download CSV</button>
+    </div>
+
     <div >{{ data.length }} statements</div>
 
     <table class="elite-table" v-if="headers.length">
@@ -25,6 +27,7 @@
       </tbody>
     </table>
     <div v-else class="text-green-400">No data yet...</div>
+
   </div>
 </template>
 
@@ -71,10 +74,56 @@ const headers = computed(() => {
     return props.showOnlyTheseKeys;
   }
   return props.data.length > 0 ? Object.keys(props.data[0]) : [];
-});
+})
+
+function downloadXapiAsCSV() {
+  const csvString = toCSV(props.data)
+
+  const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "data.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url); // cleanup
+}
+
+function toCSV(data) {
+  if (!data.length) return "";
+
+  // Extract all unique keys
+  const keys = Array.from(
+    new Set(data.flatMap(obj => Object.keys(obj)))
+  )
+
+  // Convert a single value into a safe CSV cell
+  const escape = (value) => {
+    if (value === null || value === undefined) return "";
+    if (Array.isArray(value)) return `"${value.join(";")}"`;
+    if (typeof value === "object") return `"${JSON.stringify(value)}"`;
+    const str = String(value);
+    return str.includes(",") || str.includes('"') || str.includes("\n")
+      ? `"${str.replace(/"/g, '""')}"`
+      : str;
+  }
+
+  // Build CSV
+  const header = keys.join(",");
+  const rows = data.map(obj =>
+    keys.map(k => escape(obj[k])).join(",")
+  )
+
+  return [header, ...rows].join("\n");
+}
+
 </script>
 
 <style>
+
 .elite-terminal-container {
   background-color: #ffffff;
   color: #333;
@@ -83,9 +132,18 @@ const headers = computed(() => {
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
-  position: relative;
 }
-
+.buttons-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.buttons-wrapper button {
+  padding: 3px 6px;
+  background: revert;
+  border-radius: 8px;
+  border: revert;
+  margin-right: 12px;
+}
 .elite-table {
   width: 100%;
   border-collapse: collapse;

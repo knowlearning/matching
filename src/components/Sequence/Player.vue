@@ -1,12 +1,10 @@
 <template>
-  <!--
   <xapi-table
     v-show="showXapiLog"
     :data="[...data.sequenceXapiLogMirror].reverse()"
     :showOnlyTheseKeys="[ 'actor', 'verb', 'object', 'source', 'stored', 'success', 'embed_path' ]"
     @close="showXapiLog = !showXapiLog"
   />
-  -->
   <data-viewer
     v-show="showSeqAndSubItemDefs"
     :items="[
@@ -14,6 +12,7 @@
       ...Object.entries(subItemDefs).map(([id, data]) => ({ id, data }))
     ]"
     @close="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
+
   />
   <div class="sequence-player" v-show="!showXapiLog && !showSeqAndSubItemDefs">
     <SequenceHeader class="header"
@@ -24,7 +23,7 @@
       :time="data.totalTime"
       @select="index => moveInSequence(index, 'user')"
       @close="handleClose"
-      @click.shift.meta.exact="showXapiLog = !showXapiLog"
+      @click.shift.meta.exact="activateXapiView"
       @click.shift.alt.exact="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
     />
     <div
@@ -447,6 +446,22 @@ async function handleXapiChanges(i, e) {
       data.itemInfo[key].correct = 'completed' // this is hacky, correct as t/f/'completed', but this correctness is only for this display
     }
 
+  }
+}
+
+async function activateXapiView() {
+  try {
+    const res = await Agent.query(
+      'statements',
+      [[user], [props.id]],
+      'xapi.knowlearning.systems'
+    )
+    data.sequenceXapiLogMirror = res
+    showXapiLog.value = !showXapiLog.value
+
+  }
+  catch (err) {
+    console.error('Failed to fetch xAPI data:', err.message)
   }
 }
 
