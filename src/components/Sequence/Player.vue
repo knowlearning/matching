@@ -23,7 +23,7 @@
       :time="data.totalTime"
       @select="index => moveInSequence(index, 'user')"
       @close="handleClose"
-      @click.shift.meta.exact="activateXapiView"
+      @click.shift.ctrl.exact="activateXapiView"
       @click.shift.alt.exact="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
     />
     <div
