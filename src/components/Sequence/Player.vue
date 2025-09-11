@@ -23,8 +23,8 @@
       :time="data.totalTime"
       @select="index => moveInSequence(index, 'user')"
       @close="handleClose"
-      @click.shift.ctrl.exact="activateXapiView"
-      @click.shift.alt.exact="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
+      @dblclick.shift="activateXapiView"
+      @click.shift.meta="showSeqAndSubItemDefs = !showSeqAndSubItemDefs"
     />
     <div
       v-for="item,i in sequenceDef.items"
