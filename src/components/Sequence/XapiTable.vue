@@ -104,7 +104,10 @@ function toCSV(data) {
   const escape = (value) => {
     if (value === null || value === undefined) return "";
     if (Array.isArray(value)) return `"${value.join(";")}"`;
-    if (typeof value === "object") return `"${JSON.stringify(value)}"`;
+    if (typeof value === "object" && value !== null) {
+      const json = JSON.stringify(value);
+      return `"${json.replace(/"/g, '""')}"`; // double quotes escaped
+    }
     const str = String(value);
     return str.includes(",") || str.includes('"') || str.includes("\n")
       ? `"${str.replace(/"/g, '""')}"`
