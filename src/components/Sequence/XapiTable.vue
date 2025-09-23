@@ -3,7 +3,7 @@
 
     <div class="buttons-wrapper">
       <button @click="emits('close')">Close</button>
-      <button @click="downloadXapiAsCSV">Download CSV</button>
+      <button @click="downloadCSV">Download CSV</button>
     </div>
 
     <div >{{ data.length }} statements</div>
@@ -33,6 +33,7 @@
 
 <script setup>
 import { watch, ref, computed } from 'vue';
+import { json2csv } from 'json-2-csv';
 
 const props = defineProps({
   data: {
@@ -76,51 +77,26 @@ const headers = computed(() => {
   return props.data.length > 0 ? Object.keys(props.data[0]) : [];
 })
 
-function downloadXapiAsCSV() {
-  const csvString = toCSV(props.data)
 
-  const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
+async function downloadCSV() {
+  if (!props.data || !props.data.length) return
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", "data.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  try {
+    console.log('new pattern???')
+    const csv = await json2csv(props.data)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
 
-  URL.revokeObjectURL(url); // cleanup
-}
-
-function toCSV(data) {
-  if (!data.length) return "";
-
-  // Extract all unique keys
-  const keys = Array.from(
-    new Set(data.flatMap(obj => Object.keys(obj)))
-  )
-
-  // Convert a single value into a safe CSV cell
-  const escape = (value) => {
-    if (value === null || value === undefined) return "";
-    if (Array.isArray(value)) return `"${value.join(";")}"`;
-    if (typeof value === "object" && value !== null) {
-      const json = JSON.stringify(value);
-      return `"${json.replace(/"/g, '""')}"`; // double quotes escaped
-    }
-    const str = String(value);
-    return str.includes(",") || str.includes('"') || str.includes("\n")
-      ? `"${str.replace(/"/g, '""')}"`
-      : str;
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'user_sequence_xapi.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    console.error('Error converting to CSV:', err)
   }
-
-  // Build CSV
-  const header = keys.join(",");
-  const rows = data.map(obj =>
-    keys.map(k => escape(obj[k])).join(",")
-  )
-
-  return [header, ...rows].join("\n");
 }
 
 </script>
