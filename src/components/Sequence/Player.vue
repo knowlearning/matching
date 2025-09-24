@@ -17,6 +17,7 @@
   <div class="sequence-player" v-show="!showXapiLog && !showSeqAndSubItemDefs">
     <SequenceHeader class="header"
       :sequenceId="props.id"
+      :blockNav="sequenceDef.forcedMotionMode"
       :quizMode="sequenceDef.quizMode"
       :activeItemIndex="data.activeItemIndex"
       :isCorrectArray="isCorrectArray"
@@ -100,6 +101,7 @@
       @goToSummary="moveInSequence(null, 'user')"
       @quizFinished="handleQuizFinished"
       :activeItemIndex="data.activeItemIndex"
+      :blockNav="sequenceDef.forcedMotionMode"
       :quizMode="sequenceDef.quizMode"
       :quizFinished="data.quizFinished"
       :isCorrectArray="isCorrectArray"
