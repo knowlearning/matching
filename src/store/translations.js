@@ -639,9 +639,6 @@ export default {
     km : 'បង្កើតសំណួរជម្រើសច្រើនដែលមានចម្លើយមួយឬច្រើន។',
     pl : 'Twórz pytania wielokrotnego wyboru z jedną lub wieloma odpowiedziami.'
   },
-
-
-
   'new-choice' : {
     en : 'New Choice',
     th : 'ตัวเลือกใหม่',
@@ -712,6 +709,14 @@ export default {
     fr : 'Mode Quiz',
     pt : 'Modo Quiz',
     km : 'របៀបប្រលង',
+    pl : 'Tryb quizu'
+  },
+  'forced-motion-mode' : {
+    en : 'Forced Motion Mode',
+    th : 'โหมดการเคลื่อนไหวบังคับ',
+    fr : 'Mode de mouvement forcé',
+    pt : 'Modo de movimento forçado',
+    km : 'របៀបចលនាបង្ខំ',
     pl : 'Tryb quizu'
   },
   'you-cannot-undo-this' : {

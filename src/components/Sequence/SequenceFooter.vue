@@ -9,14 +9,14 @@
 			/>
 		</div>
 		<div class="middle">
-			<button class="arrow" @click="$emit('previous')">&#8249;</button>
+			<button v-if="!props.blockNav" class="arrow" @click="$emit('previous')">&#8249;</button>
 			<span>{{ displayString }}</span>
-			<button class="arrow" @click="$emit('next')">&#8250;</button>
+			<button v-if="!props.blockNav" class="arrow" @click="$emit('next')">&#8250;</button>
 		</div>
 		<div class="right">
 			<DisplayTime class="wide" :time="time" />
 			<i
-				v-if="!props.quizMode || props.quizFinished"
+				v-if="!props.blockNav && (!props.quizMode || props.quizFinished)"
 				@click="$emit('goToSummary')"
 				class="fas fa-chart-bar"
 			></i>
@@ -69,6 +69,11 @@ const props = defineProps({
 		default: false
 	},
 	quizFinished: {
+		type: Boolean,
+		required: false,
+		default: false
+	},
+	blockNav: {
 		type: Boolean,
 		required: false,
 		default: false

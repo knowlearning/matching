@@ -20,8 +20,13 @@
 		<v-checkbox
 			v-model="data.content.quizMode"
 			:label="t('quiz-mode')"
+			hide-details="auto"
 		></v-checkbox>
-
+		<v-checkbox
+			v-model="data.content.forcedMotionMode"
+			:label="t('forced-motion-mode')"
+			hide-details="auto"
+		></v-checkbox>
 		<div class="preview-image-section" v-if="showImageArea">
 			<SelectImage
 				:active="data.content.image"
