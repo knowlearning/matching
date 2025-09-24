@@ -89,6 +89,7 @@
       class="embedded-question-wrapper"
       v-show="data.activeItemIndex === null"
       :sequenceDef="sequenceDef"
+      :blockNav="sequenceDef.forcedMotionMode"
       :isCorrectArray="isCorrectArray"
       :timeOnTasks="timeOnTasks"
       @close="handleClose"

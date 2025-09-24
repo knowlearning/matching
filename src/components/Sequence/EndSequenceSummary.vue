@@ -11,7 +11,7 @@
 					<td>
 						<i
 							class="fas fa-play-circle"
-							@click="$emit('select', i)"
+							@click="navTo(i)"
 						/>
 					</td>
 					<td>
@@ -49,6 +49,7 @@ import { useStore } from 'vuex'
 const store = useStore()
 function t(slug) { return store.getters.t(slug) }
 
+const emits = defineEmits([ 'select' ])
 const props = defineProps({
 	sequenceDef: {
 		type: Object,
@@ -61,12 +62,22 @@ const props = defineProps({
 	timeOnTasks: {
 		type: Array,
 		required: true
+	},
+	blockNav: {
+		type: Boolean,
+		required: false,
+		default: false
 	}
 })
 function numDisplay(i) {
 	let n = i+1
 	n = (n<10) ? '0'+n : ''+n
 	return n + '.	'
+}
+function navTo(i) {
+	if (!props.blockNav) {
+		emits('select', i)
+	}
 }
 
 </script>
