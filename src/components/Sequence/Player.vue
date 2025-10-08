@@ -200,8 +200,6 @@ else if (!data.sequenceXapiLogMirror) {
   data.sequenceXapiLogMirror = []
 }
 else {
-  // in case items removed from sequence
-  data.activeItemIndex = Math.min(data.activeItemIndex, sequenceDef.items.length-1)
   // if reattaching add any needed new keys
   Object.entries(initialItemInfo())
     .filter(([key, info]) => !data.itemInfo[key])
