@@ -28,7 +28,7 @@
 			/>
 		</div>
 		<div class="right">
-			<span class="wide" v-if="!props.quizMode">
+			<span class="wide" v-if="!props.quizMode && !props.forcedMotionMode">
 				{{ wideDisplayText }}
 			</span>
 			<DisplayTime
@@ -82,6 +82,11 @@ const props = defineProps({
   	default: false
   },
   showBackOrCloseArrow: {
+  	type: Boolean,
+  	required: false,
+  	default: false
+  },
+  forcedMotionMode: {
   	type: Boolean,
   	required: false,
   	default: false

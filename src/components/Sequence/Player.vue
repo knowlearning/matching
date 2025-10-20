@@ -18,6 +18,7 @@
     <SequenceHeader class="header"
       :sequenceId="props.id"
       :blockNav="sequenceDef.forcedMotionMode"
+      :forcedMotionMode="sequenceDef.forcedMotionMode"
       :quizMode="sequenceDef.quizMode"
       :activeItemIndex="data.activeItemIndex"
       :isCorrectArray="isCorrectArray"
