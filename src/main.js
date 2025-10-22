@@ -6,9 +6,10 @@ import store from './store/store.js'
 import App from './App.vue'
 import LoginPage from './components/LoginPage.vue'
 import NotFound from './components/NotFound.vue'
+import ForcedLanguageNotFound from './components/ForcedLanguageNotFound.vue'
 import EmbeddedPlayer from './components/EmbeddedPlayer.vue'
 import questionTypes from './helpers/questionTypes.js'
-
+import supportedLanguages from './store/supportedLanguages.js'
 import 'vuetify/styles'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { createVuetify } from 'vuetify'
@@ -35,12 +36,19 @@ const vuetify = createVuetify({
 })
 
 const initialLoad = async () => {
-    const { auth: { user, provider } } = await Agent.environment()
+    const { auth: { user, provider }, variables } = await Agent.environment()
+    const forcedLang = variables?.FORCED_LANGUAGE
+    const criticalLanguageFailure = forcedLang && !supportedLanguages.includes(forcedLang)
+
     if (provider === 'anonymous') {
         createApp(LoginPage)
           .use(store)
           .use(vuetify)
           .mount('#app')
+    } else if (criticalLanguageFailure) {
+        createApp(ForcedLanguageNotFound)
+            .use(vuetify)
+            .mount('#app')
     } else {
         const url = new URL(window.location.href)
         const { pathname } = url
@@ -53,10 +61,11 @@ const initialLoad = async () => {
         } else if (await routeIsUUIDOfValidType(route)) {
             // cannot use PlayOrCustomizeByTypeSwitcher directly
             // because we need to wrap in a suspense element
-            createApp(EmbeddedPlayer, { id: route })
+            const app = createApp(EmbeddedPlayer, { id: route })
                 .use(store)
                 .use(vuetify)
-                .mount('#app')
+            if (forcedLang) store.commit('language', forcedLang)
+            app.mount('#app')
         } else {
             createApp(NotFound)
                 .use(vuetify)
