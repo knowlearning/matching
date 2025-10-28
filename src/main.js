@@ -37,7 +37,10 @@ const vuetify = createVuetify({
 
 const initialLoad = async () => {
     const { auth: { user, provider }, variables } = await Agent.environment()
+
     const forcedLang = variables?.FORCED_LANGUAGE
+    const environmentLanguage = forcedLang || variables?.LANGUAGES?.[0]?.split('-')[0]
+
     const criticalLanguageFailure = forcedLang && !supportedLanguages.includes(forcedLang)
 
     if (provider === 'anonymous') {
@@ -64,7 +67,7 @@ const initialLoad = async () => {
             const app = createApp(EmbeddedPlayer, { id: route })
                 .use(store)
                 .use(vuetify)
-            if (forcedLang) store.commit('language', forcedLang)
+            if (environmentLanguage) store.commit('language', environmentLanguage)
             app.mount('#app')
         } else {
             createApp(NotFound)
