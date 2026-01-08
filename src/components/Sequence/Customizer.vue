@@ -86,7 +86,6 @@ function handleHideShowImageArea({ offsetX, offsetY }) {
 .sequence-customizer {
 	display: flex;
 	position: relative;
-	height: 100%;
 	flex-direction: column;
 	align-items: center;
 	padding-top: 56px;
