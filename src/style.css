@@ -53,3 +53,7 @@ body {
   font-weight: bolder;
   margin-right: 6px;
 }
+
+iframe {
+  user-select: none;
+}
