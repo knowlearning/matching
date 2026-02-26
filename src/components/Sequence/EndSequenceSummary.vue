@@ -10,7 +10,11 @@
 					<td>{{  numDisplay(i) }}</td>
 					<td>
 						<i
-							class="fas fa-play-circle"
+							:class="{
+								'fas': true,
+								'fa-play-circle': true,
+								'allow-nav' : !props.blockNav
+							}"
 							@click="navTo(i)"
 						/>
 					</td>
@@ -184,11 +188,11 @@ th {
 }
 i.fa-play-circle {
 	color: grey;
-	cursor: pointer;
 	font-size: 1.3rem;
 }
-i.fa-play-circle:hover {
+i.fa-play-circle.allowNav:hover {
 	color: limegreen;
+	cursor: pointer;
 }
 i.fa-check-circle {
 	color: grey;
