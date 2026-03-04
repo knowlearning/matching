@@ -8,6 +8,7 @@
         <Suspense>
           <vueEmbedComponent
             :id="previewContent"
+            :namespace="data.previewNamespace"
             @close="store.dispatch('previewContent', null)"
           />
         </Suspense>
@@ -114,7 +115,7 @@
 
 <script setup>
   import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
-  import { reactive, computed } from 'vue'
+  import { reactive, computed, watch } from 'vue'
   import Modal from './components/Modal.vue'
   import ContentBar from './components/ContentBar.vue'
   import Welcome from './components/Welcome.vue'
@@ -138,9 +139,17 @@
     content: null,
     active: null,
     tags: null,
+    previewNamespace: `preview-${Agent.uuid()}`,
     userAvatarPath: null,
     showOnlySequences: props.route === 'sequence-builder'
   })
+
+  const previewContent = computed(() => store.getters.previewContent())
+
+  watch(previewContent, val => {
+      if (val) data.previewNamespace = `preview-${Agent.uuid()}`
+    }
+  )
 
   async function fetchMyContentAndUserInfo() {
     const { auth: { user, info: { picture } } } = await Agent.environment()
@@ -167,7 +176,6 @@
       }
     })
     
-  const previewContent = computed(() => store.getters.previewContent())
   const idToShowTagInterfaceFor = computed(() => store.getters.idToShowTagInterfaceFor())
 
   async function addNew(active_type) {

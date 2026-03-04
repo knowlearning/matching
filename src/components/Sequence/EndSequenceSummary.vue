@@ -190,7 +190,7 @@ i.fa-play-circle {
 	color: grey;
 	font-size: 1.3rem;
 }
-i.fa-play-circle.allowNav:hover {
+i.fa-play-circle.allow-nav:hover {
 	color: limegreen;
 	cursor: pointer;
 }
