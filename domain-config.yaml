@@ -24,11 +24,8 @@ postgres:
   queries:
     customised_items_report:
       domains:
-        - app.pilaproject.org
-        - thailand.pilaproject.org
-        - polska-rct-2025.pilaproject.org
-        - france-rct-2025.pilaproject.org
-        - ui-dev.pilaproject.org
+        - "*.pilaproject.org"
+        - "*.knowlearning.systems"
         - f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:9898
       body: |
         SELECT
