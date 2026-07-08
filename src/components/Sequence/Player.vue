@@ -333,6 +333,10 @@ async function handleItemSubmitViaClose(i, info={}) {
 
   const key = `${i}/${sequenceDef.items[i].id}`
   if (info.competencies) { // TODO: Rehab Candli Competencies for xAPI. info.competencies is bellwether
+        // pause briefly in case candli reports updates with async races with close
+    await new Promise(r => setTimeout(r, 100))
+    await Agent.synced()
+
     competencyDashboardData.value = info.competencies
     showCompetencyDashboard.value = true
     // TODO: compute correctness based on competencies
