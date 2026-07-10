@@ -49,6 +49,7 @@ export default {
   "division": "หาร",
   "comparison": "การเปรียบเทียบ",
   "conversion of volume": "การแปลงหน่วยปริมาตร",
+  "perimeter": "เส้นรอบรูป",
   "general": "ทั่วไป",
   "attempts": "ลองใหม่",
   "not started": "ยังไม่ได้เริ่ม",
