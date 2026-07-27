@@ -76,5 +76,7 @@ export default {
   "summary": "สรุป",
   "hide details": "ซ่อนรายละเอียด",
   "show details": "แสดงรายละเอียด",
+  "generalize": "สรุปเป็นหลักการทั่วไป",
+  "review": "ทบทวน",
   "if the student has played the game multiple times, this dashboard displays their best result. the dashboard updates after they finish playing a game.": "หากนักเรียนเล่นเกมหลายครั้ง แดชบอร์ดนี้จะแสดงผลลัพธ์ที่ดีที่สุดของนักเรียน แดชบอร์ดจะอัปเดตหลังจากนักเรียนเล่นเกมเสร็จ"
 }
