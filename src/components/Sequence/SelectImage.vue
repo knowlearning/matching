@@ -48,7 +48,8 @@
 import KLImage from '../kl-image.vue'
 import PickFileButton from '../PickFileButton.vue'
 
-const KAREL_IMAGE = "e5d78100-07dc-11ef-8569-81c43f03de09"
+// const KAREL_IMAGE = "e5d78100-07dc-11ef-8569-81c43f03de09" old, too large
+const KAREL_IMAGE = "c5b11080-ab13-11f1-86f8-195d1e2ae336"
 const BETTY_IMAGE = "c31ea520-07e7-11ef-b18d-099b318b5a6f"
 const imageChoices = [ KAREL_IMAGE, BETTY_IMAGE ]
 
