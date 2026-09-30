@@ -73,6 +73,7 @@ export default {
   "explain student dashboard": "อธิบายแดชบอร์ดของนักเรียน",
   "student dashboard": "แดชบอร์ดของนักเรียน",
   "student": "นักเรียน",
+  "strategize garden": "การวางแผนสวนเชิงกลยุทธ์",
   "summary": "สรุป",
   "hide details": "ซ่อนรายละเอียด",
   "show details": "แสดงรายละเอียด",
