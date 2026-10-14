@@ -57,8 +57,8 @@
             :namespace="{
               prefix: `sequence-${id}-item-${i}`,
               allow: [
-                'pila/competencies',
-                'pila/latest_competencies',
+                'pila/',
+                'candli/',
                 'my-' // TODO: Disable!
               ]
             }"
@@ -548,4 +548,3 @@ onBeforeUnmount(() => {
   display: flex;
 }
 </style>
-
