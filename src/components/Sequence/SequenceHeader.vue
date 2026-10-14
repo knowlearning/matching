@@ -10,22 +10,32 @@
 		</div>
 
 		<div class="middle">
-			<i
-				v-for="isCorrect,i in props.isCorrectArray"
-				:key="`icon-for-item-${i}`"
-				@click="navTo(i)"
-				:class="{
-					'allowNav': !props.blockNav,
-					'fas': true,
-					'always-grey' : props.quizMode,
-					'fa-circle-check': isCorrect || (props.quizMode && isCorrect !== null),
-					'fa-circle-minus': !isCorrect,
-					'correct': isCorrect === true,
-					'incorrect': isCorrect === false,
-					'completed': isCorrect === 'completed',
-					'active' : props.activeItemIndex === i
-				}"
+			<SequenceProgressDots
+				v-if="props.useProgressDots"
+				:items="props.progressItems"
+				:activeItemIndex="props.activeItemIndex"
+				:quizMode="props.quizMode"
+				:blockNav="props.blockNav"
+				@select="navTo"
 			/>
+			<template v-else>
+				<i
+					v-for="isCorrect,i in props.isCorrectArray"
+					:key="`icon-for-item-${i}`"
+					@click="navTo(i)"
+					:class="{
+						'allowNav': !props.blockNav,
+						'fas': true,
+						'always-grey' : props.quizMode,
+						'fa-circle-check': isCorrect || (props.quizMode && isCorrect !== null),
+						'fa-circle-minus': !isCorrect,
+						'correct': isCorrect === true,
+						'incorrect': isCorrect === false,
+						'completed': isCorrect === 'completed',
+						'active' : props.activeItemIndex === i
+					}"
+				/>
+			</template>
 		</div>
 		<div class="right">
 			<span class="wide" v-if="!props.quizMode && !props.forcedMotionMode">
@@ -44,6 +54,7 @@
 import { computed } from 'vue'
 import DisplayTime from './DisplayTime.vue'
 import ItemName from '../ItemName.vue'
+import SequenceProgressDots from './SequenceProgressDots.vue'
 
 
 import { useStore } from 'vuex'
@@ -55,6 +66,14 @@ const o = n => (n < 10 ? '0' + n : '' + n);
 
 const emits = defineEmits('select')
 const props = defineProps({
+	useProgressDots: {
+		type: Boolean,
+		default: false
+	},
+	progressItems: {
+		type: Array,
+		default: () => []
+	},
 	time: {
 		type: Number,
 		required: true

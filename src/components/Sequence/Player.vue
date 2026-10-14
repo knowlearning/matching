@@ -22,6 +22,8 @@
       :quizMode="sequenceDef.quizMode"
       :activeItemIndex="data.activeItemIndex"
       :isCorrectArray="isCorrectArray"
+      :useProgressDots="useProgressDots"
+      :progressItems="activeItemInfo"
       :time="data.totalTime"
       @select="index => moveInSequence(index, 'user')"
       @close="handleClose"
@@ -127,6 +129,7 @@
 import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
 import { ref, reactive, computed, onBeforeUnmount, watch } from 'vue'
 import SequenceHeader from './SequenceHeader.vue'
+import usesProgressDots from './progressDotDomains.js'
 import SequenceFooter from './SequenceFooter.vue'
 import EndSequenceSummary from './EndSequenceSummary.vue'
 import { itemFeedbackSwal } from '../../helpers/swallows.js'
@@ -158,7 +161,8 @@ const competencyDashboardData = ref(null)
 const showCompetencyDashboard= ref(false)
 const showLLMChat = ref(false)
 
-const { auth: { user } } = await Agent.environment()
+const { auth: { user }, domain } = await Agent.environment()
+const useProgressDots = usesProgressDots(domain)
 
 const language = store.getters.language()
 
