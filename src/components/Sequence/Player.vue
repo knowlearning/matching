@@ -61,7 +61,8 @@
               allow: [
                 'pila/',
                 'candli/',
-                'my-' // TODO: Disable!
+                'my-', // TODO: Disable!
+                ...(shareRunstate[i] ? ['runstate-'] : [])
               ]
             }"
             :environmentProxy="sendEnvironment"
@@ -173,6 +174,9 @@ const res = await Promise.all(subItemIds.map(id => translateScopeId(id, language
 const subItemDefs = Object.fromEntries(
   subItemIds.map((id, i) => [id, res[i]])
 )
+const shareRunstate = await Promise.all(subItemIds.map(async id =>
+  (await Agent.metadata(id)).domain === 'thaipilacreate.eef.or.th'
+))
 
 const localQuestionContexts = JSON.parse(JSON.stringify(questionContexts))
 Object.entries(subItemDefs).forEach(([id, { testAiItemPrompt }]) => {
@@ -432,9 +436,9 @@ async function sendEnvironment(e) {
 async function handleXapiChanges(i, e) {
 
   if (e.patch[0].path[0] === 'xapi') {
-    // only handle xapi from immediate children
-    // other wrappers won't have 'runstate' as next string
-    if (!e.scope?.startsWith(`sequence-${props.id}-item-${i}/runstate`)) return
+    // Only handle the immediate child's runstate; wrappers report their own events.
+    const isSharedRunstate = shareRunstate[i] && e.scope === `runstate-${sequenceDef.items[i].id}`
+    if (!isSharedRunstate && !e.scope?.startsWith(`sequence-${props.id}-item-${i}/runstate`)) return
 
     const { verb, object, result, extensions } = e.patch[0].value
     const success = result?.success
